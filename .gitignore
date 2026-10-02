@@ -1,2 +1,14 @@
+# data: never commit
 *.csv
-perishable_goods_management.csv
+
+# model checkpoints / fitted artifacts
+*.joblib
+*.pkl
+
+# credentials
+.env
+
+# generated files
+.ipynb_checkpoints/
+__pycache__/
+figures/*.html
