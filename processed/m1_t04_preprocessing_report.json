@@ -1,0 +1,173 @@
+{
+  "task": "M1-T04",
+  "dataset_sha256": "de94302b867c9debedfd45c431306623fdfc038f5ed8ca17736339b4460a6674",
+  "rows": 100000,
+  "columns_raw": 42,
+  "day_of_week_header_repaired": false,
+  "date_format": "%Y-%m-%d",
+  "temporal_verification": {
+    "day_of_week": {
+      "mismatches": 0,
+      "decision": "KEEP existing column"
+    },
+    "is_weekend": {
+      "mismatches": 0,
+      "decision": "KEEP existing column"
+    },
+    "month": {
+      "mismatches": 0,
+      "decision": "KEEP existing column"
+    }
+  },
+  "days_remaining_at_purchase_matches_date_gap": true,
+  "days_until_expiry_rows_differing_from_date_gap": 74191,
+  "new_temporal_features": [
+    "receipt_date",
+    "days_since_receipt",
+    "shelf_life_used_ratio",
+    "expiry_remaining_ratio",
+    "expiry_lag_days",
+    "quarter",
+    "week_of_year",
+    "day_of_month",
+    "days_since_data_start",
+    "month_sin",
+    "month_cos",
+    "dow_sin",
+    "dow_cos"
+  ],
+  "quality_grade_order": {
+    "C": 1,
+    "B": 2,
+    "A": 3
+  },
+  "split": {
+    "method": "time-ordered by transaction_date",
+    "test_size": 0.2,
+    "last_train_day": "2024-08-07",
+    "train_rows": 80042,
+    "test_rows": 19958
+  },
+  "skew_threshold": 1.0,
+  "log1p_scaled_columns": [
+    "shelf_life_days",
+    "days_remaining_at_purchase",
+    "days_until_expiry",
+    "days_since_receipt",
+    "shelf_life_used_ratio",
+    "temp_abuse_events",
+    "base_price",
+    "cost_price",
+    "selling_price",
+    "discount_pct",
+    "daily_demand"
+  ],
+  "scaled_columns": [
+    "expiry_remaining_ratio",
+    "expiry_lag_days",
+    "storage_temp",
+    "temp_deviation",
+    "distribution_hours",
+    "handling_score",
+    "packaging_score",
+    "supplier_score",
+    "spoilage_sensitivity",
+    "initial_quantity",
+    "demand_variability",
+    "quality_grade_ord"
+  ],
+  "one_hot_columns_by_source": {
+    "category": 10,
+    "region": 5,
+    "product_name": 63,
+    "store_id": 50,
+    "supplier_id": 20
+  },
+  "dropped_from_features": {
+    "product_id": "45,301 unique values, identifier-like",
+    "transaction_date": "datetime",
+    "expiration_date": "datetime",
+    "receipt_date": "datetime"
+  },
+  "excluded_for_leakage": [
+    "was_spoiled",
+    "spoilage_risk",
+    "units_sold",
+    "units_wasted",
+    "waste_pct",
+    "revenue",
+    "waste_cost",
+    "profit",
+    "profit_margin_pct"
+  ],
+  "track_3a_flags": {
+    "exclude_treatment": [
+      "markdown_applied",
+      "discount_pct",
+      "selling_price"
+    ],
+    "hold_until_M1_T06": [],
+    "cleared_by_M1_T06": {
+      "spoilage_sensitivity": "LEGITIMATE input feature (keep)"
+    }
+  },
+  "calendar_features_not_in_model_matrix": [
+    "quarter",
+    "week_of_year",
+    "day_of_month",
+    "days_since_data_start"
+  ],
+  "track_3b_flags": {
+    "treatment": [
+      "discount_pct"
+    ],
+    "never_input_derived_from_discount": [
+      "selling_price",
+      "markdown_applied"
+    ],
+    "targets": [
+      "profit",
+      "waste_pct",
+      "revenue",
+      "units_sold"
+    ]
+  },
+  "redundant_pairs_abs_r_gt_0_9": [
+    [
+      "shelf_life_days",
+      "days_remaining_at_purchase",
+      0.996
+    ],
+    [
+      "shelf_life_days",
+      "days_until_expiry",
+      0.982
+    ],
+    [
+      "days_remaining_at_purchase",
+      "days_until_expiry",
+      0.986
+    ],
+    [
+      "base_price",
+      "cost_price",
+      0.992
+    ],
+    [
+      "base_price",
+      "selling_price",
+      0.979
+    ],
+    [
+      "cost_price",
+      "selling_price",
+      0.972
+    ]
+  ],
+  "n_model_features": 178,
+  "library_versions": {
+    "pandas": "2.3.3",
+    "numpy": "2.3.5",
+    "scikit-learn": "1.7.2"
+  }
+}

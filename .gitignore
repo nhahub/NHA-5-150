@@ -1,14 +1,14 @@
-# data: never commit
+# Data files
 *.csv
+*.xlsx
 
-# model checkpoints / fitted artifacts
+# Model binaries and checkpoints
 *.joblib
 *.pkl
+*.h5
+*.pt
 
-# credentials
-.env
-
-# generated files
+# Local configurations
+.vscode/
 .ipynb_checkpoints/
 __pycache__/
-figures/*.html

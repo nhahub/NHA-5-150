@@ -1,0 +1,20 @@
+{
+  "task": "M1-T06",
+  "column": "spoilage_sensitivity",
+  "verdict": "LEGITIMATE input feature (keep)",
+  "distinct_values": 9,
+  "constant_within_category": true,
+  "pearson_with_was_spoiled": 0.037,
+  "pearson_with_spoilage_risk": 0.2537,
+  "single_column_auc": 0.5267,
+  "auc_gain_on_top_of_category": 0.0013,
+  "r2_explained_by_category_onehot": 1.0,
+  "leakage_flags": {
+    "not a fixed pre-sale attribute (varies per batch)": false,
+    "near-perfect single-column separation (AUC>0.9)": false,
+    "|corr| with was_spoiled above 0.5": false,
+    "ablation AUC jump above 0.01": false
+  },
+  "action": "keep as feature; no change to model_ready_dataset; spoilage_risk stays reserved",
+  "elasticity_note": "no demand-response information; use only as category-level segment/interaction in M3-T08"
+}
