@@ -12,3 +12,8 @@
 .vscode/
 .ipynb_checkpoints/
 __pycache__/
+
+# Editor & Language Server configs
+.vscode/
+*.vscode.json
+pyrightconfig.json
