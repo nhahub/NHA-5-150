@@ -49,7 +49,7 @@ Clearance decisions in retail food chains are traditionally driven by manual sta
 
 1. **Track 3A — Spoilage Risk Classifier:** Predicts whether an inventory batch will spoil (`was_spoiled = 1`) before selling out, utilizing pre-sale attributes and concrete handling quality signals (`temp_abuse_events`, `handling_score`, `packaging_score`, `supplier_score`) to power explainable SHAP attributions.
 2. **Track 3B — Revenue-Response Regressor:** Learns the relationship between markdown depth (`discount_pct`) and resulting financial outcomes (`profit`, `revenue`, `waste_pct`), adjusting for reverse causality and discounting bias using Track 3A out-of-fold risk scores, `is_promoted`, and trailing sales velocity.
-3. **Track 3C — Discount Optimizer:** Evaluates candidate discount depths on an empirical discrete grid ($0\%$ or $[0.10, 0.75]$) to recommend the profit-maximizing discount tier for each batch. Audited via a two-lane validation framework (**Lane 1: Matched Historical Ground Truth**, **Lane 2: Counterfactual Simulated**).
+3. **Track 3C — Discount Optimizer:** Evaluates candidate discount depths on an empirical discrete grid (`0%` or `[0.10, 0.75]`) to recommend the profit-maximizing discount tier for each batch. Audited via a two-lane validation framework (**Lane 1: Matched Historical Ground Truth**, **Lane 2: Counterfactual Simulated**).
 4. **Milestone 4 — Deployment & Simulator:** A Streamlit application featuring a real-time **Manager Inventory View** and an interactive **Simulator Mode** where store managers input hypothetical batch parameters to test what-if pricing scenarios.
 
 ---
@@ -61,11 +61,11 @@ Milestone 1 establishes the verified data foundation, automated leakage boundari
 | Task ID | Component / Notebook | Status | Description & Key Outcomes |
 | :--- | :--- | :---: | :--- |
 | **M1-T01** | [`M1-T01.ipynb`](M1-T01.ipynb) | **Done** | **Dataset Ingestion & Schema Audit:** Verified 100,000 transactions, 42 columns, and 0 missing values. Documented schema deviations against the initial proposal and established strict data-leakage boundaries (`spoilage_risk` reserved for benchmark only; all post-sale outcome columns excluded). |
-| **M1-T02** | [`M1-T02.ipynb`](M1-T02.ipynb) | **Done** | **Discount & Markdown Integrity Check:** Verified 30,651 markdown rows ($30.7\%$). Proved `markdown_applied == (discount_pct > 0)` in 100% of rows (disproving the proposal's 0-discount contradiction hypothesis). Confirmed `selling_price` matches `base_price * (1 - discount_pct)` within cent rounding. |
-| **M1-T03** | [`M1-T03.ipynb`](M1-T03.ipynb) | **Done** | **Exploratory Data Analysis (EDA):** Generated static distributions, boxplots, heatmaps, and temporal charts in [`figures/`](figures/). Confirmed baseline spoilage rate of $19.44\%$ and absence of global multi-year trend or seasonality. |
-| **M1-T04** | [`M1-T04.ipynb`](M1-T04.ipynb) | **Done** | **Preprocessing & Feature Encoding:** Built a scikit-learn `ColumnTransformer` (11 $\log(1+x)$ scaled, 12 standardized, 148 one-hot, 7 binary/cyclical features = 178 total features). Enforced a strict chronological split (Train: $\le \text{2024-08-07}$, 80,042 rows; Test: $> \text{2024-08-07}$, 19,958 rows) with zero lookahead bias. Scalers fit exclusively on training data. |
+| **M1-T02** | [`M1-T02.ipynb`](M1-T02.ipynb) | **Done** | **Discount & Markdown Integrity Check:** Verified 30,651 markdown rows (30.7%). Proved `markdown_applied == (discount_pct > 0)` in 100% of rows (disproving the proposal's 0-discount contradiction hypothesis). Confirmed `selling_price` matches `base_price * (1 - discount_pct)` within cent rounding. |
+| **M1-T03** | [`M1-T03.ipynb`](M1-T03.ipynb) | **Done** | **Exploratory Data Analysis (EDA):** Generated static distributions, boxplots, heatmaps, and temporal charts in [`figures/`](figures/). Confirmed baseline spoilage rate of 19.44% and absence of global multi-year trend or seasonality. |
+| **M1-T04** | [`M1-T04.ipynb`](M1-T04.ipynb) | **Done** | **Preprocessing & Feature Encoding:** Built a scikit-learn `ColumnTransformer` (11 `log(1+x)` scaled, 12 standardized, 148 one-hot, 7 binary/cyclical features = 178 total features). Enforced a strict chronological split (Train: `<= 2024-08-07`, 80,042 rows; Test: `> 2024-08-07`, 19,958 rows) with zero lookahead bias. Scalers fit exclusively on training data. |
 | **M1-T05** | [`M1-T05.ipynb`](M1-T05.ipynb)<br>[`EDA_Report_Milestone1.md`](EDA_Report_Milestone1.md) | **Done** | **Interactive Visualizations & Synthesis Report:** Created 9 CDN-backed interactive Plotly HTML charts in [`figures_interactive/`](figures_interactive/) with assertion-guarded metrics. Compiled the comprehensive Milestone 1 EDA & Preprocessing Report containing full proposal reconciliations. |
-| **M1-T06** | [`M1-T06.ipynb`](M1-T06.ipynb) | **Done** | **Spoilage-Sensitivity Verification:** Proved `spoilage_sensitivity` is a static category-level attribute (9 distinct values, $R^2 = 1.0$ against category one-hot). Cleared it as a legitimate pre-sale feature (`track_3a_use = "allowed"`) while documenting exact collinearity constraints. |
+| **M1-T06** | [`M1-T06.ipynb`](M1-T06.ipynb) | **Done** | **Spoilage-Sensitivity Verification:** Proved `spoilage_sensitivity` is a static category-level attribute (9 distinct values, `R² = 1.0` against category one-hot). Cleared it as a legitimate pre-sale feature (`track_3a_use = "allowed"`) while documenting exact collinearity constraints. |
 
 ---
 
@@ -73,13 +73,13 @@ Milestone 1 establishes the verified data foundation, automated leakage boundari
 
 Milestone 1 audits reconciled earlier planning assumptions against the ground truth data:
 
-1. **Markdown Consistency:** The suspected contradiction (`markdown_applied = 1` with `discount_pct = 0`) occurs in **0 rows**. `markdown_applied` is exactly the indicator $\text{discount\_pct} > 0$.
-2. **Empirical Discount Grid:** Real-world discounts take 66 distinct values strictly within $[0.10, 0.75]$ (median $0.25$). No discounts exist between $0$ and $0.10$. Track 3C's search space is therefore $\{0\} \cup [0.10, 0.75]$.
-3. **Date Lag Phenomenon:** `days_remaining_at_purchase` exactly matches the physical date gap. However, `days_until_expiry` is 0 to 3 days lower in **74,191 rows ($74.2\%$)**. Both `shelf_life_used_ratio` (date gap) and `expiry_remaining_ratio` (proposal definition) are exported to preserve full signal.
-4. **Sales Velocity Feasibility:** Only **26.2%** of batches have an earlier sale of the same product in the same store in the trailing 7 days. The category $\times$ store fallback covers **84.9%** and is designated as the primary velocity proxy for Milestone 2.
-5. **Track 3A Signal Ceiling & Probability Calibration:** Individual pre-sale features have low linear correlation with spoilage (max $|r| = 0.091$). Test AUC tops out near $\sim 0.59$. Consequently, Track 3A prioritizes probability calibration (Brier score, reliability curves, log loss) alongside recall.
-6. **Pre-Sale Accounting Identity:** $\text{initial\_quantity} = \text{units\_sold} + \text{units\_wasted}$ holds in **100.0% of rows**. Pre-sale inputs gain $0.000$ predictive power from post-sale outcomes (`check_presale_inputs.py`), verifying `initial_quantity` as the valid pre-sale stock proxy.
-7. **Multicollinearity Flagging:** 6 feature pairs exhibit $|r| > 0.90$ on scaled train data (`shelf_life_days` $\sim$ `days_remaining_at_purchase` $r=0.996$; `base_price` $\sim$ `cost_price` $r=0.991$, etc.). These are bidirectionally documented in [`feature_dictionary.csv`](processed/feature_dictionary.csv) for regularization in linear models.
+1. **Markdown Consistency:** The suspected contradiction (`markdown_applied = 1` with `discount_pct = 0`) occurs in **0 rows**. `markdown_applied` is exactly the indicator `discount_pct > 0`.
+2. **Empirical Discount Grid:** Real-world discounts take 66 distinct values strictly within `[0.10, 0.75]` (median 0.25). No discounts exist between 0 and 0.10. Track 3C's search space is therefore `{0} ∪ [0.10, 0.75]`.
+3. **Date Lag Phenomenon:** `days_remaining_at_purchase` exactly matches the physical date gap. However, `days_until_expiry` is 0 to 3 days lower in **74,191 rows (74.2%)**. Both `shelf_life_used_ratio` (date gap) and `expiry_remaining_ratio` (proposal definition) are exported to preserve full signal.
+4. **Sales Velocity Feasibility:** Only **26.2%** of batches have an earlier sale of the same product in the same store in the trailing 7 days. The category × store fallback covers **84.9%** and is designated as the primary velocity proxy for Milestone 2.
+5. **Track 3A Signal Ceiling & Probability Calibration:** Individual pre-sale features have low linear correlation with spoilage (max `|r| = 0.091`). Test AUC tops out near `~0.59`. Consequently, Track 3A prioritizes probability calibration (Brier score, reliability curves, log loss) alongside recall.
+6. **Pre-Sale Accounting Identity:** `initial_quantity = units_sold + units_wasted` holds in **100.0% of rows**. Pre-sale inputs gain 0.000 predictive power from post-sale outcomes (`check_presale_inputs.py`), verifying `initial_quantity` as the valid pre-sale stock proxy.
+7. **Multicollinearity Flagging:** 6 feature pairs exhibit `|r| > 0.90` on scaled train data (`shelf_life_days` ~ `days_remaining_at_purchase` `r = 0.996`; `base_price` ~ `cost_price` `r = 0.991`, etc.). These are bidirectionally documented in [`feature_dictionary.csv`](processed/feature_dictionary.csv) for regularization in linear models.
 
 ---
 
@@ -169,8 +169,8 @@ X_train_3b, y_train_3b, X_test_3b, y_test_3b = load_dataset(track="3B")
 With the data foundation certified, Milestone 2 will focus on **Advanced Data Analysis & Feature Engineering**:
 1. **Statistical Hypothesis Testing:** Conduct formal ANOVA and Chi-Square tests to quantify factor significance across categories and handling parameters.
 2. **Sales Velocity & Sell-Through Risk Feature Engineering:**
-   $$\text{sales\_velocity} = \frac{\text{trailing 7-day units sold}}{7} \quad (\text{category-store fallback})$$
-   $$\text{sell\_through\_risk} = \frac{\text{initial\_quantity}}{\text{sales\_velocity} \times \text{days\_until\_expiry}}$$
+   - `sales_velocity = (trailing 7-day units sold) / 7` (with category-store fallback)
+   - `sell_through_risk = initial_quantity / (sales_velocity * days_until_expiry)`
 3. **Store Markdown Frequency:** Build store-level cumulative markdown frequency as an explicit confounding control for Track 3B.
 4. **Out-of-Fold Risk Probability Generation:** Implement time-blocked cross-validation inside the training period to produce Track 3A risk probabilities for Track 3B.
 
