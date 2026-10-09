@@ -1,8 +1,9 @@
 # Smart Shelf: Perishable Food Waste Reduction and Dynamic Markdown Optimizer
 
-[![Milestone 1 Status](https://img.shields.io/badge/Milestone%201-Completed%20(36%2F36%20Checks%20Passed)-brightgreen)](#milestone-1-deliverables--task-map)
+[![Milestone 1 Status](https://img.shields.io/badge/Milestone%201-Completed%20(36%2F36%20Checks%20Passed)-brightgreen)](#2-milestone-deliverables--task-map)
+[![Milestone 2 Status](https://img.shields.io/badge/Milestone%202-In%20Progress%20(M2--T01%20Complete)-blue)](#2-milestone-deliverables--task-map)
 [![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue)](requirements.txt)
-[![Code Architecture](https://img.shields.io/badge/Architecture-End--to--End%20Pipeline%20%26%20Data%20Loader-orange)](#3-repository-structure)
+[![Code Architecture](https://img.shields.io/badge/Architecture-End--to--End%20Pipeline%20%26%20Data%20Loader-orange)](#4-repository-structure)
 
 An end-to-end, data-driven machine learning decision support system designed to reduce supermarket perishable food waste and maximize recovered revenue through dynamic markdown optimization.
 
@@ -54,101 +55,134 @@ Clearance decisions in retail food chains are traditionally driven by manual sta
 
 ---
 
-## 2. Milestone 1: Deliverables & Task Map
+## 2. Milestone Deliverables & Task Map
 
-Milestone 1 establishes the verified data foundation, automated leakage boundaries, feature engineering transformers, and exploratory reporting:
-
+### Milestone 1: Data Audit, Leakage Boundary & Preprocessing Foundation
 | Task ID | Component / Notebook | Status | Description & Key Outcomes |
 | :--- | :--- | :---: | :--- |
-| **M1-T01** | [`M1-T01.ipynb`](M1-T01.ipynb) | **Done** | **Dataset Ingestion & Schema Audit:** Verified 100,000 transactions, 42 columns, and 0 missing values. Documented schema deviations against the initial proposal and established strict data-leakage boundaries (`spoilage_risk` reserved for benchmark only; all post-sale outcome columns excluded). |
-| **M1-T02** | [`M1-T02.ipynb`](M1-T02.ipynb) | **Done** | **Discount & Markdown Integrity Check:** Verified 30,651 markdown rows (30.7%). Proved `markdown_applied == (discount_pct > 0)` in 100% of rows (disproving the proposal's 0-discount contradiction hypothesis). Confirmed `selling_price` matches `base_price * (1 - discount_pct)` within cent rounding. |
-| **M1-T03** | [`M1-T03.ipynb`](M1-T03.ipynb) | **Done** | **Exploratory Data Analysis (EDA):** Generated static distributions, boxplots, heatmaps, and temporal charts in [`figures/`](figures/). Confirmed baseline spoilage rate of 19.44% and absence of global multi-year trend or seasonality. |
-| **M1-T04** | [`M1-T04.ipynb`](M1-T04.ipynb) | **Done** | **Preprocessing & Feature Encoding:** Built a scikit-learn `ColumnTransformer` (11 `log(1+x)` scaled, 12 standardized, 148 one-hot, 7 binary/cyclical features = 178 total features). Enforced a strict chronological split (Train: `<= 2024-08-07`, 80,042 rows; Test: `> 2024-08-07`, 19,958 rows) with zero lookahead bias. Scalers fit exclusively on training data. |
-| **M1-T05** | [`M1-T05.ipynb`](M1-T05.ipynb)<br>[`EDA_Report_Milestone1.md`](EDA_Report_Milestone1.md) | **Done** | **Interactive Visualizations & Synthesis Report:** Created 9 CDN-backed interactive Plotly HTML charts in [`figures_interactive/`](figures_interactive/) with assertion-guarded metrics. Compiled the comprehensive Milestone 1 EDA & Preprocessing Report containing full proposal reconciliations. |
-| **M1-T06** | [`M1-T06.ipynb`](M1-T06.ipynb) | **Done** | **Spoilage-Sensitivity Verification:** Proved `spoilage_sensitivity` is a static category-level attribute (9 distinct values, `R² = 1.0` against category one-hot). Cleared it as a legitimate pre-sale feature (`track_3a_use = "allowed"`) while documenting exact collinearity constraints. |
+| **M1-T01** | [`notebooks/M1-T01.ipynb`](notebooks/M1-T01.ipynb) | **Done** | **Dataset Ingestion & Schema Audit:** Verified 100,000 transactions, 42 columns, and 0 missing values. Documented schema deviations against the initial proposal and established strict data-leakage boundaries (`spoilage_risk` reserved for benchmark only; all post-sale outcome columns excluded). |
+| **M1-T02** | [`notebooks/M1-T02.ipynb`](notebooks/M1-T02.ipynb) | **Done** | **Discount & Markdown Integrity Check:** Verified 30,651 markdown rows (30.7%). Proved `markdown_applied == (discount_pct > 0)` in 100% of rows (disproving the proposal's 0-discount contradiction hypothesis). Confirmed `selling_price` matches `base_price * (1 - discount_pct)` within cent rounding. |
+| **M1-T03** | [`notebooks/M1-T03.ipynb`](notebooks/M1-T03.ipynb) | **Done** | **Exploratory Data Analysis (EDA):** Generated static distributions, boxplots, heatmaps, and temporal charts in [`reports/figures/m1/`](reports/figures/m1/). Confirmed baseline spoilage rate of 19.44% and absence of global multi-year trend or seasonality. |
+| **M1-T04** | [`notebooks/M1-T04.ipynb`](notebooks/M1-T04.ipynb) | **Done** | **Preprocessing & Feature Encoding:** Built a scikit-learn `ColumnTransformer` (11 `log(1+x)` scaled, 12 standardized, 148 one-hot, 7 binary/cyclical features = 178 total features). Enforced a strict chronological split (Train: `<= 2024-08-07`, 80,042 rows; Test: `> 2024-08-07`, 19,958 rows) with zero lookahead bias. Scalers fit exclusively on training data. |
+| **M1-T05** | [`notebooks/M1-T05.ipynb`](notebooks/M1-T05.ipynb)<br>[`reports/M1/EDA_Report_Milestone1.md`](reports/M1/EDA_Report_Milestone1.md) | **Done** | **Interactive Visualizations & Synthesis Report:** Created 9 CDN-backed interactive Plotly HTML charts in [`reports/figures/interactive/`](reports/figures/interactive/) with assertion-guarded metrics. Compiled the comprehensive Milestone 1 EDA & Preprocessing Report containing full proposal reconciliations. |
+| **M1-T06** | [`notebooks/M1-T06.ipynb`](notebooks/M1-T06.ipynb) | **Done** | **Spoilage-Sensitivity Verification:** Proved `spoilage_sensitivity` is a static category-level attribute (9 distinct values, `R² = 1.0` against category one-hot). Cleared it as a legitimate pre-sale feature (`track_3a_use = "allowed"`) while documenting exact collinearity constraints. |
+
+### Milestone 2: Statistical Analysis & Advanced Feature Engineering
+| Task ID | Component / Notebook | Status | Description & Key Outcomes |
+| :--- | :--- | :---: | :--- |
+| **M2-T01** | [`notebooks/M2_T01_statistical_analysis.ipynb`](notebooks/M2_T01_statistical_analysis.ipynb)<br>[`src/m2_t01_analysis.py`](src/m2_t01_analysis.py)<br>[`reports/M2/M2_T01_Spoilage_Drivers_Report.md`](reports/M2/M2_T01_Spoilage_Drivers_Report.md) | **Done** | **Statistical Analysis of Spoilage Drivers:** Completed Chi-Square tests of independence, ANOVA $F$, Welch's $t$, Mann-Whitney $U$, Cohen's $d$, and multiple-testing adjustments (Holm & Bonferroni) across 24 factors. Confirmed `quality_grade` is meaningful ($\chi^2 = 821.74, V = 0.091$), `category` has weak effect ($V = 0.039$), and `region` is independent ($p_{\text{adj}} = 1.0$). Established feature contracts in [`reports/tables/master_factor_ranking.csv`](reports/tables/master_factor_ranking.csv). |
 
 ---
 
 ## 3. Key Empirical Findings & Proposal Reconciliations
 
-Milestone 1 audits reconciled earlier planning assumptions against the ground truth data:
+Milestone 1 & 2 audits reconciled earlier planning assumptions against the ground truth data:
 
 1. **Markdown Consistency:** The suspected contradiction (`markdown_applied = 1` with `discount_pct = 0`) occurs in **0 rows**. `markdown_applied` is exactly the indicator `discount_pct > 0`.
 2. **Empirical Discount Grid:** Real-world discounts take 66 distinct values strictly within `[0.10, 0.75]` (median 0.25). No discounts exist between 0 and 0.10. Track 3C's search space is therefore `{0} ∪ [0.10, 0.75]`.
 3. **Date Lag Phenomenon:** `days_remaining_at_purchase` exactly matches the physical date gap. However, `days_until_expiry` is 0 to 3 days lower in **74,191 rows (74.2%)**. Both `shelf_life_used_ratio` (date gap) and `expiry_remaining_ratio` (proposal definition) are exported to preserve full signal.
 4. **Sales Velocity Feasibility:** Only **26.2%** of batches have an earlier sale of the same product in the same store in the trailing 7 days. The category × store fallback covers **84.9%** and is designated as the primary velocity proxy for Milestone 2.
 5. **Track 3A Signal Ceiling & Probability Calibration:** Individual pre-sale features have low linear correlation with spoilage (max `|r| = 0.091`). Test AUC tops out near `~0.59`. Consequently, Track 3A prioritizes probability calibration (Brier score, reliability curves, log loss) alongside recall.
-6. **Pre-Sale Accounting Identity:** `initial_quantity = units_sold + units_wasted` holds in **100.0% of rows**. Pre-sale inputs gain 0.000 predictive power from post-sale outcomes (`check_presale_inputs.py`), verifying `initial_quantity` as the valid pre-sale stock proxy.
-7. **Multicollinearity Flagging:** 6 feature pairs exhibit `|r| > 0.90` on scaled train data (`shelf_life_days` ~ `days_remaining_at_purchase` `r = 0.996`; `base_price` ~ `cost_price` `r = 0.991`, etc.). These are bidirectionally documented in [`feature_dictionary.csv`](processed/feature_dictionary.csv) for regularization in linear models.
+6. **Pre-Sale Accounting Identity:** `initial_quantity = units_sold + units_wasted` holds in **100.0% of rows**. Pre-sale inputs gain 0.000 predictive power from post-sale outcomes (`scripts/check_presale_inputs.py`), verifying `initial_quantity` as the valid pre-sale stock proxy.
+7. **Multicollinearity Flagging:** 6 feature pairs exhibit `|r| > 0.90` on scaled train data (`shelf_life_days` ~ `days_remaining_at_purchase` `r = 0.996`; `base_price` ~ `cost_price` `r = 0.991`, etc.). These are bidirectionally documented in [`data/processed/feature_dictionary.csv`](data/processed/feature_dictionary.csv) for regularization in linear models.
+8. **Factor Significance Hierarchy:** Spoilage is primarily driven by physical handling quality (`packaging_score` Cohen's $d = -0.225$, `handling_score` $d = -0.143$, `quality_grade` $V = 0.091$), while geographic entity IDs (`region`, `store_id`, `supplier_id`) carry zero statistically significant signal after multiplicity adjustment.
 
 ---
 
 ## 4. Repository Structure
 
 ```
-├── figures/                          # Static EDA PNG figures and large interactive charts
-│   ├── 01_target_balance.png
-│   ├── 02_numeric_histograms.png
-│   ├── 04_outlier_boxplots.png
-│   ├── 06_correlation_heatmap.png
-│   └── 07_time_patterns.png
-├── figures_interactive/              # CDN-backed lightweight Plotly HTML charts (M1-T05)
-│   ├── 01_spoilage_by_category.html
-│   ├── 02_category_by_grade.html
-│   ├── 03_monthly_by_category.html
-│   ├── 04_driver_deciles.html
-│   ├── 05_spoilage_vs_waste.html
-│   ├── 06_markdown_depth.html
-│   ├── 07_profit_by_category.html
-│   ├── 08_category_region_heatmap.html
-│   └── 09_input_correlations.html
-├── processed/                        # Audit reports, pre-sale diagnostics, and metadata
-│   ├── figures/                      # Preprocessing distribution & skew verification plots
-│   ├── check_presale_inputs.py       # Pre-sale independence & accounting identity script
-│   ├── feature_dictionary.csv        # Column dictionary with Track 3A/3B use contracts
-│   ├── m1_t04_preprocessing_report.json
-│   ├── m1_t04_report_text.md
-│   ├── m1_t06_report_text.md
-│   └── m1_t06_verdict.json
-├── src/                              # Reusable Python modules for M2/M3 modeling & M4 simulator
-│   ├── __init__.py
-│   ├── pipeline.py                   # End-to-end PerishableFeatureEngineer & ColumnTransformer
-│   └── data_loader.py                # Confounding-free data loader for Track 3A & Track 3B
-├── EDA_Report_Milestone1.md          # Comprehensive Milestone 1 Synthesis & Findings Report
-├── M1-T01.ipynb                      # Task 1: Dataset acquisition & schema verification
-├── M1-T02.ipynb                      # Task 2: Discount & markdown integrity check
-├── M1-T03.ipynb                      # Task 3: Exploratory Data Analysis
-├── M1-T04.ipynb                      # Task 4: Preprocessing & feature engineering pipeline
-├── M1-T05.ipynb                      # Task 5: Interactive visualizations companion
-├── M1-T06.ipynb                      # Task 6: Spoilage-sensitivity verification
-├── verify_m1.py                      # Master automated verification suite (36/36 tests)
-├── requirements.txt                  # Pinned dependencies
-└── README.md                         # Project documentation
+├── data/
+│   ├── raw/                  # Raw input datasets (perishable_goods_management.csv)
+│   └── processed/            # Cleaned, split & scaled datasets, and feature dictionary
+├── models/                   # Fitted preprocessor pipeline artifact (preprocessor.joblib)
+├── notebooks/                # Milestone analysis notebooks (M1-T01 to M1-T06, M2_T01)
+├── reports/
+│   ├── M1/                   # Milestone 1 EDA report and preprocessing audit artifacts
+│   ├── M2/                   # Milestone 2 Spoilage Drivers Statistical Report
+│   ├── figures/              # Visualizations partitioned by milestone
+│   │   ├── m1/               # Static PNG figures from Milestone 1 EDA & preprocessing
+│   │   ├── m2/               # Static PNG figures from Milestone 2 statistical analysis
+│   │   └── interactive/      # Standalone Plotly HTML interactive charts (M1-T03, M1-T05)
+│   └── tables/               # Statistical test results and factor ranking tables (M2-T01)
+├── scripts/                  # Automated verification and presale diagnostic scripts
+├── src/                      # Production Python modules (config, pipeline, data_loader, analysis)
+├── .gitignore                # Git ignore rules for data, models, checkpoints, and caches
+├── pyrightconfig.json        # Python typing configuration
+├── requirements.txt          # Pinned environment dependencies
+├── RESTRUCTURE_LOG.md        # Comprehensive file migration & path audit log
+└── README.md                 # Project documentation & execution guide
 ```
 
-*Note: Raw datasets (`perishable_goods_management.csv`, `cleaned_dataset.csv`, `model_ready_dataset.csv`) and model binaries (`preprocessor.joblib`) are excluded from Git via `.gitignore` per data governance standards.*
+*Note: Datasets (`perishable_goods_management.csv`, `cleaned_dataset.csv`, `model_ready_dataset.csv`) and model binaries (`preprocessor.joblib`) are excluded from Git tracking via `.gitignore` per project data governance standards.*
 
 ---
 
-## 5. Setup & Verification
+## 5. Getting the Data
+
+### 1. Download Raw Dataset
+Download the Kaggle **Perishable Goods Management** dataset:
+- Place the raw CSV into `data/raw/` with the exact filename:
+  ```bash
+  data/raw/perishable_goods_management.csv
+  ```
+- Expected dimensions: 100,000 rows × 42 columns (SHA-256: `de94302b867c9debedfd45c431306623fdfc038f5ed8ca17736339b4460a6674`).
+
+### 2. Generate Processed Datasets
+Run the preprocessing notebook or pipeline to generate all artifacts in `data/processed/` and `models/`:
+```bash
+jupyter nbconvert --execute --inplace notebooks/M1-T04.ipynb
+```
+This produces:
+- `data/processed/cleaned_dataset.csv` (100,000 rows × 57 columns, date-parsed, chronological train/test split)
+- `data/processed/model_ready_dataset.csv` (100,000 rows × 189 columns, 178 scaled/encoded features + outcome columns)
+- `data/processed/feature_dictionary.csv` (189 rows with transformation metadata & Track 3A/3B use flags)
+- `models/preprocessor.joblib` (fitted scikit-learn preprocessing `ColumnTransformer`)
+- `reports/M1/m1_t04_preprocessing_report.json`
+
+---
+
+## 6. How to Run
 
 ### Installation
-Clone the repository and install the verified dependencies:
+Clone the repository and install dependencies in your virtual environment:
 ```bash
 git clone <repo-url>
 cd NHA-5-150
 pip install -r requirements.txt
 ```
 
-### Running Automated Audits
-To independently verify the integrity of all Milestone 1 outputs:
-```bash
-# 1. Run master verification suite (checks shapes, scaling, chronological splits, and redundancies)
-python verify_m1.py
+### Execution Order
 
-# 2. Run pre-sale independence and accounting identity diagnostics
-python processed/check_presale_inputs.py
-```
+1. **Verify Setup & Ingestion Integrity:**
+   ```bash
+   # Master verification suite (runs all 36 assertion checks)
+   python scripts/verify_m1.py
+
+   # Pre-sale feature independence and accounting identity audit
+   python scripts/check_presale_inputs.py
+   ```
+
+2. **Milestone 1 Analysis & Exploration Notebooks:**
+   Notebooks can be run sequentially via Jupyter or headless with `nbconvert`:
+   ```bash
+   jupyter nbconvert --execute --inplace notebooks/M1-T01.ipynb
+   jupyter nbconvert --execute --inplace notebooks/M1-T02.ipynb
+   jupyter nbconvert --execute --inplace notebooks/M1-T03.ipynb
+   jupyter nbconvert --execute --inplace notebooks/M1-T04.ipynb
+   jupyter nbconvert --execute --inplace notebooks/M1-T05.ipynb
+   jupyter nbconvert --execute --inplace notebooks/M1-T06.ipynb
+   ```
+
+3. **Milestone 2 Statistical Analysis Pipeline:**
+   Execute either via the pure Python pipeline or the companion interactive notebook:
+   ```bash
+   # Run automated statistical test pipeline (generates tables & figures)
+   python src/m2_t01_analysis.py
+
+   # Or run notebook
+   jupyter nbconvert --execute --inplace notebooks/M2_T01_statistical_analysis.ipynb
+   ```
 
 ### Safe Data Loading for Modeling (Milestones 2 & 3)
 To ensure zero treatment confounding in Track 3A and enforce correct treatment isolation in Track 3B, use the built-in loader:
@@ -164,10 +198,10 @@ X_train_3b, y_train_3b, X_test_3b, y_test_3b = load_dataset(track="3B")
 
 ---
 
-## 6. Milestone 2 Transition Roadmap
+## 7. Milestone 2 Transition Roadmap
 
-With the data foundation certified, Milestone 2 will focus on **Advanced Data Analysis & Feature Engineering**:
-1. **Statistical Hypothesis Testing:** Conduct formal ANOVA and Chi-Square tests to quantify factor significance across categories and handling parameters.
+With the data foundation certified, Milestone 2 is delivering **Advanced Data Analysis & Feature Engineering**:
+1. **Statistical Hypothesis Testing (M2-T01 - Complete):** Quantified factor significance across categories, regions, and handling parameters with Holm/Bonferroni corrections.
 2. **Sales Velocity & Sell-Through Risk Feature Engineering:**
    - `sales_velocity = (trailing 7-day units sold) / 7` (with category-store fallback)
    - `sell_through_risk = initial_quantity / (sales_velocity * days_until_expiry)`
@@ -176,7 +210,7 @@ With the data foundation certified, Milestone 2 will focus on **Advanced Data An
 
 ---
 
-## 7. Development & Contribution Policies
+## 8. Development & Contribution Policies
 
 * **Branching Model:** Never commit directly to `main`. Create feature branches named after the Task ID:
   ```bash

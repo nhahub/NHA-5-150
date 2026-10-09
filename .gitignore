@@ -1,19 +1,27 @@
-# Data files
+# Data files (raw and processed)
 *.csv
 *.xlsx
+data/raw/*.csv
+data/processed/*.csv
 
 # Model binaries and checkpoints
 *.joblib
 *.pkl
 *.h5
 *.pt
+models/*.joblib
+models/*.pkl
 
-# Local configurations
-.vscode/
-.ipynb_checkpoints/
+# Python artifacts and caches
 __pycache__/
+*.py[cod]
+*$py.class
+*.pyc
 
-# Editor & Language Server configs
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Local configurations & Editor artifacts
 .vscode/
 *.vscode.json
 pyrightconfig.json

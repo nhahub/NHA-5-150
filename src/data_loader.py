@@ -5,9 +5,16 @@ Enforces strict feature separation between Track 3A (spoilage classifier)
 and Track 3B (revenue-response regressor) to eliminate treatment-assignment
 confounding and data leakage.
 """
+import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 import pandas as pd
+
+try:
+    from src.config import DATA_PROCESSED
+except ImportError:
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from src.config import DATA_PROCESSED
 
 
 def _resolve_data_dir(data_dir: Optional[Union[str, Path]] = None) -> Path:
@@ -19,8 +26,11 @@ def _resolve_data_dir(data_dir: Optional[Union[str, Path]] = None) -> Path:
         raise FileNotFoundError(f"model_ready_dataset.csv not found in provided path: {p}")
 
     candidates = [
+        DATA_PROCESSED,
+        Path.cwd() / "data" / "processed",
         Path.cwd() / "processed",
         Path.cwd(),
+        Path(__file__).resolve().parent.parent / "data" / "processed",
         Path(__file__).resolve().parent.parent / "processed",
         Path(__file__).resolve().parent.parent,
     ]
