@@ -14,6 +14,7 @@ This module provides end-to-end statistical functions and execution pipelines fo
 
 import os
 import sys
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -26,8 +27,26 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.tools.tools import add_constant
 from sklearn.feature_selection import mutual_info_classif
 
+try:
+    from src.config import (
+        PROJECT_ROOT,
+        CLEANED_DATASET_PATH,
+        TABLES_DIR,
+        FIGURES_M2_DIR,
+        RANDOM_STATE,
+    )
+except ImportError:
+    # If run directly as a script without src in sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from src.config import (
+        PROJECT_ROOT,
+        CLEANED_DATASET_PATH,
+        TABLES_DIR,
+        FIGURES_M2_DIR,
+        RANDOM_STATE,
+    )
+
 # Enforce reproducibility
-RANDOM_STATE = 42
 np.random.seed(RANDOM_STATE)
 
 
@@ -682,11 +701,20 @@ def plot_benchmark_deciles(decile_df, output_path, baseline=0.19442):
 
 
 def run_full_m2_t01_pipeline(
-    data_path="processed/cleaned_dataset.csv",
-    tables_dir="reports/tables",
-    figures_dir="reports/figures"
+    data_path=None,
+    tables_dir=None,
+    figures_dir=None
 ):
     """Execute complete M2-T01 statistical analysis pipeline and save all deliverables."""
+    if data_path is None:
+        data_path = CLEANED_DATASET_PATH
+    if tables_dir is None:
+        tables_dir = TABLES_DIR
+    if figures_dir is None:
+        figures_dir = FIGURES_M2_DIR
+
+    tables_dir = Path(tables_dir)
+    figures_dir = Path(figures_dir)
     os.makedirs(tables_dir, exist_ok=True)
     os.makedirs(figures_dir, exist_ok=True)
 
