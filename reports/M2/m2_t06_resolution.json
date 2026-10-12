@@ -1,0 +1,41 @@
+{
+  "task": "M2-T06",
+  "dataset_sha256": "de94302b867c9debedfd45c431306623fdfc038f5ed8ca17736339b4460a6674",
+  "rows": 100000,
+  "train_rows": 80042,
+  "test_rows": 19958,
+  "columns_in_output": [
+    "record_id",
+    "split",
+    "temp_abuse_events",
+    "handling_score",
+    "packaging_score",
+    "supplier_score",
+    "spoilage_sensitivity",
+    "is_promoted",
+    "temp_abuse_events_z",
+    "handling_score_z",
+    "packaging_score_z",
+    "supplier_score_z",
+    "spoilage_sensitivity_z"
+  ],
+  "pearson_r_with_was_spoiled": {
+    "temp_abuse_events": 0.0287,
+    "handling_score": -0.0563,
+    "packaging_score": -0.0885,
+    "supplier_score": 0.0029,
+    "spoilage_sensitivity": 0.037,
+    "is_promoted": 0.0019
+  },
+  "track_3a_notes": {
+    "temp_abuse_events": "keep as Track 3A input",
+    "handling_score": "keep as Track 3A input",
+    "packaging_score": "keep as Track 3A input",
+    "supplier_score": "null signal; M2-T01 recommends drop",
+    "spoilage_sensitivity": "cleared by M1-T06; redundant with category (R2 = 1.0), M2-T01 recommends drop",
+    "is_promoted": "own feature for M3-T05; null for spoilage, so not a Track 3A driver (M2-T01)"
+  },
+  "spoilage_sensitivity_r2_category": 1.0,
+  "is_promoted_corr_with_markdown_applied": -0.002,
+  "distribution_hours_enrichment_tried": false
+}
