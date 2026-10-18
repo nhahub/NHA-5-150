@@ -3,7 +3,7 @@
 *.xlsx
 data/raw/*.csv
 data/processed/*.csv
-!reports/tables/*.csv
+!reports/tables/M2_T09_mlflow_runs_*.csv
 
 # Model binaries and checkpoints
 *.joblib
