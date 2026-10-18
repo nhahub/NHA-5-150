@@ -99,7 +99,7 @@ Milestone 1 & 2 audits reconciled earlier planning assumptions against the groun
 ├── notebooks/                # Milestone analysis notebooks (M1-T01 to M1-T06, M2_T01)
 ├── reports/
 │   ├── M1/                   # Milestone 1 EDA report and preprocessing audit artifacts
-│   ├── M2/                   # Milestone 2 Spoilage Drivers Statistical Report
+│   ├── M2/                   # Milestone 2 reports (M2-T01 drivers report, M2-T09 MLflow setup guide)
 │   ├── figures/              # Visualizations partitioned by milestone
 │   │   ├── m1/               # Static PNG figures from Milestone 1 EDA & preprocessing
 │   │   ├── m2/               # Static PNG figures from Milestone 2 statistical analysis

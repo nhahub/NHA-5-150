@@ -3,6 +3,7 @@
 *.xlsx
 data/raw/*.csv
 data/processed/*.csv
+!reports/tables/*.csv
 
 # Model binaries and checkpoints
 *.joblib
@@ -11,6 +12,16 @@ data/processed/*.csv
 *.pt
 models/*.joblib
 models/*.pkl
+
+# MLflow tracking stores & artifacts
+models/mlruns/
+models/mlartifacts/
+mlruns/
+mlartifacts/
+.mlflow/
+*.db
+.env
+.env.*
 
 # Python artifacts and caches
 __pycache__/
