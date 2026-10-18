@@ -42,3 +42,37 @@ FIGURES_INTERACTIVE_DIR = FIGURES_DIR / "interactive"
 
 # Fixed random state for reproducibility
 RANDOM_STATE = 42
+
+# MLflow tracking configuration (local store under models/mlruns, overridable by env var)
+import os
+
+# Enable filesystem tracking backend for MLflow 3.x and suppress agent hints
+os.environ.setdefault("MLFLOW_ALLOW_FILE_STORE", "true")
+os.environ.setdefault("MLFLOW_DISABLE_AGENT_HINT", "1")
+
+MLFLOW_TRACKING_DIR = MODELS_DIR / "mlruns"
+MLFLOW_ARTIFACTS_DIR = MODELS_DIR / "mlartifacts"
+
+# Ensure tracking directory exists
+MLFLOW_TRACKING_DIR.mkdir(parents=True, exist_ok=True)
+MLFLOW_ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
+
+# Default to local file URI, but allow remote server via MLFLOW_TRACKING_URI env var
+DEFAULT_MLFLOW_TRACKING_URI = MLFLOW_TRACKING_DIR.as_uri()
+MLFLOW_TRACKING_URI = os.environ.get("MLFLOW_TRACKING_URI", DEFAULT_MLFLOW_TRACKING_URI)
+
+# Standard experiment names across tracks
+MLFLOW_EXPERIMENT_3A = "smart-shelf-3a-spoilage-classifier"
+MLFLOW_EXPERIMENT_3B = "smart-shelf-3b-revenue-response"
+MLFLOW_EXPERIMENT_3C = "smart-shelf-3c-discount-optimizer"
+
+EXPERIMENT_NAMES = {
+    "3A": MLFLOW_EXPERIMENT_3A,
+    "3B": MLFLOW_EXPERIMENT_3B,
+    "3C": MLFLOW_EXPERIMENT_3C,
+}
+
+# Environment variable name for author attribution
+SMART_SHELF_AUTHOR_ENV_VAR = "SMART_SHELF_AUTHOR"
+
+
