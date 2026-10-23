@@ -205,9 +205,9 @@ All features use only information known when the batch arrives, or earlier batch
 | `sell_through_risk` | M2-T03 | `current_stock / sales_velocity_per_day` (days needed to sell the stock) | `current_stock`, `sales_velocity_per_day` | 2,603 (576 no history + 2,027 zero velocity) | Sell-out logic input for M3. |
 | `sell_through_ratio` | M2-T03 | `sell_through_risk / max(days_until_expiry, 1)`, capped at 10 | plus `days_until_expiry` | 576 | AUC 0.505 (no spoilage signal alone). Better used as a graded score. |
 | `at_risk` / `risk_status` | M2-T03 | 1 where ratio > 1. Zero velocity with stock = `at_risk_zero_velocity`. No earlier data = `no_history`, no flag. | as above | 576 | Flags 58.9% of batches with a velocity; coarse flag. |
-| `markdown_flag` | M2-T04 | `markdown_applied` | `markdown_applied` | 0 | Treatment variable for Track 3B only. |
-| `discount_depth` | M2-T04 | `discount_pct` rounded to 2 decimals | `discount_pct` | 0 | Treatment variable for Track 3B only. |
-| `discount_tier`, `is_light`, `is_medium`, `is_deep` | M2-T04 | none (0%), light (10 to 30%), medium (30 to 50%), deep (above 50%); one-hot indicators | `discount_pct` | 0 | Treatment variables for Track 3B only. Counts: 69,349 / 18,403 / 5,805 / 6,443. |
+| `markdown_flag` | M2-T04 | `markdown_applied` | `markdown_applied` | 0 | Excluded from Track 3A. For Track 3B see the note in Section 4. |
+| `discount_depth` | M2-T04 | `discount_pct` rounded to 2 decimals | `discount_pct` | 0 | Excluded from Track 3A. For Track 3B see the note in Section 4. |
+| `discount_tier`, `is_light`, `is_medium`, `is_deep` | M2-T04 | none (0%), light (10 to 30%), medium (30 to 50%), deep (above 50%); one-hot indicators | `discount_pct` | 0 | Excluded from Track 3A. For Track 3B see the note in Section 4. Counts: 69,349 / 18,403 / 5,805 / 6,443. |
 | `temp_abuse_events` (prepared) | M2-T06 | `log1p`, then `StandardScaler` (fitted on the training period only) | `temp_abuse_events` | 0 | Small risk driver (r = +0.0287). Keep for Track 3A. |
 | `handling_score` (prepared) | M2-T06 | `StandardScaler` | `handling_score` | 0 | Protective (r = -0.0563). Keep for Track 3A. |
 | `packaging_score` (prepared) | M2-T06 | `StandardScaler` | `packaging_score` | 0 | Strongest numeric signal (r = -0.0885). Keep for Track 3A. |
@@ -250,8 +250,10 @@ No single engineered feature predicts spoilage on its own (all AUCs between 0.47
 | Track | Uses |
 |---|---|
 | **Track 3A** (spoilage classifier) | Keep list in Section 3.3. Out-of-fold predictions are produced from this model. |
-| **Track 3B** (revenue and discount model) | Out-of-fold spoilage probability as the risk input; discount flags (M2-T04) as treatment variables; `sell_through_risk`, `sell_through_ratio` and `at_risk` for sell-out logic. |
+| **Track 3B** (revenue and discount model) | Out-of-fold spoilage probability as the risk input; `discount_pct` as the discount input; `sell_through_risk`, `sell_through_ratio` and `at_risk` for sell-out logic. |
 | **M3-T05** (confounding check) | `is_promoted`, `store_md_freq_hist` (or `store_md_freq_smoothed`), always together with `category`. |
+
+**Note on discount inputs.** The team repo rules say that for Track 3B `discount_pct` is the only discount input. The M2-T04 columns (`markdown_flag`, `discount_depth`, `discount_tier` and the one-hot tiers) are all derived from `discount_pct`. They are used in this report for description and segmentation. The team should confirm whether any of them may also enter the Track 3B model as extra inputs.
 
 ---
 
@@ -259,6 +261,7 @@ No single engineered feature predicts spoilage on its own (all AUCs between 0.47
 
 - Join all feature files to the cleaned dataset on `record_id`. Feature files are saved in `data/processed/` and are not committed (`.gitignore` excludes `*.csv`); each notebook recreates its file.
 - Fill or drop empty rows as described in Section 3.2.
+- State which shelf-life version each model uses (team rule). `expiry_remaining_ratio` (equal to `remaining_shelf_life_ratio`) and `shelf_life_used_ratio` are both on the M2-T01 keep list (correlation -0.45), so the final model must say which one it uses, or justify using both.
 - In deployment, count only finished batches (or live sales and live markdown history) in the velocity and store-markdown features, because `units_sold` is a batch's final total. In this dataset about 78% of a 7-day window's sales come from batches that had not finished selling. The within-category correlation between this velocity and the current batch's own selling speed is 0.007 (0.002 for `units_sold`), so no information about the current batch passes through, and the feature does not distort this dataset.
 
 ---
@@ -278,9 +281,20 @@ No single engineered feature predicts spoilage on its own (all AUCs between 0.47
 
 ---
 
-## 7. Notes and open items for the team
+## 7. Deviations from plan and open items
 
-These are small inconsistencies between notebooks that were found while compiling this report. This document uses the executed notebook outputs.
+### 7.1 Deviations from plan
+
+- **M2-T02.** The product-store pair uses `product_name` x `store_id` instead of `product_id` x `store_id` (`product_id` gives about one row per pair). An empty 7-day window uses the category-store fallback instead of velocity 0. Added extra columns: `remaining_ratio_at_purchase`, `sales_velocity_per_day`, `velocity_source`, `batches_in_window_7d`.
+- **M2-T03.** The main velocity is `sales_velocity_per_day`, not the card's raw `sales_velocity`, because the raw velocity is not in units per day (it would flag 41.1% of batches and agree with the main flag on only 72.9% of rows). Zero velocity with stock is flagged `at_risk_zero_velocity` (ratio capped at 10), and `days_until_expiry = 0` is counted as 1 day. The optional `distribution_hours` enrichment was tried and kept as separate columns; it does not change the official flag.
+- **M2-T06.** `supplier_score` and `spoilage_sensitivity` were prepared as the task requires but are not recommended for the final Track 3A set (no signal, and redundant with `category`).
+- **M2-T08.** Added a smoothed version (K = 20), a 90-day version and a strict "finished batches only" version next to the main feature.
+- **M2-T10.** The task card does not define "High Spoilage Risk" and "Normal Velocity", so the segmentation uses the M2-T03 `at_risk` flag (zero velocity included). Figures are static PNG files; interactive Plotly versions were not built. The velocity and sell-through functions were added to `src/m2_velocity.py`.
+- **M2-T01, M2-T04 and M2-T07.** No deviations reported.
+
+### 7.2 Inconsistencies between notebooks
+
+These are small inconsistencies found while compiling this report. This document uses the executed notebook outputs.
 
 1. **Chronological split size (M2-T01).** The written conclusion states 70,077 / 29,923 batches; the executed output is 70,000 / 30,000 (split date 2024-05-26).
 2. **Keep list versus verdict column (M2-T01).** `days_until_expiry` and `initial_quantity` are labelled "drop (null signal)" in the verdict table, while the synthesis keeps them (`days_until_expiry` as the representative of the collinear group and as an input to M2-T03; `initial_quantity` as batch size and `current_stock`). Likewise the keep list includes factors whose own verdict is "weak". The final set is to be settled in M3-T02.
