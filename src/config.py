@@ -19,10 +19,13 @@ RAW_DATASET_PATH = DATA_RAW / "perishable_goods_management.csv"
 CLEANED_DATASET_PATH = DATA_PROCESSED / "cleaned_dataset.csv"
 MODEL_READY_DATASET_PATH = DATA_PROCESSED / "model_ready_dataset.csv"
 FEATURE_DICTIONARY_PATH = DATA_PROCESSED / "feature_dictionary.csv"
+MODEL_READY_M2_DATASET_PATH = DATA_PROCESSED / "model_ready_m2_dataset.csv"
+FEATURE_DICTIONARY_M2_PATH = DATA_PROCESSED / "feature_dictionary_m2.csv"
 
 # Models and checkpoints
 MODELS_DIR = PROJECT_ROOT / "models"
 PREPROCESSOR_PATH = MODELS_DIR / "preprocessor.joblib"
+PREPROCESSOR_M2_PATH = MODELS_DIR / "preprocessor_m2.joblib"
 
 # Notebooks and scripts
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
