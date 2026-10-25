@@ -27,6 +27,8 @@ TRACK_3A_OOF_TRAIN_PATH = DATA_PROCESSED / "track_3a_oof_train.csv"
 MODELS_DIR = PROJECT_ROOT / "models"
 PREPROCESSOR_PATH = MODELS_DIR / "preprocessor.joblib"
 PREPROCESSOR_M2_PATH = MODELS_DIR / "preprocessor_m2.joblib"
+TRACK_3A_MODEL_PATH = MODELS_DIR / "track_3a_classifier.joblib"
+TRACK_3B_MODEL_PATH = MODELS_DIR / "track_3b_regressor.joblib"
 
 # Notebooks and scripts
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"

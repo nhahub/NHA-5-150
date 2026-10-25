@@ -242,3 +242,97 @@ export MLFLOW_TRACKING_URI="https://your-remote-mlflow-server.com"
 1. **Local Tracking vs. Remote Server:** The task card suggested a "shared location". Per user decision and instructor approval, the project utilizes local file tracking (`models/mlruns/`) combined with version-controlled, per-author CSV run summaries (`reports/tables/M2_T09_mlflow_runs_<author>.csv`). This completely eliminates external hosting costs, firewall/credential friction, and authentication failures while maintaining full traceability and reviewability on GitHub.
 2. **Environment Python Version:** Python 3.11 was selected for the dedicated `smart-shelf` conda environment because base Python 3.13.9 encounters wheel build failures with `shap` and `lightgbm` on Windows. All base scientific package versions (`scikit-learn==1.7.2`, `pandas==2.3.3`, `numpy==2.3.5`, `joblib==1.5.2`, `scipy==1.16.3`) were matched exactly, and `models/preprocessor.joblib` and `verify_m1.py` were verified to load and pass 36/36 checks with zero regressions.
 3. **MLflow 3.x Compatibility:** In MLflow 3.x, local filesystem tracking backends display a maintenance notice. `os.environ["MLFLOW_ALLOW_FILE_STORE"] = "true"` was configured in `src/config.py` to enable local file storage without warnings or migration friction.
+
+---
+
+## 10. Milestone 3 Extended Helpers (`src/mlflow_utils.py`)
+
+Milestone 3 requires standardized model persistence, diagnostic figures, SHAP interpretability, and out-of-fold artifact storage across all modeling tracks.
+
+### 10.1 Model Persistence with Metadata (`save_model_with_metadata` & `load_model_with_metadata`)
+Saves a model via `joblib` alongside a companion JSON file capturing the ordered feature list, shelf-life version, training period, library versions, MLflow run ID, and git commit. Refuses to overwrite existing files unless `overwrite=True` is passed. Automatically logs both files as MLflow artifacts when a run is active.
+
+```python
+from src.mlflow_utils import save_model_with_metadata, load_model_with_metadata
+
+# Save model (defaults to models/track_3a_classifier.joblib and .json per Decision 6)
+model_path, meta_path = save_model_with_metadata(
+    model=classifier,
+    track="3A",
+    feature_list=feature_columns,
+    shelf_life_version="expiry_remaining_ratio",
+    train_period="2023-01-01 to 2024-08-07",
+    overwrite=False,
+)
+
+# Load model and verify metadata
+loaded_model, metadata = load_model_with_metadata(model_path)
+feature_order = metadata["feature_list"]
+```
+
+### 10.2 Reliability Calibration Curve (`log_calibration_curve`)
+Generates a binned reliability curve figure, logs it as an artifact, and returns the calculated Brier score.
+
+```python
+from src.mlflow_utils import log_calibration_curve
+
+brier_score = log_calibration_curve(
+    y_true=y_test,
+    proba=y_test_proba,
+    n_bins=10,
+    name="reliability_curve_test",
+)
+```
+
+### 10.3 Confusion Matrix (`log_confusion_matrix`)
+Generates and logs an annotated confusion matrix plot as an artifact, returning the confusion matrix array.
+
+```python
+from src.mlflow_utils import log_confusion_matrix
+
+cm = log_confusion_matrix(
+    y_true=y_test,
+    y_pred=y_test_pred,
+    name="confusion_matrix_test",
+)
+```
+
+### 10.4 SHAP Summary Plot (`log_shap_summary`)
+Samples up to `max_rows` rows (seed 42), generates a tree SHAP summary plot, logs it as an artifact, and returns a dictionary of mean absolute SHAP values per feature. Handles both single-array and list-of-arrays SHAP outputs.
+
+```python
+from src.mlflow_utils import log_shap_summary
+
+feature_importances = log_shap_summary(
+    model=tree_model,
+    X_sample=X_test,
+    max_rows=2000,
+    name="shap_summary",
+)
+```
+
+### 10.5 Out-of-Fold (OOF) Predictions (`log_oof_predictions`)
+Validates that an OOF DataFrame contains `record_id` and `oof_proba` columns and logs it as a CSV artifact.
+
+```python
+from src.mlflow_utils import log_oof_predictions
+
+artifact_name = log_oof_predictions(
+    oof_df=oof_predictions_df,
+    name="track_3a_oof",
+)
+```
+
+---
+
+## 11. Troubleshooting
+
+### 11.1 Windows Application Control & SHAP / Numba Import Error (WinError 4551)
+On Windows machines with Application Control (or SmartApp Control), importing `shap` (through `numba` and `llvmlite`) can fail with `WinError 4551` because `llvmlite.dll` or `_helperlib` is blocked.
+
+The fix, run in an activated conda environment you created yourself, is:
+```powershell
+Get-ChildItem -Path $env:CONDA_PREFIX -Recurse -Include *.dll,*.pyd | Unblock-File
+```
+This PowerShell command only removes the "downloaded from the internet" mark (Zone.Identifier alternate data stream) from the environment's package files, allowing Windows Application Control to load the native binary extensions properly.
+
