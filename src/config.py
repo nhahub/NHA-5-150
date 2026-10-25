@@ -21,6 +21,7 @@ MODEL_READY_DATASET_PATH = DATA_PROCESSED / "model_ready_dataset.csv"
 FEATURE_DICTIONARY_PATH = DATA_PROCESSED / "feature_dictionary.csv"
 MODEL_READY_M2_DATASET_PATH = DATA_PROCESSED / "model_ready_m2_dataset.csv"
 FEATURE_DICTIONARY_M2_PATH = DATA_PROCESSED / "feature_dictionary_m2.csv"
+TRACK_3A_OOF_TRAIN_PATH = DATA_PROCESSED / "track_3a_oof_train.csv"
 
 # Models and checkpoints
 MODELS_DIR = PROJECT_ROOT / "models"
