@@ -9,7 +9,7 @@ Consolidates all Milestone 2 engineered features into reproducible, code-built d
 - Standardized Track 3A and Track 3B feature list constants (M2-T11, M3 Design Decisions)
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple
 import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
@@ -265,6 +265,26 @@ def fit_quality_handling_preprocessor(
     return z_df, scalers
 
 
+def validate_feature_columns_exist(
+    features: Sequence[str], available_columns: Sequence[str]
+) -> None:
+    """
+    Validates that every feature in `features` exists in `available_columns`.
+
+    Raises
+    ------
+    KeyError
+        If any requested feature column is missing from available_columns.
+    """
+    avail_set = set(available_columns)
+    missing = [f for f in features if f not in avail_set]
+    if missing:
+        raise KeyError(
+            f"Feature validation failed! The following {len(missing)} feature(s) "
+            f"were not found in dataset columns: {missing}"
+        )
+
+
 # -----------------------------------------------------------------------------
 # Canonical Feature Lists for Milestone 3 (Decision 2 & 3)
 # -----------------------------------------------------------------------------
@@ -314,8 +334,8 @@ TRACK_3A_FEATURES_FULL: List[str] = [
     "category_Seafood",
     "region_Midwest",
     "region_Northeast",
-    "region_South",
     "region_Southeast",
+    "region_Southwest",
     "region_West",
     # 63 Product One-Hot Features
     "product_name_Antibiotics",
@@ -382,77 +402,77 @@ TRACK_3A_FEATURES_FULL: List[str] = [
     "product_name_Wraps",
     "product_name_Yogurt",
     # 50 Store ID One-Hot Features
-    "store_id_S001",
-    "store_id_S002",
-    "store_id_S003",
-    "store_id_S004",
-    "store_id_S005",
-    "store_id_S006",
-    "store_id_S007",
-    "store_id_S008",
-    "store_id_S009",
-    "store_id_S010",
-    "store_id_S011",
-    "store_id_S012",
-    "store_id_S013",
-    "store_id_S014",
-    "store_id_S015",
-    "store_id_S016",
-    "store_id_S017",
-    "store_id_S018",
-    "store_id_S019",
-    "store_id_S020",
-    "store_id_S021",
-    "store_id_S022",
-    "store_id_S023",
-    "store_id_S024",
-    "store_id_S025",
-    "store_id_S026",
-    "store_id_S027",
-    "store_id_S028",
-    "store_id_S029",
-    "store_id_S030",
-    "store_id_S031",
-    "store_id_S032",
-    "store_id_S033",
-    "store_id_S034",
-    "store_id_S035",
-    "store_id_S036",
-    "store_id_S037",
-    "store_id_S038",
-    "store_id_S039",
-    "store_id_S040",
-    "store_id_S041",
-    "store_id_S042",
-    "store_id_S043",
-    "store_id_S044",
-    "store_id_S045",
-    "store_id_S046",
-    "store_id_S047",
-    "store_id_S048",
-    "store_id_S049",
-    "store_id_S050",
+    "store_id_STORE_001",
+    "store_id_STORE_002",
+    "store_id_STORE_003",
+    "store_id_STORE_004",
+    "store_id_STORE_005",
+    "store_id_STORE_006",
+    "store_id_STORE_007",
+    "store_id_STORE_008",
+    "store_id_STORE_009",
+    "store_id_STORE_010",
+    "store_id_STORE_011",
+    "store_id_STORE_012",
+    "store_id_STORE_013",
+    "store_id_STORE_014",
+    "store_id_STORE_015",
+    "store_id_STORE_016",
+    "store_id_STORE_017",
+    "store_id_STORE_018",
+    "store_id_STORE_019",
+    "store_id_STORE_020",
+    "store_id_STORE_021",
+    "store_id_STORE_022",
+    "store_id_STORE_023",
+    "store_id_STORE_024",
+    "store_id_STORE_025",
+    "store_id_STORE_026",
+    "store_id_STORE_027",
+    "store_id_STORE_028",
+    "store_id_STORE_029",
+    "store_id_STORE_030",
+    "store_id_STORE_031",
+    "store_id_STORE_032",
+    "store_id_STORE_033",
+    "store_id_STORE_034",
+    "store_id_STORE_035",
+    "store_id_STORE_036",
+    "store_id_STORE_037",
+    "store_id_STORE_038",
+    "store_id_STORE_039",
+    "store_id_STORE_040",
+    "store_id_STORE_041",
+    "store_id_STORE_042",
+    "store_id_STORE_043",
+    "store_id_STORE_044",
+    "store_id_STORE_045",
+    "store_id_STORE_046",
+    "store_id_STORE_047",
+    "store_id_STORE_048",
+    "store_id_STORE_049",
+    "store_id_STORE_050",
     # 20 Supplier ID One-Hot Features
-    "supplier_id_SUP001",
-    "supplier_id_SUP002",
-    "supplier_id_SUP003",
-    "supplier_id_SUP004",
-    "supplier_id_SUP005",
-    "supplier_id_SUP006",
-    "supplier_id_SUP007",
-    "supplier_id_SUP008",
-    "supplier_id_SUP009",
-    "supplier_id_SUP010",
-    "supplier_id_SUP011",
-    "supplier_id_SUP012",
-    "supplier_id_SUP013",
-    "supplier_id_SUP014",
-    "supplier_id_SUP015",
-    "supplier_id_SUP016",
-    "supplier_id_SUP017",
-    "supplier_id_SUP018",
-    "supplier_id_SUP019",
-    "supplier_id_SUP020",
+    "supplier_id_SUPPLIER_01",
+    "supplier_id_SUPPLIER_02",
+    "supplier_id_SUPPLIER_03",
+    "supplier_id_SUPPLIER_04",
+    "supplier_id_SUPPLIER_05",
+    "supplier_id_SUPPLIER_06",
+    "supplier_id_SUPPLIER_07",
+    "supplier_id_SUPPLIER_08",
+    "supplier_id_SUPPLIER_09",
+    "supplier_id_SUPPLIER_10",
+    "supplier_id_SUPPLIER_11",
+    "supplier_id_SUPPLIER_12",
+    "supplier_id_SUPPLIER_13",
+    "supplier_id_SUPPLIER_14",
+    "supplier_id_SUPPLIER_15",
+    "supplier_id_SUPPLIER_16",
+    "supplier_id_SUPPLIER_17",
+    "supplier_id_SUPPLIER_18",
+    "supplier_id_SUPPLIER_19",
+    "supplier_id_SUPPLIER_20",
     # M2 Engineered Allowed Features
     "sales_velocity",
     "sales_velocity_per_day",
@@ -624,8 +644,8 @@ TRACK_3B_FEATURES: List[str] = [
     # Region One-Hot
     "region_Midwest",
     "region_Northeast",
-    "region_South",
     "region_Southeast",
+    "region_Southwest",
     "region_West",
 ]
 
