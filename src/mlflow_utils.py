@@ -13,22 +13,33 @@ from pathlib import Path
 import re
 import subprocess
 import tempfile
-from typing import Any, Dict, Generator, List, Optional, Sequence, Union
+from typing import Any, Dict, Generator, List, Optional, Sequence, Tuple, Union
 
+import joblib
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 import mlflow
 from mlflow.entities import Run
 from mlflow.tracking import MlflowClient
+import numpy as np
 import pandas as pd
+import shap
+from sklearn.calibration import calibration_curve
+from sklearn.metrics import brier_score_loss, confusion_matrix
 
 from src.config import (
     EXPERIMENT_NAMES,
     MLFLOW_ARTIFACTS_DIR,
     MLFLOW_TRACKING_DIR,
     MLFLOW_TRACKING_URI,
+    MODELS_DIR,
     PROJECT_ROOT,
     RANDOM_STATE,
     SMART_SHELF_AUTHOR_ENV_VAR,
     TABLES_DIR,
+    TRACK_3A_MODEL_PATH,
+    TRACK_3B_MODEL_PATH,
 )
 
 # Canonical forbidden column sets to enforce strict leakage prevention
@@ -579,4 +590,419 @@ def merge_runs_summaries(
 
     merged_df.to_csv(target_path, index=False)
     return target_path
+
+
+def save_model_with_metadata(
+    model: Any,
+    track: str,
+    feature_list: Sequence[str],
+    shelf_life_version: str,
+    train_period: Union[str, Dict[str, str], Sequence[str]],
+    mlflow_run_id: Optional[str] = None,
+    models_dir: Optional[Union[str, Path]] = None,
+    name: Optional[str] = None,
+    overwrite: bool = False,
+    log_as_artifact: bool = True,
+) -> Tuple[Path, Path]:
+    """
+    Saves a trained model with joblib and a standardized JSON metadata file beside it.
+
+    Parameters
+    ----------
+    model : Any
+        Trained model instance (e.g. scikit-learn, LightGBM, XGBoost).
+    track : str
+        Track identifier ('3A', '3B', or '3C').
+    feature_list : Sequence[str]
+        Ordered list of feature column names used by the model.
+    shelf_life_version : str
+        Shelf-life formulation ('expiry_remaining_ratio' or 'shelf_life_used_ratio').
+    train_period : Union[str, Dict[str, str], Sequence[str]]
+        Description or boundary of training period (e.g. '2023-01-01 to 2024-08-07').
+    mlflow_run_id : Optional[str]
+        MLflow run ID associated with the model. Defaults to active run ID if active.
+    models_dir : Optional[Union[str, Path]]
+        Destination directory. Defaults to src.config.MODELS_DIR.
+    name : Optional[str]
+        Model base filename (without suffix or with .joblib).
+        Defaults to track_3a_classifier.joblib for Track 3A and track_3b_regressor.joblib for Track 3B.
+    overwrite : bool, default False
+        Whether to overwrite existing files. If False, raises FileExistsError if files exist.
+    log_as_artifact : bool, default True
+        Whether to log both the model and metadata files as artifacts if an MLflow run is active.
+
+    Returns
+    -------
+    Tuple[Path, Path]
+        Paths to the saved (model_path, metadata_path).
+    """
+    track_norm = track.strip().upper()
+    target_dir = Path(models_dir) if models_dir is not None else MODELS_DIR
+
+    if name:
+        stem = Path(name).stem
+    else:
+        if track_norm == "3A":
+            stem = TRACK_3A_MODEL_PATH.stem
+        elif track_norm == "3B":
+            stem = TRACK_3B_MODEL_PATH.stem
+        elif track_norm == "3C":
+            stem = "track_3c_optimizer"
+        else:
+            stem = f"model_track_{track_norm.lower()}"
+
+    model_path = target_dir / f"{stem}.joblib"
+    meta_path = target_dir / f"{stem}.json"
+
+    if not overwrite:
+        if model_path.exists():
+            raise FileExistsError(
+                f"Model file already exists: {to_repo_relative_path(model_path)}. "
+                "Pass overwrite=True to replace."
+            )
+        if meta_path.exists():
+            raise FileExistsError(
+                f"Metadata file already exists: {to_repo_relative_path(meta_path)}. "
+                "Pass overwrite=True to replace."
+            )
+
+    import sklearn
+    lib_versions: Dict[str, str] = {
+        "scikit-learn": getattr(sklearn, "__version__", "unknown"),
+        "pandas": getattr(pd, "__version__", "unknown"),
+        "numpy": getattr(np, "__version__", "unknown"),
+        "joblib": getattr(joblib, "__version__", "unknown"),
+        "mlflow": getattr(mlflow, "__version__", "unknown"),
+    }
+    try:
+        import lightgbm
+        lib_versions["lightgbm"] = lightgbm.__version__
+    except ImportError:
+        pass
+    try:
+        import xgboost
+        lib_versions["xgboost"] = xgboost.__version__
+    except ImportError:
+        pass
+    try:
+        import shap
+        lib_versions["shap"] = shap.__version__
+    except ImportError:
+        pass
+
+    resolved_run_id = mlflow_run_id
+    if not resolved_run_id:
+        active = mlflow.active_run()
+        if active is not None:
+            resolved_run_id = active.info.run_id
+
+    metadata = {
+        "track": track_norm,
+        "feature_list": list(feature_list),
+        "features": list(feature_list),
+        "shelf_life_version": str(shelf_life_version),
+        "train_period": train_period,
+        "library_versions": lib_versions,
+        "mlflow_run_id": resolved_run_id,
+        "git_commit": get_git_commit_hash(),
+        "model_class": model.__class__.__name__,
+    }
+
+    target_dir.mkdir(parents=True, exist_ok=True)
+    joblib.dump(model, model_path)
+    with open(meta_path, "w", encoding="utf-8") as f:
+        json.dump(metadata, f, indent=2)
+
+    if log_as_artifact and mlflow.active_run() is not None:
+        mlflow.log_artifact(str(model_path))
+        mlflow.log_artifact(str(meta_path))
+
+    return model_path, meta_path
+
+
+def load_model_with_metadata(path: Union[str, Path]) -> Tuple[Any, Dict[str, Any]]:
+    """
+    Loads a model and its associated metadata JSON file.
+
+    Parameters
+    ----------
+    path : Union[str, Path]
+        Path to the model (.joblib) or metadata (.json) file.
+
+    Returns
+    -------
+    Tuple[Any, Dict[str, Any]]
+        (model, metadata)
+
+    Raises
+    ------
+    FileNotFoundError
+        If either the model file or the metadata JSON file is missing.
+    KeyError
+        If the feature list is absent from the metadata.
+    """
+    p = Path(path)
+    if p.suffix == ".json":
+        meta_path = p
+        model_path = p.with_suffix(".joblib")
+    elif p.suffix == ".joblib":
+        model_path = p
+        meta_path = p.with_suffix(".json")
+    else:
+        model_path = p.with_suffix(".joblib")
+        meta_path = p.with_suffix(".json")
+
+    if not model_path.exists():
+        raise FileNotFoundError(f"Model file does not exist: {to_repo_relative_path(model_path)}")
+    if not meta_path.exists():
+        raise FileNotFoundError(f"Metadata JSON file missing beside model: {to_repo_relative_path(meta_path)}")
+
+    with open(meta_path, "r", encoding="utf-8") as f:
+        metadata = json.load(f)
+
+    if "feature_list" not in metadata and "features" not in metadata:
+        raise KeyError(f"Feature list is absent from model metadata: {to_repo_relative_path(meta_path)}")
+
+    if "feature_list" not in metadata and "features" in metadata:
+        metadata["feature_list"] = metadata["features"]
+    elif "features" not in metadata and "feature_list" in metadata:
+        metadata["features"] = metadata["feature_list"]
+
+    model = joblib.load(model_path)
+    return model, metadata
+
+
+def log_calibration_curve(
+    y_true: Union[Sequence[int], np.ndarray, pd.Series],
+    proba: Union[Sequence[float], np.ndarray, pd.Series],
+    n_bins: int = 10,
+    name: str = "reliability_curve",
+) -> float:
+    """
+    Computes calibration curve, logs the reliability curve plot as an artifact,
+    and returns the Brier score.
+
+    Parameters
+    ----------
+    y_true : array-like
+        Binary true labels.
+    proba : array-like
+        Predicted probabilities for the positive class.
+    n_bins : int, default 10
+        Number of probability bins.
+    name : str, default "reliability_curve"
+        Artifact base name.
+
+    Returns
+    -------
+    float
+        The calculated Brier score.
+    """
+    y_arr = np.asarray(y_true)
+    p_arr = np.asarray(proba)
+
+    brier = float(brier_score_loss(y_arr, p_arr))
+    prob_true, prob_pred = calibration_curve(y_arr, p_arr, n_bins=n_bins, strategy="uniform")
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+    ax.plot([0, 1], [0, 1], "k--", label="Perfectly calibrated")
+    ax.plot(prob_pred, prob_true, "s-", color="#1f77b4", label=f"Model (Brier = {brier:.4f})")
+    ax.set_xlabel("Mean predicted probability")
+    ax.set_ylabel("Fraction of positives")
+    ax.set_ylim([-0.05, 1.05])
+    ax.set_xlim([-0.05, 1.05])
+    ax.set_title("Reliability Curve (Calibration)")
+    ax.legend(loc="lower right")
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+
+    filename = f"{name}.png" if not name.endswith(".png") else name
+    log_figure_artifact(fig, filename)
+    plt.close(fig)
+    plt.close("all")
+
+    return brier
+
+
+def log_confusion_matrix(
+    y_true: Union[Sequence[int], np.ndarray, pd.Series],
+    y_pred: Union[Sequence[int], np.ndarray, pd.Series],
+    name: str = "confusion_matrix",
+) -> np.ndarray:
+    """
+    Computes confusion matrix, logs a formatted matrix plot as an artifact,
+    and returns the confusion matrix array.
+
+    Parameters
+    ----------
+    y_true : array-like
+        True binary labels.
+    y_pred : array-like
+        Predicted discrete labels.
+    name : str, default "confusion_matrix"
+        Artifact base name.
+
+    Returns
+    -------
+    np.ndarray
+        The confusion matrix array.
+    """
+    y_t = np.asarray(y_true)
+    y_p = np.asarray(y_pred)
+
+    cm = confusion_matrix(y_t, y_p)
+
+    fig, ax = plt.subplots(figsize=(5, 4))
+    im = ax.imshow(cm, interpolation="nearest", cmap="Blues")
+    fig.colorbar(im, ax=ax)
+    classes = ["Negative (0)", "Positive (1)"] if cm.shape == (2, 2) else [str(i) for i in range(len(cm))]
+    ax.set(
+        xticks=np.arange(cm.shape[1]),
+        yticks=np.arange(cm.shape[0]),
+        xticklabels=classes,
+        yticklabels=classes,
+        ylabel="Actual label",
+        xlabel="Predicted label",
+        title="Confusion Matrix",
+    )
+    thresh = cm.max() / 2.0 if cm.max() > 0 else 1.0
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax.text(
+                j,
+                i,
+                f"{cm[i, j]:,}",
+                ha="center",
+                va="center",
+                color="white" if cm[i, j] > thresh else "black",
+            )
+    fig.tight_layout()
+
+    filename = f"{name}.png" if not name.endswith(".png") else name
+    log_figure_artifact(fig, filename)
+    plt.close(fig)
+    plt.close("all")
+
+    return cm
+
+
+def log_shap_summary(
+    model: Any,
+    X_sample: Union[pd.DataFrame, np.ndarray],
+    max_rows: int = 2000,
+    name: str = "shap_summary",
+) -> Dict[str, float]:
+    """
+    Samples at most max_rows with seed 42, logs a SHAP summary plot for tree models,
+    and returns the mean absolute SHAP value per feature as a dictionary.
+
+    Handles both list-of-arrays and single-array SHAP outputs for binary classifiers.
+
+    Parameters
+    ----------
+    model : Any
+        Trained tree model (LightGBM, XGBoost, RandomForest, GradientBoosting).
+    X_sample : Union[pd.DataFrame, np.ndarray]
+        Input features.
+    max_rows : int, default 2000
+        Maximum sample rows to compute SHAP values for.
+    name : str, default "shap_summary"
+        Artifact base name.
+
+    Returns
+    -------
+    Dict[str, float]
+        Dictionary mapping feature name to its mean absolute SHAP value.
+    """
+    if isinstance(X_sample, pd.DataFrame):
+        feature_names = list(X_sample.columns)
+        if len(X_sample) > max_rows:
+            X_df = X_sample.sample(n=max_rows, random_state=42)
+        else:
+            X_df = X_sample.copy()
+    else:
+        arr = np.asarray(X_sample)
+        feature_names = [f"feature_{i}" for i in range(arr.shape[1])]
+        if len(arr) > max_rows:
+            rng = np.random.default_rng(42)
+            idx = rng.choice(len(arr), size=max_rows, replace=False)
+            X_df = pd.DataFrame(arr[idx], columns=feature_names)
+        else:
+            X_df = pd.DataFrame(arr, columns=feature_names)
+
+    explainer = shap.TreeExplainer(model)
+    shap_values = explainer.shap_values(X_df)
+
+    # Handle list-of-arrays, 3D ndarrays, and 2D ndarrays
+    if isinstance(shap_values, list):
+        if len(shap_values) == 2:
+            shap_matrix = np.asarray(shap_values[1])
+        else:
+            shap_matrix = np.asarray(shap_values[0])
+    elif isinstance(shap_values, np.ndarray):
+        if shap_values.ndim == 3:
+            if shap_values.shape[-1] == 2:
+                shap_matrix = shap_values[:, :, 1]
+            elif shap_values.shape[0] == 2:
+                shap_matrix = shap_values[1, :, :]
+            else:
+                shap_matrix = shap_values[:, :, 0]
+        else:
+            shap_matrix = shap_values
+    elif hasattr(shap_values, "values"):
+        vals = shap_values.values
+        if vals.ndim == 3 and vals.shape[-1] == 2:
+            shap_matrix = vals[:, :, 1]
+        else:
+            shap_matrix = vals
+    else:
+        shap_matrix = np.asarray(shap_values)
+
+    mean_abs_shap = np.mean(np.abs(shap_matrix), axis=0)
+    shap_dict = {str(col): float(val) for col, val in zip(feature_names, mean_abs_shap)}
+
+    plt.figure()
+    shap.summary_plot(shap_matrix, X_df, show=False)
+    fig = plt.gcf()
+    filename = f"{name}.png" if not name.endswith(".png") else name
+    log_figure_artifact(fig, filename)
+    plt.close(fig)
+    plt.close("all")
+
+    return shap_dict
+
+
+def log_oof_predictions(
+    oof_df: pd.DataFrame,
+    name: str = "track_3a_oof",
+) -> str:
+    """
+    Logs out-of-fold (OOF) prediction DataFrame as a CSV artifact.
+    Validates presence of 'record_id' and 'oof_proba' columns.
+
+    Parameters
+    ----------
+    oof_df : pd.DataFrame
+        DataFrame containing OOF predictions.
+    name : str, default "track_3a_oof"
+        Artifact base name.
+
+    Returns
+    -------
+    str
+        Logged artifact filename.
+    """
+    if "record_id" not in oof_df.columns:
+        raise ValueError("OOF DataFrame missing required column: 'record_id'")
+    if "oof_proba" not in oof_df.columns:
+        raise ValueError("OOF DataFrame missing required column: 'oof_proba'")
+
+    filename = f"{name}.csv" if not name.endswith(".csv") else name
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        tmp_path = Path(tmp_dir) / filename
+        oof_df.to_csv(tmp_path, index=False)
+        mlflow.log_artifact(str(tmp_path))
+
+    return filename
+
 
