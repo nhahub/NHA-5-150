@@ -13,15 +13,19 @@ An end-to-end machine learning decision support system and interactive Streamlit
 ## 1. Project Overview & System Architecture
 
 Clearance decisions in retail food chains are frequently driven by manual staff inspection or rigid static markdown rules. This leads to two standard operational failure modes:
+
 1. **Premature markdowns:** Items discounted unnecessarily early, sacrificing gross margin on products that would have sold at full price.
 2. **Late markdowns:** Items discounted too close to expiration, failing to stimulate demand before expiration and resulting in 100% inventory write-off.
 
 ### Dataset Foundation
+
 The project utilizes the Kaggle **Perishable Goods Management** dataset:
+
 - **Dimensions:** 100,000 transaction rows × 42 columns, spanning January 2023 to December 2024 across 50 stores, 5 regions, 20 suppliers, 10 categories, and 63 distinct products.
 - **Nature of Data:** The dataset is synthetic. Consequently, all reported business-impact figures, revenue gains, and waste reductions are simulated estimates derived from this synthetic data.
 
 ### System Architecture
+
 Smart Shelf links two predictive machine learning models into a dynamic discount optimization engine:
 
 ```
@@ -78,6 +82,7 @@ Smart Shelf links two predictive machine learning models into a dynamic discount
 ## 2. Milestone Deliverables & Task Map
 
 ### Milestone 1: Data Audit, Leakage Boundary & Preprocessing Foundation
+
 | Task ID | Component / Deliverable | Status | Description & Key Outcomes |
 | :--- | :--- | :---: | :--- |
 | **M1-T01** | [`notebooks/M1-T01.ipynb`](notebooks/M1-T01.ipynb) | **Done** | **Dataset Ingestion & Schema Audit:** Verified 100,000 transactions, 42 columns, and 0 missing values. Documented schema deviations and established strict data-leakage boundaries (`spoilage_risk` reserved for benchmark only; post-sale outcome columns excluded). |
@@ -88,6 +93,7 @@ Smart Shelf links two predictive machine learning models into a dynamic discount
 | **M1-T06** | [`notebooks/M1-T06.ipynb`](notebooks/M1-T06.ipynb)<br>[`reports/M1/m1_t06_report_text.md`](reports/M1/m1_t06_report_text.md)<br>[`reports/M1/m1_t06_verdict.json`](reports/M1/m1_t06_verdict.json) | **Done** | **Spoilage-Sensitivity Verification:** Proved `spoilage_sensitivity` is a static category-level attribute (9 distinct values, $R^2 = 1.0$ against category one-hot). Cleared it as a valid pre-sale feature while documenting exact collinearity constraints. |
 
 ### Milestone 2: Statistical Analysis & Advanced Feature Engineering
+
 | Task ID | Component / Deliverable | Status | Description & Key Outcomes |
 | :--- | :--- | :---: | :--- |
 | **M2-T01** | [`notebooks/M2_T01_statistical_analysis.ipynb`](notebooks/M2_T01_statistical_analysis.ipynb)<br>[`src/m2_t01_analysis.py`](src/m2_t01_analysis.py)<br>[`reports/M2/M2_T01_Spoilage_Drivers_Report.md`](reports/M2/M2_T01_Spoilage_Drivers_Report.md) | **Done** | **Statistical Analysis of Spoilage Drivers:** Completed Chi-Square tests of independence, ANOVA $F$, Welch's $t$, Mann-Whitney $U$, Cohen's $d$, and multiple-testing adjustments (Holm & Bonferroni) across 24 factors. Confirmed `quality_grade` is meaningful ($\chi^2 = 821.74, V = 0.091$), `category` has weak effect ($V = 0.039$), and `region` is independent ($p_{\text{adj}} = 1.0$). |
@@ -105,6 +111,7 @@ Smart Shelf links two predictive machine learning models into a dynamic discount
 | **M2-T13** | [`src/mlflow_utils.py`](src/mlflow_utils.py)<br>[`src/config.py`](src/config.py)<br>[`scripts/M2_T13_test_helpers.py`](scripts/M2_T13_test_helpers.py)<br>[`reports/M2/M2-T09_MLflow_Setup.md`](reports/M2/M2-T09_MLflow_Setup.md) | **Done** | **Milestone 3 MLflow Helpers:** Implemented reusable helpers: model serialization with JSON metadata (`save_model_with_metadata`, `load_model_with_metadata`), calibration curves, confusion matrix, SHAP summary plots, OOF prediction logging, and CSV summary export/merge. |
 
 ### Milestone 3: Machine Learning Model Development, Revenue Optimization, and Explainability (Planned)
+
 *Track definitions and scopes per project proposal (`Smart_Shelf_v5.md`):*
 
 | Track / Component | Status | Description & Planned Methodology |
@@ -116,12 +123,14 @@ Smart Shelf links two predictive machine learning models into a dynamic discount
 *Milestone 3 Key Deliverables:* Model Evaluation Report, Optimizer Validation Report, Model Code, Final Models.
 
 ### Milestone 4: MLOps, Deployment, and Monitoring (Planned)
+
 - **MLOps Implementation:** Experiment tracking, run parameters, metrics, and artifact management using MLflow.
 - **Model Deployment:** Interactive Streamlit dashboard featuring a **Manager View** (inventory items flagged by spoilage risk and recommended discount tiers with confidence flags) and a **Simulator Mode** (interactive what-if pricing scenario testing).
 - **Model Monitoring & Retraining Strategy:** Tracking prediction drift, estimated spoilage reduction, and estimated revenue recovery (clearly labeled as backtested/simulated estimates), with defined alerting thresholds and periodic retraining plans.
 - *Milestone 4 Key Deliverables:* Deployed Model (Streamlit dashboard), MLOps Report, Monitoring Setup.
 
 ### Milestone 5: Final Documentation and Presentation (Planned)
+
 - **Final Project Report:** Comprehensive project synthesis including problem framing, dataset description, exploration, model development, deployment, before/after business case (strictly separating Lane 1 matched and Lane 2 simulated evidence), and explicit discussion of synthetic-data limitations.
 - **Worked Example:** End-to-end walkthrough of a single representative batch: raw features → classifier risk prediction & confidence flag → SHAP explanation → revenue-response what-if scoring → optimizer recommendation & tier → backtested outcome.
 - **Final Presentation:** Polished stakeholder presentation demonstrating system methodology, results, and live Simulator Mode.
@@ -260,7 +269,9 @@ All findings below have been audited, cross-reconciled, and programmatically ver
 ## 5. Getting Started & Execution Guide
 
 ### 1. Environment Setup
+
 Clone the repository and set up a Python 3.11 virtual environment (e.g., using Conda):
+
 ```bash
 # Create and activate environment
 conda create -n smart-shelf python=3.11 -y
@@ -271,13 +282,17 @@ pip install -r requirements.txt
 ```
 
 ### 2. Place Raw Dataset
+
 Download the Kaggle **Perishable Goods Management** dataset CSV and place it in `data/raw/`:
+
 ```bash
 data/raw/perishable_goods_management.csv
 ```
+
 *Expected file properties: 100,000 rows × 42 columns; SHA-256: `de94302b867c9debedfd45c431306623fdfc038f5ed8ca17736339b4460a6674`.*
 
 ### 3. Dataset Regeneration Pipeline
+
 To regenerate all processed datasets, feature dictionaries, and serialized preprocessors from scratch, execute the following steps in order:
 
 ```bash
@@ -305,7 +320,9 @@ python scripts/M2_T12_decision_checks.py
 ```
 
 ### 4. Integrity Verification Suites (Read-Only)
+
 Run the automated verification scripts at any time to validate dataset integrity, leakage boundaries, and MLflow logging:
+
 ```bash
 # Verify Milestone 1 data foundation (36 assertion checks)
 python scripts/verify_m1.py
@@ -321,6 +338,7 @@ python scripts/M2_T13_test_helpers.py
 ```
 
 ### 5. Safe Data Loading Note
+
 - The consolidated Milestone 2 canonical feature sets live in [`src/m2_feature_pipeline.py`](src/m2_feature_pipeline.py): `TRACK_3A_FEATURES_FULL` (180 features), `TRACK_3A_FEATURES_COMPACT` (90 features), and `TRACK_3B_FEATURES` (43 features).
 - [`src/data_loader.py`](src/data_loader.py) is the earlier Milestone 1 loader, which loads features from `data/processed/model_ready_dataset.csv` (175 pre-sale features for Track 3A and pre-sale features + `discount_pct` for Track 3B) using `data/processed/feature_dictionary.csv`.
 
@@ -331,18 +349,23 @@ python scripts/M2_T13_test_helpers.py
 Experiment tracking is fully standardized through [`src/mlflow_utils.py`](src/mlflow_utils.py) using a local filesystem tracking store located under `models/mlruns/`.
 
 ### Experiments
+
 Three standard experiment namespaces are configured:
+
 - `smart-shelf-3a-spoilage-classifier`: Spoilage probability classifier runs.
 - `smart-shelf-3b-revenue-response`: Demand elasticity and revenue-response regression runs.
 - `smart-shelf-3c-discount-optimizer`: Policy optimization and discount selection runs.
 
 ### Author Attribution & Reproducibility
+
 - Runs are tagged with the author's identity using the `SMART_SHELF_AUTHOR` environment variable (falling back to `git config user.name`).
 - Machine usernames, local file paths, and email addresses are filtered to ensure sanitized tracking artifacts.
 - Fixed random state: `RANDOM_STATE = 42`.
 
 ### Reusable Milestone 3 Helpers
+
 The following helper functions in `src/mlflow_utils.py` support Milestone 3 modeling:
+
 - `save_model_with_metadata(model, track, feature_list, shelf_life_version, train_period, mlflow_run_id=None, models_dir=None, name=None, overwrite=False, log_as_artifact=True)`: Saves model pipeline to `.joblib` alongside a standardized `.json` metadata file (feature list, shelf-life version, training period, library versions, git commit, and run ID) and optionally logs both as MLflow artifacts.
 - `load_model_with_metadata(path)`: Loads `.joblib` model and accompanying `.json` metadata together with strict schema and feature-list validation.
 - `log_calibration_curve(y_true, proba, n_bins=10, name="reliability_curve")`: Computes Brier score, logs reliability curve figure artifact to MLflow, and returns calculated Brier score.
@@ -353,7 +376,9 @@ The following helper functions in `src/mlflow_utils.py` support Milestone 3 mode
 - `merge_runs_summaries(tables_dir=None, output_path=None)`: Merges all per-author run summaries. By default writes to `models/mlruns/M2_T09_mlflow_runs_master.csv` (gitignored under `models/mlruns/`). Only per-author CSV files are kept in `reports/tables/`.
 
 ### Windows Application Control Troubleshooting
+
 On Windows systems with Application Control or AppLocker policies enabled, importing `shap` or compiled C-extensions may trigger `WinError 4551`. To unblock all Conda DLLs, run this command in PowerShell:
+
 ```powershell
 Get-ChildItem -Path $env:CONDA_PREFIX -Recurse -Include *.dll,*.pyd | Unblock-File
 ```
@@ -367,14 +392,18 @@ To ensure code quality, strict leakage prevention, and seamless team collaborati
 1. **Branching Model:**
    - Never commit directly to `main`.
    - Create task-specific feature branches from `main` using the task identifier:
+
      ```bash
      git checkout -b <Task-ID>-<description>
      ```
+
 2. **Commit Conventions:**
    - Prefix commit messages with the Task ID:
+
      ```bash
      git commit -m "<Task-ID>: <description>"
      ```
+
 3. **Data Governance & Clean Commits:**
    - Under no circumstances should raw datasets, processed CSV files, or binary model artifacts (`.joblib`, `.pkl`) be committed to Git.
    - All paths must be imported from [`src/config.py`](src/config.py) rather than hardcoded.
@@ -387,6 +416,7 @@ To ensure code quality, strict leakage prevention, and seamless team collaborati
 ## 8. Known Issues & Technical Debt
 
 The following known issues are documented for resolution during Milestone 3:
+
 1. **Hardcoded Paths in Earlier Notebooks:** Notebooks `M2-T02.ipynb`, `M2-T03__Sell_Through_Risk.ipynb`, `M2_T04_discount_flags.ipynb`, `M2-T07.ipynb`, and `M2_T08_store_markdown_frequency.ipynb` load data from relative file paths rather than importing canonical path constants from `src.config`.
 2. **Gitignore Scope for Report Tables:** `.gitignore` excludes `*.csv`, with only `!reports/tables/M2_T09_mlflow_runs_*.csv` whitelisted. Consequently, all other CSV tables generated under `reports/tables/` are untracked by Git.
 3. **Unexported Figure Tables:** The four auxiliary tables referenced in `reports/M2/M2_T10_figure_notes.md` (`M2_T10_segment_summary.csv`, `M2_T10_category_segments.csv`, `M2_T10_ratio_bands.csv`, `M2_T10_grade_by_segment.csv`) were never exported to `reports/tables/`.
@@ -404,4 +434,5 @@ The following known issues are documented for resolution during Milestone 3:
 
 ## 10. Project Documentation
 
-Project documentation: to be added.
+- [Project documentation](Smart_Shelf_Project_Documentation.md): planning, stakeholder analysis, data design and UI/UX design.
+- [Project proposal (v5)](Smart_Shelf_v5.md).
