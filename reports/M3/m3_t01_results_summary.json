@@ -1,0 +1,502 @@
+{
+  "references": {
+    "constant_base_rate_cv": {
+      "brier": 0.15606318850982165,
+      "log_loss": 0.491276668176331,
+      "roc_auc": 0.49427326388942233,
+      "ece": 1.0324033446473813e-06
+    },
+    "spoilage_risk_benchmark_train": {
+      "brier": 0.15342618647709955,
+      "log_loss": 0.48278535666610883,
+      "roc_auc": 0.5930945595079026,
+      "ece": 0.0024923415207016254
+    },
+    "existing_lgbm_oof_baseline": {
+      "brier": 0.15397300751421059,
+      "log_loss": 0.48452493160531185,
+      "roc_auc": 0.5842196906565124,
+      "ece": 0.003370998645153393
+    }
+  },
+  "candidates": [
+    {
+      "model_family": "logreg",
+      "feature_set_name": "track_3a_compact",
+      "params": {
+        "C": 0.005
+      },
+      "metrics": {
+        "brier": 0.1537399141774408,
+        "log_loss": 0.483743926726195,
+        "roc_auc": 0.5884597442940973,
+        "ece": 0.0016685106152325413
+      }
+    },
+    {
+      "model_family": "xgboost",
+      "feature_set_name": "track_3a_full",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 4,
+        "learning_rate": 0.023404527272255594,
+        "min_child_weight": 109,
+        "subsample": 0.8320457481218804,
+        "colsample_bytree": 0.6488152939379115,
+        "reg_lambda": 2.2039920190846214
+      },
+      "metrics": {
+        "brier": 0.1537256051503849,
+        "log_loss": 0.48372210232106666,
+        "roc_auc": 0.588499972842904,
+        "ece": 0.0011430896394363736
+      }
+    },
+    {
+      "model_family": "logreg",
+      "feature_set_name": "track_3a_full",
+      "params": {
+        "C": 0.001
+      },
+      "metrics": {
+        "brier": 0.15374104248123333,
+        "log_loss": 0.48376640810801314,
+        "roc_auc": 0.5884173443378303,
+        "ece": 0.0025410689519452705
+      }
+    },
+    {
+      "model_family": "lightgbm",
+      "feature_set_name": "track_3a_full",
+      "params": {
+        "n_estimators": 150,
+        "learning_rate": 0.026867313736068595,
+        "num_leaves": 14,
+        "min_child_samples": 155,
+        "subsample": 0.8295835055926347,
+        "colsample_bytree": 0.7164916560792167,
+        "reg_lambda": 3.126143958203108
+      },
+      "metrics": {
+        "brier": 0.15373028886557757,
+        "log_loss": 0.48376089588784826,
+        "roc_auc": 0.5882415613525047,
+        "ece": 0.0031806316336790855
+      }
+    },
+    {
+      "model_family": "xgboost",
+      "feature_set_name": "track_3a_compact",
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 3,
+        "learning_rate": 0.05317232167577955,
+        "min_child_weight": 42,
+        "subsample": 0.7195154778955838,
+        "colsample_bytree": 0.9795542149013333,
+        "reg_lambda": 9.021655603568131
+      },
+      "metrics": {
+        "brier": 0.15376838401442877,
+        "log_loss": 0.48385602605128475,
+        "roc_auc": 0.5879838679968619,
+        "ece": 0.0017885388298925025
+      }
+    },
+    {
+      "model_family": "lightgbm",
+      "feature_set_name": "track_3a_compact",
+      "params": {
+        "n_estimators": 300,
+        "learning_rate": 0.032654713909375875,
+        "num_leaves": 9,
+        "min_child_samples": 187,
+        "subsample": 0.8320457481218804,
+        "colsample_bytree": 0.6488152939379115,
+        "reg_lambda": 2.2039920190846214
+      },
+      "metrics": {
+        "brier": 0.15382486335645998,
+        "log_loss": 0.4840351605216506,
+        "roc_auc": 0.5863716284633379,
+        "ece": 0.0016371328711460213
+      }
+    },
+    {
+      "model_family": "rf",
+      "feature_set_name": "track_3a_full",
+      "params": {
+        "n_estimators": 250,
+        "max_depth": 8,
+        "min_samples_leaf": 43,
+        "max_features": 0.4
+      },
+      "metrics": {
+        "brier": 0.1538909025909694,
+        "log_loss": 0.484304493937221,
+        "roc_auc": 0.5852306973699,
+        "ece": 0.0028033498525640486
+      }
+    },
+    {
+      "model_family": "rf",
+      "feature_set_name": "track_3a_compact",
+      "params": {
+        "n_estimators": 150,
+        "max_depth": 8,
+        "min_samples_leaf": 100,
+        "max_features": 0.4
+      },
+      "metrics": {
+        "brier": 0.15393448909400764,
+        "log_loss": 0.484424705872531,
+        "roc_auc": 0.5848622602334083,
+        "ece": 0.002952775097038669
+      }
+    }
+  ],
+  "calibration": [
+    {
+      "model_family": "logreg",
+      "feature_set_name": "track_3a_compact",
+      "calibration": "uncalibrated",
+      "metrics": {
+        "brier": 0.1537399141774408,
+        "log_loss": 0.483743926726195,
+        "roc_auc": 0.5884597442940973,
+        "ece": 0.0016685106152325413
+      },
+      "reliability_bins": [
+        {
+          "mean_predicted_prob": 0.09382938826470495,
+          "observed_spoilage_rate": 0.09381237524950099
+        },
+        {
+          "mean_predicted_prob": 0.16035327086581622,
+          "observed_spoilage_rate": 0.15980744020115623
+        },
+        {
+          "mean_predicted_prob": 0.23595076458705297,
+          "observed_spoilage_rate": 0.23830295980354144
+        },
+        {
+          "mean_predicted_prob": 0.3213548546471479,
+          "observed_spoilage_rate": 0.30458089668615984
+        },
+        {
+          "mean_predicted_prob": 0.4071542809288916,
+          "observed_spoilage_rate": 0.5
+        }
+      ]
+    },
+    {
+      "model_family": "logreg",
+      "feature_set_name": "track_3a_compact",
+      "calibration": "sigmoid",
+      "metrics": {
+        "brier": 0.1537307673320731,
+        "log_loss": 0.48372113197229794,
+        "roc_auc": 0.5886040963814778,
+        "ece": 0.0021815009995024455
+      },
+      "reliability_bins": [
+        {
+          "mean_predicted_prob": 0.09422836668251534,
+          "observed_spoilage_rate": 0.08868501529051988
+        },
+        {
+          "mean_predicted_prob": 0.16102173760554198,
+          "observed_spoilage_rate": 0.15982993633294876
+        },
+        {
+          "mean_predicted_prob": 0.23532673237481472,
+          "observed_spoilage_rate": 0.23849022633744857
+        },
+        {
+          "mean_predicted_prob": 0.3203683141915369,
+          "observed_spoilage_rate": 0.31093836757357024
+        },
+        {
+          "mean_predicted_prob": 0.4087316648279263,
+          "observed_spoilage_rate": 0.0
+        }
+      ]
+    },
+    {
+      "model_family": "logreg",
+      "feature_set_name": "track_3a_compact",
+      "calibration": "isotonic",
+      "metrics": {
+        "brier": 0.15375665375538625,
+        "log_loss": 0.4839660812355933,
+        "roc_auc": 0.5880285118741961,
+        "ece": 0.0008581434622748569
+      },
+      "reliability_bins": [
+        {
+          "mean_predicted_prob": 0.08703414762252457,
+          "observed_spoilage_rate": 0.09161576901721266
+        },
+        {
+          "mean_predicted_prob": 0.1585119176528772,
+          "observed_spoilage_rate": 0.15944139412747674
+        },
+        {
+          "mean_predicted_prob": 0.23469028917457851,
+          "observed_spoilage_rate": 0.23433032139997712
+        },
+        {
+          "mean_predicted_prob": 0.327980496766567,
+          "observed_spoilage_rate": 0.32514880952380953
+        },
+        {
+          "mean_predicted_prob": 0.44346487338225166,
+          "observed_spoilage_rate": 0.34782608695652173
+        },
+        {
+          "mean_predicted_prob": 0.5245871944061455,
+          "observed_spoilage_rate": 0.14285714285714285
+        },
+        {
+          "mean_predicted_prob": 0.6467732875323831,
+          "observed_spoilage_rate": 0.6
+        }
+      ]
+    },
+    {
+      "model_family": "xgboost",
+      "feature_set_name": "track_3a_full",
+      "calibration": "uncalibrated",
+      "metrics": {
+        "brier": 0.1537256051503849,
+        "log_loss": 0.48372210232106666,
+        "roc_auc": 0.588499972842904,
+        "ece": 0.0011430896394363736
+      },
+      "reliability_bins": [
+        {
+          "mean_predicted_prob": 0.09477784037590027,
+          "observed_spoilage_rate": 0.11060606060606061
+        },
+        {
+          "mean_predicted_prob": 0.16000152876708015,
+          "observed_spoilage_rate": 0.15998236137140337
+        },
+        {
+          "mean_predicted_prob": 0.2349694213891743,
+          "observed_spoilage_rate": 0.23655847564930052
+        },
+        {
+          "mean_predicted_prob": 0.3203282262914287,
+          "observed_spoilage_rate": 0.3028641072516758
+        },
+        {
+          "mean_predicted_prob": 0.413086599111557,
+          "observed_spoilage_rate": 0.4
+        }
+      ]
+    },
+    {
+      "model_family": "xgboost",
+      "feature_set_name": "track_3a_full",
+      "calibration": "sigmoid",
+      "metrics": {
+        "brier": 0.1537581894020553,
+        "log_loss": 0.48386269462133896,
+        "roc_auc": 0.5887487865322951,
+        "ece": 0.0044511533473966134
+      },
+      "reliability_bins": [
+        {
+          "mean_predicted_prob": 0.16391335091775328,
+          "observed_spoilage_rate": 0.16145908130398212
+        },
+        {
+          "mean_predicted_prob": 0.23355707029577516,
+          "observed_spoilage_rate": 0.23988733541468713
+        },
+        {
+          "mean_predicted_prob": 0.3249562634419649,
+          "observed_spoilage_rate": 0.2973874374652585
+        },
+        {
+          "mean_predicted_prob": 0.4214318127485754,
+          "observed_spoilage_rate": 0.4375
+        }
+      ]
+    },
+    {
+      "model_family": "xgboost",
+      "feature_set_name": "track_3a_full",
+      "calibration": "isotonic",
+      "metrics": {
+        "brier": 0.15376709537282524,
+        "log_loss": 0.4838520285806993,
+        "roc_auc": 0.588140345359526,
+        "ece": 0.0025985029966327537
+      },
+      "reliability_bins": [
+        {
+          "mean_predicted_prob": 0.08985825403238532,
+          "observed_spoilage_rate": 0.10706638115631692
+        },
+        {
+          "mean_predicted_prob": 0.16058303000487115,
+          "observed_spoilage_rate": 0.15913315500748063
+        },
+        {
+          "mean_predicted_prob": 0.23432199205580156,
+          "observed_spoilage_rate": 0.23711735069679737
+        },
+        {
+          "mean_predicted_prob": 0.3234875054447511,
+          "observed_spoilage_rate": 0.29896907216494845
+        },
+        {
+          "mean_predicted_prob": 0.43851077855994186,
+          "observed_spoilage_rate": 0.3561643835616438
+        },
+        {
+          "mean_predicted_prob": 0.5186138905230023,
+          "observed_spoilage_rate": 0.2857142857142857
+        },
+        {
+          "mean_predicted_prob": 0.6165825029214222,
+          "observed_spoilage_rate": 1.0
+        },
+        {
+          "mean_predicted_prob": 0.8886335094769796,
+          "observed_spoilage_rate": 0.0
+        }
+      ]
+    }
+  ],
+  "chosen": {
+    "model_family": "logreg",
+    "feature_set_name": "track_3a_compact",
+    "calibration": "uncalibrated",
+    "params": {
+      "C": 0.005
+    },
+    "cv_metrics": {
+      "brier": 0.1537399141774408,
+      "log_loss": 0.483743926726195,
+      "roc_auc": 0.5884597442940973,
+      "ece": 0.0016685106152325413
+    },
+    "oof_regenerated": false,
+    "brier_gain_vs_m2_baseline": 0.00023309333676979627,
+    "log_loss_gain_vs_m2_baseline": 0.0007810048791168644
+  },
+  "test": {
+    "model_metrics": {
+      "brier": 0.15640742607682803,
+      "log_loss": 0.48987567457756626,
+      "roc_auc": 0.5899190509656349,
+      "ece": 0.005789645333738579
+    },
+    "benchmark_metrics": {
+      "brier": 0.15601046086782244,
+      "log_loss": 0.48852626350524636,
+      "roc_auc": 0.5967366592848501,
+      "ece": 0.003918328489828642
+    },
+    "thresholds": [
+      {
+        "threshold": 0.2,
+        "pred_pos_rate": 0.4114640745565688,
+        "precision": 0.24439844130540672,
+        "recall": 0.507587253414264,
+        "f1": 0.3299358868979122,
+        "tn": 9799,
+        "fp": 6205,
+        "fn": 1947,
+        "tp": 2007
+      },
+      {
+        "threshold": 0.3,
+        "pred_pos_rate": 0.02455155827237198,
+        "precision": 0.3183673469387755,
+        "recall": 0.03945371775417299,
+        "f1": 0.0702070207020702,
+        "tn": 15670,
+        "fp": 334,
+        "fn": 3798,
+        "tp": 156
+      },
+      {
+        "threshold": 0.5,
+        "pred_pos_rate": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tn": 16004,
+        "fp": 0,
+        "fn": 3954,
+        "tp": 0
+      }
+    ],
+    "support": {
+      "flagged_rows": 2866,
+      "total_test_rows": 19958,
+      "flagged_pct": 14.360156328289408,
+      "flagged_metrics": {
+        "brier": 0.1531021762003136,
+        "log_loss": 0.4815409419561397,
+        "roc_auc": 0.60711306082747,
+        "ece": 0.010209233391977905
+      },
+      "unflagged_metrics": {
+        "brier": 0.1569616529751483,
+        "log_loss": 0.49127324909740056,
+        "roc_auc": 0.5873138928180407,
+        "ece": 0.0077361715110777505
+      }
+    },
+    "shap_top10": [
+      {
+        "feature": "packaging_score",
+        "mean_abs_shap": 0.19169715047504593
+      },
+      {
+        "feature": "handling_score",
+        "mean_abs_shap": 0.12135966493472757
+      },
+      {
+        "feature": "days_until_expiry",
+        "mean_abs_shap": 0.08014580216915644
+      },
+      {
+        "feature": "days_since_receipt",
+        "mean_abs_shap": 0.07984934785018963
+      },
+      {
+        "feature": "temp_deviation",
+        "mean_abs_shap": 0.07135665998495651
+      },
+      {
+        "feature": "distribution_hours",
+        "mean_abs_shap": 0.06509360027814633
+      },
+      {
+        "feature": "daily_demand",
+        "mean_abs_shap": 0.05242472213360557
+      },
+      {
+        "feature": "base_price",
+        "mean_abs_shap": 0.03346506534608544
+      },
+      {
+        "feature": "initial_quantity",
+        "mean_abs_shap": 0.02994411436047425
+      },
+      {
+        "feature": "temp_abuse_events",
+        "mean_abs_shap": 0.017639364307272618
+      }
+    ],
+    "mlflow_run_id": "1c6393d91cbd4396b3baee6c91045aa2",
+    "model_path": "D:\\DEPI\\Project\\Github Repo\\NHA-5-150\\models\\track_3a_classifier.joblib",
+    "meta_path": "D:\\DEPI\\Project\\Github Repo\\NHA-5-150\\models\\track_3a_classifier.json"
+  }
+}
