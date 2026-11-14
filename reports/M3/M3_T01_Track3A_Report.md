@@ -83,6 +83,7 @@ The top two candidates (`logreg` on COMPACT and `xgboost` on FULL) were evaluate
 | Evaluator | Brier Score | Log Loss | ROC-AUC | ECE (10-bin) |
 | :--- | :---: | :---: | :---: | :---: |
 | **Final Track 3A (`logreg` COMPACT)** | **0.15641** | **0.48988** | **0.5899** | **0.00579** |
+| Constant Base-Rate Predictor (`0.19350`) | 0.15889 | 0.49785 | 0.5000 | — |
 | `spoilage_risk` Benchmark (Test) | 0.15601 | 0.48853 | 0.5967 | 0.00392 |
 | Gap (Model − Benchmark) | +0.00040 | +0.00135 | -0.0068 | +0.00187 |
 
@@ -100,6 +101,29 @@ The top two candidates (`logreg` on COMPACT and `xgboost` on FULL) were evaluate
 - **Flagged Subset:** Brier = `0.15310`, Log Loss = `0.48154`, ROC-AUC = `0.6071`
 - **Unflagged Subset:** Brier = `0.15696`, Log Loss = `0.49127`, ROC-AUC = `0.5873`
 - Consistent with M2-T12 findings, flagged rows show no calibration degradation; the flag strictly surfaces limited historical product–store sample count.
+
+### 5.4 Illustrative Cost-Asymmetric Threshold Sweep (CV OOF v2, Train Only)
+
+*Note: Illustrative only; real unit economics and markdown profit optimization are decided in Track 3C.*  
+Swept thresholds on `track_3a_oof_train_v2.csv` (`N = 80,042`) minimizing expected cost per batch $(\text{FN} \cdot k + \text{FP}) / N$ for $k = \text{cost(missed spoilage)} / \text{cost(false alarm)}$:
+
+| Cost Ratio $k$ | Optimal Threshold | Expected Cost / Batch | Recall | Precision | Predicted Pos Rate |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| **1** | 0.390 | 0.19350 | 0.0007 | 0.5000 | 0.03% |
+| **2** | 0.365 | 0.38676 | 0.0024 | 0.4022 | 0.11% |
+| **3** | 0.245 | 0.56770 | 0.2179 | 0.2705 | 15.59% |
+| **5** | 0.170 | 0.75312 | 0.7399 | 0.2221 | 64.46% |
+
+### 5.5 Final OOF (`v2`) vs. Baseline OOF (`v1`) vs. Test Probabilities
+
+- `track_3a_oof_train_v2.csv` (5-fold time-blocked CV of frozen `logreg` `C=0.005` on `COMPACT`, `N = 80,042`): Brier = `0.15374`, Log Loss = `0.48374`, ROC-AUC = `0.5885`.
+- Pearson correlation between `v1` (M2 LightGBM) and `v2` (frozen LogReg) aligned on `record_id`: **`0.8704`**.
+
+| Distribution | Count | Mean | Std | Min | P05 | P25 | P50 | P75 | P95 | Max |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| `track_3a_oof_train.csv` (v1, LGBM) | 80,042 | 0.1923 | 0.0512 | 0.0559 | 0.1158 | 0.1543 | 0.1888 | 0.2263 | 0.2805 | 0.5641 |
+| `track_3a_oof_train_v2.csv` (v2, LogReg) | 80,042 | 0.1933 | 0.0494 | 0.0689 | 0.1214 | 0.1562 | 0.1884 | 0.2253 | 0.2824 | 0.4220 |
+| `track_3a_proba_test.csv` (Test, LogReg) | 19,958 | 0.1931 | 0.0491 | 0.0699 | 0.1213 | 0.1558 | 0.1881 | 0.2250 | 0.2814 | 0.4235 |
 
 ---
 
@@ -132,7 +156,9 @@ The synthetic dataset's `was_spoiled` outcome behaves like a Bernoulli draw from
 
 ## 8. Deviations from Plan
 
-1. **Compact Feature Set Selected (`TRACK_3A_FEATURES_COMPACT`, 90 features):** Per Design Decision #2 (`M2_T11_M3_Design_Decisions.md`), selecting `COMPACT` over `FULL` (180 features) is a documented deviation from the initial proposal, justified by equal CV performance (`0.48374` vs `0.48377` log loss) with half the features and zero NaNs.
-2. **`shap.LinearExplainer` Used Instead of `TreeExplainer`:** Because uncalibrated Logistic Regression won over tree models under the parsimony rule, `shap.LinearExplainer` was used in `scripts/M3_T01_train_track3a.py` rather than `src.mlflow_utils.log_shap_summary` (which assumes `shap.TreeExplainer`).
-3. **`lbfgs` `max_iter=500` Convergence Warning:** Logistic Regression emitted `ConvergenceWarning` at `max_iter=500` on unscaled one-hot + continuous features, though coefficients stabilized cleanly (`C=0.005` achieved top calibration and AUC).
+1. **Regularized Logistic Regression Selected Instead of a Tree Model:** Under the parsimony rule, uncalibrated L2 Logistic Regression (`C=0.005`) on `COMPACT` (`0.15374` CV Brier, `0.48374` CV log loss, `0.5885` CV AUC) matched tuned XGBoost (`0.15373` / `0.48372` / `0.5885`), LightGBM (`0.15373` / `0.48376` / `0.5882`), and Random Forest (`0.15389` / `0.48430` / `0.5852`) within noise, so the simpler linear model was frozen.
+2. **Compact Feature Set Selected (`TRACK_3A_FEATURES_COMPACT`, 90 features):** Per Design Decision #2 (`M2_T11_M3_Design_Decisions.md`), selecting `COMPACT` over `FULL` (180 features) is a documented deviation from the initial proposal. `COMPACT` omits the M2 engineered features (`sales_velocity`, `sales_velocity_per_day`, `sell_through_risk`, `sell_through_ratio`, `at_risk`, `store_md_freq_hist`, `store_md_freq_smoothed`), `supplier_score`, region/store/supplier one-hots, and 7 collinear/zero-signal pre-sale columns, yielding equal CV log loss (`0.48374` vs `0.48377`) with zero NaNs.
+3. **Support Flag Key is `product_name × store_id` (Not `category × region × store`):** As established in M2-T12b (`src/support.py`, threshold = 20), `category × region × store` cells all had $\ge 129$ training rows and never triggered; `product_name × store_id` flags `14.36%` (`2,866`) of test rows.
+4. **`shap.LinearExplainer` Used Instead of `TreeExplainer`:** Because Logistic Regression won over tree models, `shap.LinearExplainer` was used in `scripts/M3_T01_train_track3a.py` rather than `src.mlflow_utils.log_shap_summary` (which assumes `shap.TreeExplainer`).
+5. **`lbfgs` `max_iter=500` Convergence Warning:** Logistic Regression emitted `ConvergenceWarning` at `max_iter=500` on unscaled one-hot + continuous features, though coefficients stabilized cleanly (`C=0.005` achieved top calibration and AUC).
 
