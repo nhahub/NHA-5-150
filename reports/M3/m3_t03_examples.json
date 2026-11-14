@@ -1,0 +1,797 @@
+{
+  "validation": {
+    "sum_to_logit_max_abs_err": 4.440892098500626e-16,
+    "sum_to_prob_pts_max_abs_err": 1.2601031329495527e-13,
+    "stability_identical_repeated": true,
+    "stability_identical_single_vs_batched": true,
+    "global_grouped_ranking_top10": [
+      {
+        "driver": "packaging_score",
+        "mean_abs_logit": 0.19194646331175552
+      },
+      {
+        "driver": "handling_score",
+        "mean_abs_logit": 0.12030782746247957
+      },
+      {
+        "driver": "days_since_receipt",
+        "mean_abs_logit": 0.08397069433802776
+      },
+      {
+        "driver": "days_until_expiry",
+        "mean_abs_logit": 0.08184493158199871
+      },
+      {
+        "driver": "temp_deviation",
+        "mean_abs_logit": 0.07019812740949456
+      },
+      {
+        "driver": "distribution_hours",
+        "mean_abs_logit": 0.06444231518802361
+      },
+      {
+        "driver": "daily_demand",
+        "mean_abs_logit": 0.052802973949079575
+      },
+      {
+        "driver": "category",
+        "mean_abs_logit": 0.041295254261492886
+      },
+      {
+        "driver": "base_price",
+        "mean_abs_logit": 0.03361304351087598
+      },
+      {
+        "driver": "initial_quantity",
+        "mean_abs_logit": 0.029898757204497948
+      }
+    ]
+  },
+  "examples": [
+    {
+      "case": "high_risk",
+      "title": "Example 1: High-Risk Batch",
+      "product_name": "Crab",
+      "store_id": "STORE_036",
+      "category": null,
+      "plain_text": "Predicted spoilage risk 42.4% (typical batch: 19.4%). Main drivers: packaging quality raises risk (+6.5 pts), storage temperature deviation raises risk (+5.9 pts), handling quality raises risk (+4.2 pts).",
+      "figure_path": "reports/figures/m3/m3_t03_example_high_risk.png",
+      "explanation": {
+        "record_id": 61556,
+        "predicted_proba": 0.42353012029455794,
+        "base_rate": 0.19356670376988375,
+        "model_logit": -0.30829845765505803,
+        "base_logit": -1.4579368055851214,
+        "logit_diff": 1.1496383479300634,
+        "sum_contributions_logit": 1.1496383479300631,
+        "grouped_contributions": [
+          {
+            "driver": "days_until_expiry",
+            "label": "days until expiry",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.14812652317984878,
+            "prob_pts_contrib": 2.9629910492887968
+          },
+          {
+            "driver": "days_since_receipt",
+            "label": "days since receipt",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.10552581019216137,
+            "prob_pts_contrib": -2.1108443265672943
+          },
+          {
+            "driver": "temp_abuse_events",
+            "label": "temperature abuse events",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.02502883663920721,
+            "prob_pts_contrib": 0.5006545576313861
+          },
+          {
+            "driver": "base_price",
+            "label": "base price",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.008837708075799013,
+            "prob_pts_contrib": 0.17678164154994597
+          },
+          {
+            "driver": "daily_demand",
+            "label": "expected daily demand",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.08918490266811988,
+            "prob_pts_contrib": 1.7839753655493953
+          },
+          {
+            "driver": "expiry_remaining_ratio",
+            "label": "remaining shelf-life ratio",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.012914365001533066,
+            "prob_pts_contrib": -0.25832745605141283
+          },
+          {
+            "driver": "temp_deviation",
+            "label": "storage temperature deviation",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.2957888552049493,
+            "prob_pts_contrib": 5.9166968321232645
+          },
+          {
+            "driver": "distribution_hours",
+            "label": "distribution transit time",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.10557735895358962,
+            "prob_pts_contrib": 2.111875462081954
+          },
+          {
+            "driver": "handling_score",
+            "label": "handling quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.21102571948163348,
+            "prob_pts_contrib": 4.221170554544348
+          },
+          {
+            "driver": "packaging_score",
+            "label": "packaging quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.3240191986911281,
+            "prob_pts_contrib": 6.481391481482829
+          },
+          {
+            "driver": "initial_quantity",
+            "label": "initial batch quantity",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.00030612221142187033,
+            "prob_pts_contrib": -0.006123396087074893
+          },
+          {
+            "driver": "quality_grade_ord",
+            "label": "quality grade",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.006434261136890368,
+            "prob_pts_contrib": 0.12870522947632707
+          },
+          {
+            "driver": "is_weekend",
+            "label": "weekend arrival",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.009607516531244496,
+            "prob_pts_contrib": 0.19218020430688307
+          },
+          {
+            "driver": "seasonality_month",
+            "label": "month of year",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.01302119585409342,
+            "prob_pts_contrib": 0.26046440528325226
+          },
+          {
+            "driver": "day_of_week",
+            "label": "day of week",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.002379418092761678,
+            "prob_pts_contrib": 0.047595760435210056
+          },
+          {
+            "driver": "category",
+            "label": "product category",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.01843475469161322,
+            "prob_pts_contrib": -0.36875241499299183
+          },
+          {
+            "driver": "product_name",
+            "label": "product type",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.04778790551752734,
+            "prob_pts_contrib": 0.9559067024125959
+          }
+        ],
+        "top_push_up": [
+          {
+            "driver": "packaging_score",
+            "label": "packaging quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.3240191986911281,
+            "prob_pts_contrib": 6.481391481482829
+          },
+          {
+            "driver": "temp_deviation",
+            "label": "storage temperature deviation",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.2957888552049493,
+            "prob_pts_contrib": 5.9166968321232645
+          },
+          {
+            "driver": "handling_score",
+            "label": "handling quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.21102571948163348,
+            "prob_pts_contrib": 4.221170554544348
+          },
+          {
+            "driver": "days_until_expiry",
+            "label": "days until expiry",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.14812652317984878,
+            "prob_pts_contrib": 2.9629910492887968
+          },
+          {
+            "driver": "distribution_hours",
+            "label": "distribution transit time",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.10557735895358962,
+            "prob_pts_contrib": 2.111875462081954
+          }
+        ],
+        "top_push_down": [
+          {
+            "driver": "days_since_receipt",
+            "label": "days since receipt",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.10552581019216137,
+            "prob_pts_contrib": -2.1108443265672943
+          },
+          {
+            "driver": "category",
+            "label": "product category",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.01843475469161322,
+            "prob_pts_contrib": -0.36875241499299183
+          },
+          {
+            "driver": "expiry_remaining_ratio",
+            "label": "remaining shelf-life ratio",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.012914365001533066,
+            "prob_pts_contrib": -0.25832745605141283
+          },
+          {
+            "driver": "initial_quantity",
+            "label": "initial batch quantity",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.00030612221142187033,
+            "prob_pts_contrib": -0.006123396087074893
+          }
+        ],
+        "top_drivers": [
+          {
+            "driver": "packaging_score",
+            "label": "packaging quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.3240191986911281,
+            "prob_pts_contrib": 6.481391481482829
+          },
+          {
+            "driver": "temp_deviation",
+            "label": "storage temperature deviation",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.2957888552049493,
+            "prob_pts_contrib": 5.9166968321232645
+          },
+          {
+            "driver": "handling_score",
+            "label": "handling quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.21102571948163348,
+            "prob_pts_contrib": 4.221170554544348
+          },
+          {
+            "driver": "days_until_expiry",
+            "label": "days until expiry",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.14812652317984878,
+            "prob_pts_contrib": 2.9629910492887968
+          },
+          {
+            "driver": "distribution_hours",
+            "label": "distribution transit time",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.10557735895358962,
+            "prob_pts_contrib": 2.111875462081954
+          }
+        ],
+        "low_history_flag": false,
+        "history_rows": 22,
+        "confidence_note": "Sufficient history for this product at this store"
+      }
+    },
+    {
+      "case": "low_risk",
+      "title": "Example 2: Low-Risk Batch",
+      "product_name": "Frozen Desserts",
+      "store_id": "STORE_021",
+      "category": null,
+      "plain_text": "Predicted spoilage risk 7.0% (typical batch: 19.4%). Main drivers: packaging quality lowers risk (-3.5 pts), days until expiry lowers risk (-1.9 pts), handling quality lowers risk (-1.5 pts).",
+      "figure_path": "reports/figures/m3/m3_t03_example_low_risk.png",
+      "explanation": {
+        "record_id": 40477,
+        "predicted_proba": 0.06992347263153503,
+        "base_rate": 0.19356670376988375,
+        "model_logit": -2.587865474358045,
+        "base_logit": -1.4579368055851214,
+        "logit_diff": -1.1299286687729237,
+        "sum_contributions_logit": -1.129928668772924,
+        "grouped_contributions": [
+          {
+            "driver": "days_until_expiry",
+            "label": "days until expiry",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.1764853142154267,
+            "prob_pts_contrib": -1.9312028361719007
+          },
+          {
+            "driver": "days_since_receipt",
+            "label": "days since receipt",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.04693871294572714,
+            "prob_pts_contrib": -0.513630133872767
+          },
+          {
+            "driver": "temp_abuse_events",
+            "label": "temperature abuse events",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.017036590079782914,
+            "prob_pts_contrib": -0.18642407288696047
+          },
+          {
+            "driver": "base_price",
+            "label": "base price",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.0018027706606110233,
+            "prob_pts_contrib": 0.019726943446919266
+          },
+          {
+            "driver": "daily_demand",
+            "label": "expected daily demand",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.09691031279380692,
+            "prob_pts_contrib": -1.0604478437976839
+          },
+          {
+            "driver": "expiry_remaining_ratio",
+            "label": "remaining shelf-life ratio",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.006816974994684835,
+            "prob_pts_contrib": 0.0745952234177314
+          },
+          {
+            "driver": "temp_deviation",
+            "label": "storage temperature deviation",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.08847458716646009,
+            "prob_pts_contrib": -0.968139328898736
+          },
+          {
+            "driver": "distribution_hours",
+            "label": "distribution transit time",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.11375318993347698,
+            "prob_pts_contrib": -1.2447521993528525
+          },
+          {
+            "driver": "handling_score",
+            "label": "handling quality",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.14063137746740337,
+            "prob_pts_contrib": -1.538868637468028
+          },
+          {
+            "driver": "packaging_score",
+            "label": "packaging quality",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.32358457326587,
+            "prob_pts_contrib": -3.5408467180998944
+          },
+          {
+            "driver": "initial_quantity",
+            "label": "initial batch quantity",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.02067660178805778,
+            "prob_pts_contrib": 0.22625515439065247
+          },
+          {
+            "driver": "quality_grade_ord",
+            "label": "quality grade",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.004163223767522565,
+            "prob_pts_contrib": -0.04555636588347394
+          },
+          {
+            "driver": "is_weekend",
+            "label": "weekend arrival",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.009607516531244496,
+            "prob_pts_contrib": 0.10513091843471908
+          },
+          {
+            "driver": "seasonality_month",
+            "label": "month of year",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.018402508256125532,
+            "prob_pts_contrib": -0.20137072761490973
+          },
+          {
+            "driver": "day_of_week",
+            "label": "day of week",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.012277677306140032,
+            "prob_pts_contrib": -0.1343493385873375
+          },
+          {
+            "driver": "category",
+            "label": "product category",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.06158832068170267,
+            "prob_pts_contrib": -0.6739344863017057
+          },
+          {
+            "driver": "product_name",
+            "label": "product type",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.06858614486807729,
+            "prob_pts_contrib": -0.7505086645886474
+          }
+        ],
+        "top_push_up": [
+          {
+            "driver": "initial_quantity",
+            "label": "initial batch quantity",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.02067660178805778,
+            "prob_pts_contrib": 0.22625515439065247
+          },
+          {
+            "driver": "is_weekend",
+            "label": "weekend arrival",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.009607516531244496,
+            "prob_pts_contrib": 0.10513091843471908
+          },
+          {
+            "driver": "expiry_remaining_ratio",
+            "label": "remaining shelf-life ratio",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.006816974994684835,
+            "prob_pts_contrib": 0.0745952234177314
+          },
+          {
+            "driver": "base_price",
+            "label": "base price",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.0018027706606110233,
+            "prob_pts_contrib": 0.019726943446919266
+          }
+        ],
+        "top_push_down": [
+          {
+            "driver": "packaging_score",
+            "label": "packaging quality",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.32358457326587,
+            "prob_pts_contrib": -3.5408467180998944
+          },
+          {
+            "driver": "days_until_expiry",
+            "label": "days until expiry",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.1764853142154267,
+            "prob_pts_contrib": -1.9312028361719007
+          },
+          {
+            "driver": "handling_score",
+            "label": "handling quality",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.14063137746740337,
+            "prob_pts_contrib": -1.538868637468028
+          },
+          {
+            "driver": "distribution_hours",
+            "label": "distribution transit time",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.11375318993347698,
+            "prob_pts_contrib": -1.2447521993528525
+          },
+          {
+            "driver": "daily_demand",
+            "label": "expected daily demand",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.09691031279380692,
+            "prob_pts_contrib": -1.0604478437976839
+          }
+        ],
+        "top_drivers": [
+          {
+            "driver": "packaging_score",
+            "label": "packaging quality",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.32358457326587,
+            "prob_pts_contrib": -3.5408467180998944
+          },
+          {
+            "driver": "days_until_expiry",
+            "label": "days until expiry",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.1764853142154267,
+            "prob_pts_contrib": -1.9312028361719007
+          },
+          {
+            "driver": "handling_score",
+            "label": "handling quality",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.14063137746740337,
+            "prob_pts_contrib": -1.538868637468028
+          },
+          {
+            "driver": "distribution_hours",
+            "label": "distribution transit time",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.11375318993347698,
+            "prob_pts_contrib": -1.2447521993528525
+          },
+          {
+            "driver": "daily_demand",
+            "label": "expected daily demand",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.09691031279380692,
+            "prob_pts_contrib": -1.0604478437976839
+          }
+        ],
+        "low_history_flag": false,
+        "history_rows": 32,
+        "confidence_note": "Sufficient history for this product at this store"
+      }
+    },
+    {
+      "case": "limited_history",
+      "title": "Example 3: Limited-History Batch",
+      "product_name": "Cakes",
+      "store_id": "STORE_025",
+      "category": null,
+      "plain_text": "Predicted spoilage risk 38.3% (typical batch: 19.4%). Main drivers: storage temperature deviation raises risk (+8.7 pts), packaging quality raises risk (+6.3 pts), handling quality raises risk (+2.7 pts). Note: Limited history for this product at this store (18 training rows).",
+      "figure_path": "reports/figures/m3/m3_t03_example_limited_history.png",
+      "explanation": {
+        "record_id": 210,
+        "predicted_proba": 0.3829716254879917,
+        "base_rate": 0.19356670376988375,
+        "model_logit": -0.47695410916337433,
+        "base_logit": -1.4579368055851214,
+        "logit_diff": 0.9809826964217471,
+        "sum_contributions_logit": 0.9809826964217468,
+        "grouped_contributions": [
+          {
+            "driver": "days_until_expiry",
+            "label": "days until expiry",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.04845719903425204,
+            "prob_pts_contrib": 0.935595706554179
+          },
+          {
+            "driver": "days_since_receipt",
+            "label": "days since receipt",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.01266731505073841,
+            "prob_pts_contrib": -0.2445763645286792
+          },
+          {
+            "driver": "temp_abuse_events",
+            "label": "temperature abuse events",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.051569112320343995,
+            "prob_pts_contrib": 0.995679507674804
+          },
+          {
+            "driver": "base_price",
+            "label": "base price",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.0011273578342293317,
+            "prob_pts_contrib": -0.021766655326273157
+          },
+          {
+            "driver": "daily_demand",
+            "label": "expected daily demand",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.06337681650508417,
+            "prob_pts_contrib": 1.2236587875274418
+          },
+          {
+            "driver": "expiry_remaining_ratio",
+            "label": "remaining shelf-life ratio",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.0013994233380086904,
+            "prob_pts_contrib": -0.027019606844530402
+          },
+          {
+            "driver": "temp_deviation",
+            "label": "storage temperature deviation",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.4509719900876298,
+            "prob_pts_contrib": 8.707219280337277
+          },
+          {
+            "driver": "distribution_hours",
+            "label": "distribution transit time",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.04886696204784889,
+            "prob_pts_contrib": 0.9435072764316482
+          },
+          {
+            "driver": "handling_score",
+            "label": "handling quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.1406945534882612,
+            "prob_pts_contrib": 2.7164842954734003
+          },
+          {
+            "driver": "packaging_score",
+            "label": "packaging quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.3240191986911281,
+            "prob_pts_contrib": 6.256056420476599
+          },
+          {
+            "driver": "initial_quantity",
+            "label": "initial batch quantity",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.040563661154245194,
+            "prob_pts_contrib": -0.783189865992966
+          },
+          {
+            "driver": "quality_grade_ord",
+            "label": "quality grade",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.006434261136890368,
+            "prob_pts_contrib": 0.12423060380084883
+          },
+          {
+            "driver": "is_weekend",
+            "label": "weekend arrival",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.009607516531244496,
+            "prob_pts_contrib": 0.1854987782295658
+          },
+          {
+            "driver": "seasonality_month",
+            "label": "month of year",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.018402508256125532,
+            "prob_pts_contrib": -0.3553095939798089
+          },
+          {
+            "driver": "day_of_week",
+            "label": "day of week",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.002379418092761678,
+            "prob_pts_contrib": 0.0459410241626138
+          },
+          {
+            "driver": "category",
+            "label": "product category",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.07686240034896426,
+            "prob_pts_contrib": -1.484034017548315
+          },
+          {
+            "driver": "product_name",
+            "label": "product type",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.014371665531386317,
+            "prob_pts_contrib": -0.2774834046370148
+          }
+        ],
+        "top_push_up": [
+          {
+            "driver": "temp_deviation",
+            "label": "storage temperature deviation",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.4509719900876298,
+            "prob_pts_contrib": 8.707219280337277
+          },
+          {
+            "driver": "packaging_score",
+            "label": "packaging quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.3240191986911281,
+            "prob_pts_contrib": 6.256056420476599
+          },
+          {
+            "driver": "handling_score",
+            "label": "handling quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.1406945534882612,
+            "prob_pts_contrib": 2.7164842954734003
+          },
+          {
+            "driver": "daily_demand",
+            "label": "expected daily demand",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.06337681650508417,
+            "prob_pts_contrib": 1.2236587875274418
+          },
+          {
+            "driver": "temp_abuse_events",
+            "label": "temperature abuse events",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.051569112320343995,
+            "prob_pts_contrib": 0.995679507674804
+          }
+        ],
+        "top_push_down": [
+          {
+            "driver": "category",
+            "label": "product category",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.07686240034896426,
+            "prob_pts_contrib": -1.484034017548315
+          },
+          {
+            "driver": "initial_quantity",
+            "label": "initial batch quantity",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.040563661154245194,
+            "prob_pts_contrib": -0.783189865992966
+          },
+          {
+            "driver": "seasonality_month",
+            "label": "month of year",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.018402508256125532,
+            "prob_pts_contrib": -0.3553095939798089
+          },
+          {
+            "driver": "product_name",
+            "label": "product type",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.014371665531386317,
+            "prob_pts_contrib": -0.2774834046370148
+          },
+          {
+            "driver": "days_since_receipt",
+            "label": "days since receipt",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.01266731505073841,
+            "prob_pts_contrib": -0.2445763645286792
+          }
+        ],
+        "top_drivers": [
+          {
+            "driver": "temp_deviation",
+            "label": "storage temperature deviation",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.4509719900876298,
+            "prob_pts_contrib": 8.707219280337277
+          },
+          {
+            "driver": "packaging_score",
+            "label": "packaging quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.3240191986911281,
+            "prob_pts_contrib": 6.256056420476599
+          },
+          {
+            "driver": "handling_score",
+            "label": "handling quality",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.1406945534882612,
+            "prob_pts_contrib": 2.7164842954734003
+          },
+          {
+            "driver": "category",
+            "label": "product category",
+            "direction": "lowers risk",
+            "log_odds_contrib": -0.07686240034896426,
+            "prob_pts_contrib": -1.484034017548315
+          },
+          {
+            "driver": "daily_demand",
+            "label": "expected daily demand",
+            "direction": "raises risk",
+            "log_odds_contrib": 0.06337681650508417,
+            "prob_pts_contrib": 1.2236587875274418
+          }
+        ],
+        "low_history_flag": true,
+        "history_rows": 18,
+        "confidence_note": "Limited history for this product at this store"
+      }
+    }
+  ]
+}
