@@ -7,7 +7,8 @@ COMPACT (90) feature sets, leak-free calibration comparison (uncalibrated vs
 Platt vs isotonic), final test evaluation, SHAP attribution, and support flagging.
 """
 
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 import numpy as np
 import optuna
 import pandas as pd
@@ -32,6 +33,7 @@ from src.config import (
     CLEANED_DATASET_PATH,
     MODEL_READY_M2_DATASET_PATH,
     RANDOM_STATE,
+    TRACK_3A_MODEL_PATH,
     TRACK_3A_OOF_TRAIN_PATH,
 )
 from src.m2_feature_pipeline import (
@@ -40,6 +42,7 @@ from src.m2_feature_pipeline import (
     validate_feature_columns_exist,
 )
 from src.m3_oof import generate_oof_predictions
+from src.mlflow_utils import load_model_with_metadata
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
@@ -386,4 +389,67 @@ def compute_threshold_metrics(
             "tp": int(cm[1, 1]),
         })
     return rows
+
+
+def sweep_cost_asymmetric_thresholds(
+    y_true: np.ndarray,
+    proba: np.ndarray,
+    cost_ratios: Tuple[int, ...] = (1, 2, 3, 5),
+    thresholds: Optional[np.ndarray] = None,
+) -> List[Dict[str, Any]]:
+    """
+    Illustrative cost-asymmetric threshold sweep on CV OOF probabilities.
+    Minimizes expected cost per batch = (FN * k + FP * 1) / N for k = cost(missed spoilage) / cost(false alarm).
+    """
+    grid = thresholds if thresholds is not None else np.round(np.linspace(0.05, 0.50, 91), 4)
+    y_arr = np.asarray(y_true)
+    p_arr = np.asarray(proba)
+    n = len(y_arr)
+    results: List[Dict[str, Any]] = []
+    for k in cost_ratios:
+        best_row: Optional[Dict[str, Any]] = None
+        for thr in grid:
+            preds = (p_arr >= thr).astype(int)
+            fp = int(((preds == 1) & (y_arr == 0)).sum())
+            fn = int(((preds == 0) & (y_arr == 1)).sum())
+            exp_cost = (fn * k + fp) / n
+            if best_row is None or exp_cost < best_row["expected_cost_per_batch"]:
+                best_row = {
+                    "cost_ratio_k": int(k),
+                    "optimal_threshold": float(thr),
+                    "expected_cost_per_batch": float(exp_cost),
+                    "recall": float(recall_score(y_arr, preds, zero_division=0)),
+                    "precision": float(precision_score(y_arr, preds, zero_division=0)),
+                    "f1": float(f1_score(y_arr, preds, zero_division=0)),
+                    "pred_pos_rate": float(preds.mean()),
+                }
+        assert best_row is not None
+        results.append(best_row)
+    return results
+
+
+def score_batches(
+    df: pd.DataFrame,
+    model_path: Optional[Union[str, Path]] = None,
+) -> np.ndarray:
+    """
+    Loads the frozen Track 3A classifier with metadata, validates required feature
+    columns and ordering, and returns calibrated spoilage probabilities in [0, 1].
+    Supports both multi-row batches and single-row simulator inputs.
+    """
+    if df.empty:
+        raise ValueError("Input DataFrame is empty; expected at least 1 row.")
+    target_path = Path(model_path) if model_path is not None else TRACK_3A_MODEL_PATH
+    model, metadata = load_model_with_metadata(target_path)
+    feature_list = metadata["feature_list"]
+    missing = [c for c in feature_list if c not in df.columns]
+    if missing:
+        raise KeyError(f"Missing required Track 3A features: {missing[:10]} (total {len(missing)})")
+    X = df[feature_list]
+    if X.isna().any().any():
+        nan_cols = X.columns[X.isna().any()].tolist()
+        raise ValueError(f"NaN values found in Track 3A scoring inputs: {nan_cols[:10]}")
+    proba = np.asarray(model.predict_proba(X)[:, 1], dtype=float)
+    return np.clip(proba, 0.0, 1.0)
+
 
