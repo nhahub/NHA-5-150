@@ -1,0 +1,684 @@
+{
+  "integrity": {
+    "n_total": 100000,
+    "n_train": 80042,
+    "n_test": 19958,
+    "record_id_unique": true,
+    "train_oof_missing": 0,
+    "test_oof_missing": 0,
+    "inventory_max_diff": 0,
+    "profit_identity_max_err": 3.2741809263825417e-11,
+    "leakage_guard_passed": true,
+    "feature_nan_counts": {
+      "sales_velocity": 576,
+      "store_md_freq_hist": 152,
+      "sell_through_risk": 2603,
+      "sell_through_ratio": 576,
+      "at_risk": 576
+    },
+    "s_distribution": {
+      "overall_mean": 0.7740792287740972,
+      "overall_std": 0.28717049627804403,
+      "share_exactly_0": 0.07652,
+      "share_exactly_1": 0.42598,
+      "quantiles": {
+        "min": 0.0,
+        "p05": 0.0,
+        "p25": 0.6923076923076923,
+        "p50": 0.8763890603778244,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0
+      },
+      "train_mean": 0.777319636797185
+    }
+  },
+  "diagnostics": {
+    "discount_bins": [
+      {
+        "discount_bin": "0%",
+        "n_rows": 55567,
+        "share_pct": 69.42230329077235,
+        "thin_support": false,
+        "mean_s": 0.7679374174488095,
+        "mean_profit": 1278.2023845087913,
+        "mean_profit_per_unit": 4.571297370169517,
+        "loss_share_pct": 16.781543002141557
+      },
+      {
+        "discount_bin": "10-15%",
+        "n_rows": 941,
+        "share_pct": 1.1756327927837884,
+        "thin_support": false,
+        "mean_s": 0.6788705935616095,
+        "mean_profit": 207.60982996811902,
+        "mean_profit_per_unit": 0.6378313981857014,
+        "loss_share_pct": 43.145589798087144
+      },
+      {
+        "discount_bin": "15-20%",
+        "n_rows": 5259,
+        "share_pct": 6.5703005921891,
+        "thin_support": false,
+        "mean_s": 0.785880299863841,
+        "mean_profit": 374.98750713063316,
+        "mean_profit_per_unit": 0.706597532029114,
+        "loss_share_pct": 26.83019585472523
+      },
+      {
+        "discount_bin": "20-25%",
+        "n_rows": 6051,
+        "share_pct": 7.55978111491467,
+        "thin_support": false,
+        "mean_s": 0.802291070302218,
+        "mean_profit": 83.91879193521731,
+        "mean_profit_per_unit": -0.128203894036961,
+        "loss_share_pct": 28.573789456288218
+      },
+      {
+        "discount_bin": "25-30%",
+        "n_rows": 2273,
+        "share_pct": 2.8397591264586093,
+        "thin_support": false,
+        "mean_s": 0.728040766681667,
+        "mean_profit": -112.55230972283324,
+        "mean_profit_per_unit": -0.5091819120883765,
+        "loss_share_pct": 50.06599208095028
+      },
+      {
+        "discount_bin": "30-35%",
+        "n_rows": 857,
+        "share_pct": 1.0706878888583495,
+        "thin_support": false,
+        "mean_s": 0.6520714943016995,
+        "mean_profit": -354.4775845974329,
+        "mean_profit_per_unit": -1.4620885180053225,
+        "loss_share_pct": 73.51225204200699
+      },
+      {
+        "discount_bin": "35-40%",
+        "n_rows": 918,
+        "share_pct": 1.1468978786137278,
+        "thin_support": false,
+        "mean_s": 0.6453589881121548,
+        "mean_profit": -449.12693899782136,
+        "mean_profit_per_unit": -1.9630592195978167,
+        "loss_share_pct": 81.48148148148148
+      },
+      {
+        "discount_bin": "40-45%",
+        "n_rows": 1609,
+        "share_pct": 2.0101946478098998,
+        "thin_support": false,
+        "mean_s": 0.7793886514203903,
+        "mean_profit": -342.93216904909883,
+        "mean_profit_per_unit": -1.3928563669026506,
+        "loss_share_pct": 74.08328154133001
+      },
+      {
+        "discount_bin": "45-50%",
+        "n_rows": 1210,
+        "share_pct": 1.5117063541640638,
+        "thin_support": false,
+        "mean_s": 0.8652019175153842,
+        "mean_profit": -332.67061157024796,
+        "mean_profit_per_unit": -1.3321178578199477,
+        "loss_share_pct": 73.38842975206612
+      },
+      {
+        "discount_bin": "50-55%",
+        "n_rows": 1311,
+        "share_pct": 1.6378901076934609,
+        "thin_support": false,
+        "mean_s": 0.8838189591843011,
+        "mean_profit": -465.3433638443936,
+        "mean_profit_per_unit": -1.8043847749322082,
+        "loss_share_pct": 84.744469870328
+      },
+      {
+        "discount_bin": "55-60%",
+        "n_rows": 1208,
+        "share_pct": 1.509207665975363,
+        "thin_support": false,
+        "mean_s": 0.9000485116780077,
+        "mean_profit": -534.2747268211921,
+        "mean_profit_per_unit": -2.210309504689456,
+        "loss_share_pct": 93.95695364238411
+      },
+      {
+        "discount_bin": "60-65%",
+        "n_rows": 1239,
+        "share_pct": 1.5479373329002275,
+        "thin_support": false,
+        "mean_s": 0.9025635956339555,
+        "mean_profit": -745.9562066182405,
+        "mean_profit_per_unit": -2.902680979011867,
+        "loss_share_pct": 100.0
+      },
+      {
+        "discount_bin": "65-70%",
+        "n_rows": 1127,
+        "share_pct": 1.4080107943329752,
+        "thin_support": false,
+        "mean_s": 0.9065184483117319,
+        "mean_profit": -846.8177462289264,
+        "mean_profit_per_unit": -3.504084108530448,
+        "loss_share_pct": 100.0
+      },
+      {
+        "discount_bin": "70-75%",
+        "n_rows": 472,
+        "share_pct": 0.5896904125334199,
+        "thin_support": false,
+        "mean_s": 0.9044807472091508,
+        "mean_profit": -1138.4865889830508,
+        "mean_profit_per_unit": -4.458874742411383,
+        "loss_share_pct": 100.0
+      }
+    ],
+    "spearman_with_discount": [
+      {
+        "feature": "oof_proba",
+        "n_valid": 80042,
+        "spearman_rho": 0.41492968583090045,
+        "p_value": 0.0
+      },
+      {
+        "feature": "expiry_remaining_ratio",
+        "n_valid": 80042,
+        "spearman_rho": -0.553246393393819,
+        "p_value": 0.0
+      },
+      {
+        "feature": "store_md_freq_hist",
+        "n_valid": 79890,
+        "spearman_rho": 0.00230720709094325,
+        "p_value": 0.5143246819473279
+      },
+      {
+        "feature": "sales_velocity",
+        "n_valid": 79466,
+        "spearman_rho": 0.09162848527192836,
+        "p_value": 1.0119597684006362e-147
+      },
+      {
+        "feature": "quality_grade_ord",
+        "n_valid": 80042,
+        "spearman_rho": -0.35525389115064,
+        "p_value": 0.0
+      },
+      {
+        "feature": "is_promoted",
+        "n_valid": 80042,
+        "spearman_rho": -0.0034792020263987996,
+        "p_value": 0.324961723755701
+      }
+    ],
+    "discount_by_oof_decile": [
+      {
+        "oof_decile": 1,
+        "n_rows": 8005,
+        "mean_oof": 0.11903174904111515,
+        "discount_rate": 0.07920049968769519,
+        "mean_discount_all": 0.026974391005621486
+      },
+      {
+        "oof_decile": 2,
+        "n_rows": 8004,
+        "mean_oof": 0.14150647970421462,
+        "discount_rate": 0.1271864067966017,
+        "mean_discount_all": 0.04651174412793604
+      },
+      {
+        "oof_decile": 3,
+        "n_rows": 8004,
+        "mean_oof": 0.15615155757940846,
+        "discount_rate": 0.14792603698150925,
+        "mean_discount_all": 0.05625812093953024
+      },
+      {
+        "oof_decile": 4,
+        "n_rows": 8004,
+        "mean_oof": 0.16924664910086376,
+        "discount_rate": 0.16966516741629187,
+        "mean_discount_all": 0.06382058970514742
+      },
+      {
+        "oof_decile": 5,
+        "n_rows": 8004,
+        "mean_oof": 0.18200614359220807,
+        "discount_rate": 0.18790604697651175,
+        "mean_discount_all": 0.06883808095952024
+      },
+      {
+        "oof_decile": 6,
+        "n_rows": 8004,
+        "mean_oof": 0.19504997628063458,
+        "discount_rate": 0.23275862068965517,
+        "mean_discount_all": 0.08301099450274863
+      },
+      {
+        "oof_decile": 7,
+        "n_rows": 8004,
+        "mean_oof": 0.20912885683946514,
+        "discount_rate": 0.31059470264867567,
+        "mean_discount_all": 0.10483133433283359
+      },
+      {
+        "oof_decile": 8,
+        "n_rows": 8004,
+        "mean_oof": 0.22548857978474413,
+        "discount_rate": 0.41066966516741626,
+        "mean_discount_all": 0.12878935532233882
+      },
+      {
+        "oof_decile": 9,
+        "n_rows": 8004,
+        "mean_oof": 0.24694978415533309,
+        "discount_rate": 0.5729635182408795,
+        "mean_discount_all": 0.1706159420289855
+      },
+      {
+        "oof_decile": 10,
+        "n_rows": 8005,
+        "mean_oof": 0.28868545380213245,
+        "discount_rate": 0.8188632104934416,
+        "mean_discount_all": 0.25555277951280453
+      }
+    ],
+    "discount_by_exp_decile": [
+      {
+        "exp_decile": 1,
+        "n_rows": 8005,
+        "mean_exp_ratio": -2.2420929219237977,
+        "discount_rate": 1.0,
+        "mean_discount_all": 0.5425559025608995
+      },
+      {
+        "exp_decile": 2,
+        "n_rows": 8004,
+        "mean_exp_ratio": -1.1053874394052972,
+        "discount_rate": 0.9045477261369316,
+        "mean_discount_all": 0.23178285857071465
+      },
+      {
+        "exp_decile": 3,
+        "n_rows": 8004,
+        "mean_exp_ratio": -0.46760626186906545,
+        "discount_rate": 0.15529735132433783,
+        "mean_discount_all": 0.0311944027986007
+      },
+      {
+        "exp_decile": 4,
+        "n_rows": 8004,
+        "mean_exp_ratio": -0.08468318986444277,
+        "discount_rate": 0.14105447276361818,
+        "mean_discount_all": 0.02810469765117441
+      },
+      {
+        "exp_decile": 5,
+        "n_rows": 8004,
+        "mean_exp_ratio": 0.1417675039105447,
+        "discount_rate": 0.14442778610694654,
+        "mean_discount_all": 0.028883058470764618
+      },
+      {
+        "exp_decile": 6,
+        "n_rows": 8004,
+        "mean_exp_ratio": 0.3296306280609695,
+        "discount_rate": 0.1418040979510245,
+        "mean_discount_all": 0.02828335832083958
+      },
+      {
+        "exp_decile": 7,
+        "n_rows": 8004,
+        "mean_exp_ratio": 0.5110563223388306,
+        "discount_rate": 0.14392803598200898,
+        "mean_discount_all": 0.028716891554222888
+      },
+      {
+        "exp_decile": 8,
+        "n_rows": 8004,
+        "mean_exp_ratio": 0.7089128403298351,
+        "discount_rate": 0.14142928535732133,
+        "mean_discount_all": 0.028339580209895052
+      },
+      {
+        "exp_decile": 9,
+        "n_rows": 8004,
+        "mean_exp_ratio": 0.9505374180409795,
+        "discount_rate": 0.14730134932533734,
+        "mean_discount_all": 0.029656421789105446
+      },
+      {
+        "exp_decile": 10,
+        "n_rows": 8005,
+        "mean_exp_ratio": 1.2579900587133042,
+        "discount_rate": 0.13791380387257965,
+        "mean_discount_all": 0.027650218613366646
+      }
+    ],
+    "overlap": {
+      "n_strata": 85,
+      "share_strata_both": 0.7764705882352941,
+      "share_rows_both": 0.8185327702955948,
+      "share_strata_3plus_bins": 0.7294117647058823,
+      "share_rows_3plus_bins": 0.758751655380925,
+      "min_rows_per_stratum": 1,
+      "median_rows_per_stratum": 804.0
+    },
+    "promoted_vs_not": [
+      {
+        "is_promoted": 0,
+        "n_rows": 68103,
+        "discount_rate": 0.3062420157702304,
+        "mean_discount_all": 0.1008611955420466,
+        "mean_discount_when_md": 0.3293512658227848
+      },
+      {
+        "is_promoted": 1,
+        "n_rows": 11939,
+        "discount_rate": 0.303124214758355,
+        "mean_discount_all": 0.09858279587905185,
+        "mean_discount_when_md": 0.32522243713733073
+      }
+    ],
+    "raw_by_tercile_and_bin": [
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "0%",
+        "n_rows": 23408,
+        "mean_s": 0.7566813062946142,
+        "mean_profit": 906.4572996411483
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "10-15%",
+        "n_rows": 286,
+        "mean_s": 0.6654092536476741,
+        "mean_profit": 126.74482517482517
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "15-20%",
+        "n_rows": 335,
+        "mean_s": 0.7326924654263741,
+        "mean_profit": 223.9317014925373
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "20-25%",
+        "n_rows": 319,
+        "mean_s": 0.7542338275077346,
+        "mean_profit": 197.45689655172413
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "25-30%",
+        "n_rows": 496,
+        "mean_s": 0.707105497295829,
+        "mean_profit": -122.96810483870968
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "30-35%",
+        "n_rows": 198,
+        "mean_s": 0.6155861048316363,
+        "mean_profit": -371.2097474747475
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "35-40%",
+        "n_rows": 170,
+        "mean_s": 0.5940884154188054,
+        "mean_profit": -461.15529411764703
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "40-45%",
+        "n_rows": 360,
+        "mean_s": 0.7785559700127225,
+        "mean_profit": -281.6222222222222
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "45-50%",
+        "n_rows": 227,
+        "mean_s": 0.8924217965531248,
+        "mean_profit": -255.1783259911894
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "50-55%",
+        "n_rows": 222,
+        "mean_s": 0.9183205583898258,
+        "mean_profit": -352.4639189189189
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "55-60%",
+        "n_rows": 236,
+        "mean_s": 0.9204611654483149,
+        "mean_profit": -520.6438135593221
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "60-65%",
+        "n_rows": 219,
+        "mean_s": 0.9183635234513946,
+        "mean_profit": -634.923607305936
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "65-70%",
+        "n_rows": 186,
+        "mean_s": 0.9146875923118352,
+        "mean_profit": -845.777311827957
+      },
+      {
+        "oof_tercile": "LowRisk",
+        "discount_bin": "70-75%",
+        "n_rows": 19,
+        "mean_s": 0.9506835685247922,
+        "mean_profit": -1209.9763157894736
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "0%",
+        "n_rows": 20820,
+        "mean_s": 0.7731655879128997,
+        "mean_profit": 1389.4390038424592
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "10-15%",
+        "n_rows": 381,
+        "mean_s": 0.672658508337989,
+        "mean_profit": 244.77632545931758
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "15-20%",
+        "n_rows": 864,
+        "mean_s": 0.7192257070056719,
+        "mean_profit": 165.81086805555555
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "20-25%",
+        "n_rows": 893,
+        "mean_s": 0.7513575825484523,
+        "mean_profit": -310.09106382978723
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "25-30%",
+        "n_rows": 714,
+        "mean_s": 0.7070608862898692,
+        "mean_profit": -115.3824649859944
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "30-35%",
+        "n_rows": 257,
+        "mean_s": 0.6170444835924386,
+        "mean_profit": -455.44972762645915
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "35-40%",
+        "n_rows": 243,
+        "mean_s": 0.6063717493440577,
+        "mean_profit": -481.88008230452675
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "40-45%",
+        "n_rows": 559,
+        "mean_s": 0.7877425637753468,
+        "mean_profit": -369.79805008944544
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "45-50%",
+        "n_rows": 398,
+        "mean_s": 0.8849694671626613,
+        "mean_profit": -274.4541457286432
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "50-55%",
+        "n_rows": 393,
+        "mean_s": 0.9053111990855276,
+        "mean_profit": -460.73290076335877
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "55-60%",
+        "n_rows": 376,
+        "mean_s": 0.900800094238747,
+        "mean_profit": -530.2470212765958
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "60-65%",
+        "n_rows": 392,
+        "mean_s": 0.9051690232365268,
+        "mean_profit": -739.75625
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "65-70%",
+        "n_rows": 343,
+        "mean_s": 0.9109701872633295,
+        "mean_profit": -856.7920408163264
+      },
+      {
+        "oof_tercile": "MidRisk",
+        "discount_bin": "70-75%",
+        "n_rows": 47,
+        "mean_s": 0.920386348242744,
+        "mean_profit": -962.0672340425531
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "0%",
+        "n_rows": 11339,
+        "mean_s": 0.7815746465549963,
+        "mean_profit": 1841.3792547843725
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "10-15%",
+        "n_rows": 274,
+        "mean_s": 0.7015594537279775,
+        "mean_profit": 240.3359489051095
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "15-20%",
+        "n_rows": 4060,
+        "mean_s": 0.8044535739441387,
+        "mean_profit": 431.9659088669951
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "20-25%",
+        "n_rows": 4839,
+        "mean_s": 0.8148585150254155,
+        "mean_profit": 149.1455218020252
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "25-30%",
+        "n_rows": 1063,
+        "mean_s": 0.7519010942593897,
+        "mean_profit": -105.79128880526811
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "30-35%",
+        "n_rows": 402,
+        "mean_s": 0.6924347999418801,
+        "mean_profit": -281.6845273631841
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "35-40%",
+        "n_rows": 505,
+        "mean_s": 0.6813785849012975,
+        "mean_profit": -429.31736633663365
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "40-45%",
+        "n_rows": 690,
+        "mean_s": 0.7730552141745056,
+        "mean_profit": -353.15471014492755
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "45-50%",
+        "n_rows": 585,
+        "mean_s": 0.8411909819578055,
+        "mean_profit": -402.3473675213675
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "50-55%",
+        "n_rows": 696,
+        "mean_s": 0.8606784343210706,
+        "mean_profit": -503.95133620689654
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "55-60%",
+        "n_rows": 596,
+        "mean_s": 0.8914914960192315,
+        "mean_profit": -542.2131711409396
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "60-65%",
+        "n_rows": 628,
+        "mean_s": 0.8954274303278612,
+        "mean_profit": -788.5462101910829
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "65-70%",
+        "n_rows": 598,
+        "mean_s": 0.901424121816051,
+        "mean_profit": -841.4203177257525
+      },
+      {
+        "oof_tercile": "HighRisk",
+        "discount_bin": "70-75%",
+        "n_rows": 406,
+        "mean_s": 0.9004772574220177,
+        "mean_profit": -1155.5639408866996
+      }
+    ]
+  },
+  "mlflow_run_id": "486dd40b3dfc4baa898d80b8b81453a5"
+}
