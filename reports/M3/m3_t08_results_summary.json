@@ -1,0 +1,264 @@
+{
+  "slopes_comparison": [
+    {
+      "category": "Bakery",
+      "n_cat_r1": 3811,
+      "n_supported_bins": 13,
+      "slope_per10_overall": 0.018989068710049607,
+      "slope_per10_10-30%": 0.03668927688616552,
+      "slope_per10_30-50%": 0.018928532733045567,
+      "slope_per10_50-75%": 0.004877330950760106,
+      "n_r1": 3811,
+      "mf_slope_per10": 0.030469917039857877,
+      "mf_ci95_low_per10": 0.02432984233915134,
+      "mf_ci95_high_per10": 0.0365303952370335
+    },
+    {
+      "category": "Beverages",
+      "n_cat_r1": 1247,
+      "n_supported_bins": 3,
+      "slope_per10_overall": 0.020337334390261197,
+      "slope_per10_10-30%": 0.020337334390261197,
+      "slope_per10_30-50%": NaN,
+      "slope_per10_50-75%": NaN,
+      "n_r1": 1247,
+      "mf_slope_per10": 0.010403002051955263,
+      "mf_ci95_low_per10": -0.018091193255224878,
+      "mf_ci95_high_per10": 0.04068609756985754
+    },
+    {
+      "category": "Dairy",
+      "n_cat_r1": 1363,
+      "n_supported_bins": 5,
+      "slope_per10_overall": 0.03111623383281592,
+      "slope_per10_10-30%": 0.03111623383281592,
+      "slope_per10_30-50%": NaN,
+      "slope_per10_50-75%": NaN,
+      "n_r1": 1363,
+      "mf_slope_per10": 0.03763902930078086,
+      "mf_ci95_low_per10": 0.01780313471991326,
+      "mf_ci95_high_per10": 0.05860574261499723
+    },
+    {
+      "category": "Deli",
+      "n_cat_r1": 2193,
+      "n_supported_bins": 12,
+      "slope_per10_overall": 0.020380188414614822,
+      "slope_per10_10-30%": 0.037785282672702425,
+      "slope_per10_30-50%": 0.01583144988661861,
+      "slope_per10_50-75%": 0.0032383807744929736,
+      "n_r1": 2193,
+      "mf_slope_per10": 0.03744299189661437,
+      "mf_ci95_low_per10": 0.026339534219159463,
+      "mf_ci95_high_per10": 0.04940119821250927
+    },
+    {
+      "category": "Frozen_Meals",
+      "n_cat_r1": 1119,
+      "n_supported_bins": 3,
+      "slope_per10_overall": 0.01840539452289491,
+      "slope_per10_10-30%": 0.01840539452289491,
+      "slope_per10_30-50%": NaN,
+      "slope_per10_50-75%": NaN,
+      "n_r1": 1119,
+      "mf_slope_per10": 0.021524518034896065,
+      "mf_ci95_low_per10": 0.0011706169616753585,
+      "mf_ci95_high_per10": 0.04238769096888931
+    },
+    {
+      "category": "Meat",
+      "n_cat_r1": 2757,
+      "n_supported_bins": 13,
+      "slope_per10_overall": 0.021250238012511573,
+      "slope_per10_10-30%": 0.042885433118986516,
+      "slope_per10_30-50%": 0.01911141071662531,
+      "slope_per10_50-75%": 0.0056531437640406235,
+      "n_r1": 2757,
+      "mf_slope_per10": 0.03879999054074551,
+      "mf_ci95_low_per10": 0.02994380881119777,
+      "mf_ci95_high_per10": 0.04800942444359073
+    },
+    {
+      "category": "Pharmaceuticals",
+      "n_cat_r1": 1164,
+      "n_supported_bins": 3,
+      "slope_per10_overall": 0.018577606466055215,
+      "slope_per10_10-30%": 0.018577606466055215,
+      "slope_per10_30-50%": NaN,
+      "slope_per10_50-75%": NaN,
+      "n_r1": 1164,
+      "mf_slope_per10": 0.016195145991168235,
+      "mf_ci95_low_per10": -0.01406226767789452,
+      "mf_ci95_high_per10": 0.0443159467181336
+    },
+    {
+      "category": "Produce",
+      "n_cat_r1": 1915,
+      "n_supported_bins": 12,
+      "slope_per10_overall": 0.018682713914640926,
+      "slope_per10_10-30%": 0.03600811613455479,
+      "slope_per10_30-50%": 0.012786131902397857,
+      "slope_per10_50-75%": 0.003444286971079865,
+      "n_r1": 1915,
+      "mf_slope_per10": 0.04822250293804659,
+      "mf_ci95_low_per10": 0.03766563004413992,
+      "mf_ci95_high_per10": 0.059102889560951916
+    },
+    {
+      "category": "Ready_to_Eat",
+      "n_cat_r1": 5064,
+      "n_supported_bins": 13,
+      "slope_per10_overall": 0.01629532646360671,
+      "slope_per10_10-30%": 0.031980912821151675,
+      "slope_per10_30-50%": 0.015982959666908325,
+      "slope_per10_50-75%": 0.00399675081492945,
+      "n_r1": 5064,
+      "mf_slope_per10": 0.012358367805835331,
+      "mf_ci95_low_per10": 0.0075519351772644116,
+      "mf_ci95_high_per10": 0.017542547021573984
+    },
+    {
+      "category": "Seafood",
+      "n_cat_r1": 3842,
+      "n_supported_bins": 13,
+      "slope_per10_overall": 0.019354386395908543,
+      "slope_per10_10-30%": 0.03778457577893529,
+      "slope_per10_30-50%": 0.019061300499664202,
+      "slope_per10_50-75%": 0.004844703606482615,
+      "n_r1": 3842,
+      "mf_slope_per10": 0.025335156395107413,
+      "mf_ci95_low_per10": 0.019713291336351642,
+      "mf_ci95_high_per10": 0.030752858301453724
+    }
+  ],
+  "spoilage_sensitivity_check": {
+    "n_categories": 10,
+    "spearman_sens_vs_baseline_s": -0.1580554413568168,
+    "spearman_sens_vs_model_slope": 0.10334394242561099,
+    "table": [
+      {
+        "category": "Bakery",
+        "spoilage_sensitivity": 0.5,
+        "baseline_s_hat": 0.7467608537213858,
+        "model_slope_per10": 0.018989068710049607
+      },
+      {
+        "category": "Beverages",
+        "spoilage_sensitivity": 0.4,
+        "baseline_s_hat": 0.8227230808895998,
+        "model_slope_per10": 0.020337334390261197
+      },
+      {
+        "category": "Dairy",
+        "spoilage_sensitivity": 0.7,
+        "baseline_s_hat": 0.7879513772642026,
+        "model_slope_per10": 0.03111623383281592
+      },
+      {
+        "category": "Deli",
+        "spoilage_sensitivity": 0.75,
+        "baseline_s_hat": 0.741841408934287,
+        "model_slope_per10": 0.020380188414614822
+      },
+      {
+        "category": "Frozen_Meals",
+        "spoilage_sensitivity": 0.3,
+        "baseline_s_hat": 0.519467251102011,
+        "model_slope_per10": 0.01840539452289491
+      },
+      {
+        "category": "Meat",
+        "spoilage_sensitivity": 0.9,
+        "baseline_s_hat": 0.7041646115436452,
+        "model_slope_per10": 0.021250238012511573
+      },
+      {
+        "category": "Pharmaceuticals",
+        "spoilage_sensitivity": 0.85,
+        "baseline_s_hat": 0.6458165892052861,
+        "model_slope_per10": 0.018577606466055215
+      },
+      {
+        "category": "Produce",
+        "spoilage_sensitivity": 0.6,
+        "baseline_s_hat": 0.7512131600644912,
+        "model_slope_per10": 0.018682713914640926
+      },
+      {
+        "category": "Ready_to_Eat",
+        "spoilage_sensitivity": 0.9,
+        "baseline_s_hat": 0.7783775087605628,
+        "model_slope_per10": 0.01629532646360671
+      },
+      {
+        "category": "Seafood",
+        "spoilage_sensitivity": 0.95,
+        "baseline_s_hat": 0.7329721735397751,
+        "model_slope_per10": 0.019354386395908543
+      }
+    ]
+  },
+  "censoring_by_category_band": [
+    {
+      "category": "Bakery",
+      "10-30%": 35.95307917888563,
+      "30-50%": 32.15725806451613,
+      "50-75%": 66.15798922800718
+    },
+    {
+      "category": "Beverages",
+      "10-30%": 52.296535052377116,
+      "30-50%": 33.333333333333336,
+      "50-75%": NaN
+    },
+    {
+      "category": "Dairy",
+      "10-30%": 52.20417633410673,
+      "30-50%": 8.955223880597014,
+      "50-75%": 33.333333333333336
+    },
+    {
+      "category": "Deli",
+      "10-30%": 43.056436271401395,
+      "30-50%": 14.893617021276595,
+      "50-75%": 45.0
+    },
+    {
+      "category": "Frozen_Meals",
+      "10-30%": 34.405719392314566,
+      "30-50%": NaN,
+      "50-75%": NaN
+    },
+    {
+      "category": "Meat",
+      "10-30%": 35.21205357142857,
+      "30-50%": 13.88888888888889,
+      "50-75%": 40.3598971722365
+    },
+    {
+      "category": "Pharmaceuticals",
+      "10-30%": 47.93814432989691,
+      "30-50%": NaN,
+      "50-75%": NaN
+    },
+    {
+      "category": "Produce",
+      "10-30%": 46.01063829787234,
+      "30-50%": 15.702479338842975,
+      "50-75%": 44.37869822485207
+    },
+    {
+      "category": "Ready_to_Eat",
+      "10-30%": 33.55555555555556,
+      "30-50%": 43.18181818181818,
+      "50-75%": 66.04255319148936
+    },
+    {
+      "category": "Seafood",
+      "10-30%": 33.55817875210793,
+      "30-50%": 28.93923789907312,
+      "50-75%": 63.27838827838828
+    }
+  ],
+  "mlflow_run_id": "c770f14daf394111bbe467a0101d929a"
+}
