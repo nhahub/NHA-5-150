@@ -4,6 +4,7 @@
 data/raw/*.csv
 data/processed/*.csv
 !reports/tables/M2_T09_mlflow_runs_*.csv
+!reports/tables/M3_T08_category_elasticity.csv
 
 # Model binaries and checkpoints
 *.joblib
