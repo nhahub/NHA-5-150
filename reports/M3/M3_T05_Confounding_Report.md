@@ -1,93 +1,96 @@
 # M3-T05: Track 3B Confounding & Selection-Bias Diagnosis Report
 
-**Task:** M3-T05 — Control-Variable Baseline, Binned Diagnostic & DML Decision  
+**Task:** M3-T05 — Control-Variable Baseline, Binned Diagnostic, DML Decision & R1 Addendum  
 **Branch:** `M3-T05-confounding-check`  
-**MLflow Experiment:** `smart-shelf-3b-revenue-response` (Run ID: `4f3e319110254c3f801e63cbe4203916`)  
+**MLflow Experiment:** `smart-shelf-3b-revenue-response` (Pass 1 Run: `4f3e319110254c3f801e63cbe4203916`; Addendum Run: `7b9dd2dcd299464d90f90dafcf80b9a4`)  
 **Scope:** Strictly training partition (`split == "train"`, `N = 80,042`). Test partition untouched.
+
+---
+
+## Headline: Discount Assignment Is Rule-Based
+
+In the training partition (`N = 80,042`), whether a batch receives a discount (`discount_pct > 0`) is **100.00% deterministically governed by a two-clause rule with zero violations**:
+$$\text{discount\_pct} > 0 \iff (\text{raw\_expiry\_remaining\_ratio} \le 0.40) \;\lor\; (\text{quality\_grade} == \text{'C'})$$
+
+| Rule Variant | Violations (out of 80,042) | Details |
+| :--- | :---: | :--- |
+| `raw_expiry_remaining_ratio <= 0.40 OR quality_grade == 'C'` | **0** | Exact boundary (`1,588` non-C rows at exact `0.40` are all discounted) |
+| `raw_expiry_remaining_ratio < 0.40 OR quality_grade == 'C'` | 1,588 | Boundary `0.40` is inclusive (`<=`) |
+
+- **Group shares:** `quality_grade == 'C'` = `14.35%` (`11,488` rows); `ratio <= 0.40` = `18.89%` (`15,122` rows); overlap (both) = `2.67%` (`2,135` rows).
+- **Regions:**
+  - **R0 (Rule says no discount, `ratio > 0.40` & `grade != 'C'`):** `55,567` rows (`69.42%`), `s` mean `0.7679` (`std 0.309`, median `0.892`, `s=0`: `9.46%`, `s=1`: `43.14%`), profit/unit **`+$4.57`**, loss share `16.8%`. **Zero discounted batches exist in R0.**
+  - **R1 (Rule says discount, `ratio <= 0.40` OR `grade == 'C'`):** `24,475` rows (`30.58%`), `s` mean `0.7986` (`std 0.240`, median `0.867`, `s=0`: `2.21%`, `s=1`: `41.58%`), profit/unit **`-$0.78`**, loss share `54.0%`. **Zero undiscounted batches exist in R1.**
+
+### Revision of First-Pass Verdicts
+Because R0 and R1 are completely disjoint (`0%` propensity overlap), **the first-pass Rule U (`15/15`) and Rule M (`15/15`) verdicts rested on extrapolation across the R0/R1 boundary, and the `+0.0436` sell-through gain from `0%` to `30%` discount is a model extrapolation, not a measured effect.** Within R0, no discount response is observable; within R1, `0%` is never observed, so only **depth variation among positive discounts (`10%–75%`)** is empirically identifiable.
 
 ---
 
 ## 1. Pre-Registered Rules (Applied Mechanically)
 
-1. **Rule S (Support):** A `(stratum, discount-bin)` cell is *supported* if training data has $\ge 30$ observed rows in that stratum (`oof_proba` quintile $\times$ `expiry_remaining_ratio` quintile, 25 strata) within that 5-point discount bin. Unsupported predictions are shown dashed and never used as evidence.
-2. **Rule U (Uniformly Harmful):** The model is *uniformly harmful* if, over supported cells only, predicted profit per initial unit falls monotonically from the lowest to the highest supported discount in $\ge 80\%$ of evaluable strata.
-3. **Rule M (Monotone Demand):** Predicted sell-through $s$ is *sensible* if, in supported cells, its average slope vs. discount is $\ge 0$ in $\ge 80\%$ of evaluable strata.
-4. **Rule D (DML Escalation):** Recommend DML/EconML only if **(a)** Rule U triggers or Rule M fails, **AND (b)** propensity overlap is adequate ($< 5\%$ of rows with propensity $< 0.02$ or $> 0.98$). Otherwise recommend against.
+1. **Rule S (Superseded Coarse Support) & Region-Based Support (`discount_support`):** Coarse 5×5 quintile support (`discount_support_coarse`) crossed the R0/R1 boundary and is superseded. Under region-based support:
+   - **R0 rows:** `0%` is `"ok"` (`supported=True`); any `d > 0` is `supported=False` (`reason="no_discount_region"`).
+   - **R1 rows:** `0%` is `supported=False` (`reason="no_zero_history"`); `d > 0` is `"ok"` (`supported=True`) iff training R1 has $\ge 30$ rows in that 5-point depth bin within the same `(quality_grade == 'C', R1 expiry_remaining_ratio tercile)` cell (else `"thin_depth_bin"`).
+2. **Rule U / Rule M / Rule D (Pass 1):** Rule U (profit/unit falls monotonically across supported discounts in $\ge 80\%$ of strata); Rule M ($s$ slope $\ge 0$ in $\ge 80\%$); Rule D (DML only if Rule U/M fails AND extreme propensity $< 5\%$).
+3. **Rule E (Addendum — Usable Quasi-Random Depth Variation in R1):** Residual depth inside R1 is usable as quasi-random variation **only if**: **(i)** OOF residual SD $\ge 3.0$ discount points, **AND (ii)** OOF $R^2$ of the residual predicted from store, supplier, product, month, day-of-week, handling, packaging, temp abuse, daily demand, and `oof_proba` is $< 0.05$.
 
 ---
 
-## 2. Counterfactual-Consistency Check
+## 2. Depth Assignment & Quasi-Random Variation Inside R1 (`N = 24,475`)
 
-Verified that **zero** features in `TRACK_3B_FEATURES` (excluding `discount_pct`) + `oof_proba` are `selling_price`-based, `markdown` flags, `discount` tiers, or deterministic functions of `discount_pct` (`max |corr| = 0.7891` with `expiry_remaining_ratio`, a pre-sale timing confounder).
+![R1 Depth vs Expiry](../figures/m3/m3_t05_r1_depth_vs_expiry.png)
 
----
-
-## 3. Propensity Diagnostics (How Discounts Are Assigned)
-
-- **5-Fold Time-Blocked Propensity Classifier `P(discount_pct > 0 | controls)`:**
-  - **OOF ROC-AUC:** **`1.0000`**, **Brier:** **`0.00000`**
-  - **Extreme Propensity (`< 0.02` or `> 0.98`):** **`100.00%`** (`69.42%` `< 0.02`, `30.58%` `> 0.98`)
-- **Discounted-Only Depth Regressor (`discount_pct | controls`, `n = 24,475`):**
-  - **OOF $R^2$:** **`0.8738`**, **OOF RMSE:** **`0.0610`**
-- **Depth-3 Decision Tree (`accuracy = 1.0000`):** Discounting is **100% deterministic**:
-  - `raw expiry_remaining_ratio <= 0.40` (standardized `<= -0.8373`) $\rightarrow$ `discount > 0`
-  - `raw expiry_remaining_ratio > 0.40` AND `quality_grade == 'C'` (`quality_grade_ord <= -1.0585`) $\rightarrow$ `discount > 0`
-  - Otherwise $\rightarrow$ `discount == 0`
-
-![Propensity Histogram](../figures/m3/m3_t05_propensity_histogram.png)
+- **Distinct depths:** `61` distinct values in Grade C and `61` in Grade A/B (tiered/noisy function of expiry and quality, not a single deterministic step).
+- **`depth ~ controls` (5-fold time-blocked LightGBM):** OOF $R^2 = \mathbf{0.8738}$, **residual SD = `6.10` discount points** ($\ge 3.0$ pts $\checkmark$).
+- **`residual ~ other features` (store, supplier, product, month, dow, handling, packaging, temp_abuse, daily_demand, `oof_proba`):** **OOF $R^2 = \mathbf{-0.0704}$** ($< 0.05$ $\checkmark$).
+- **Rule E Verdict: PASSED (`SD = 6.10 >= 3.0` and `resid R^2 = -0.0704 < 0.05`).** Residual depth inside R1 is usable quasi-random variation!
 
 ---
 
-## 4. Fixed Diagnostic Models & Control-Sensitivity Ablations (5-Fold CV)
+## 3. Local Depth Effect Inside R1 Only (Diagnostic)
 
-All models use LightGBM `objective="cross_entropy"` on $s \in [0, 1]$ (`num_leaves=31`, `lr=0.05`, `n_estimators=400`, `min_child_samples=50`, `subsample=colsample=0.8`, `random_state=42`):
+![R1 Binned Sell-Through](../figures/m3/m3_t05_r1_binned_s.png)
+![R1 Binned Profit per Unit](../figures/m3/m3_t05_r1_binned_profit.png)
 
-| Model / Ablation | OOF RMSE | OOF $R^2$ | Mean $s(0.30) - s(0.00)$ | Shift vs. CONTROLLED |
-| :--- | :---: | :---: | :---: | :---: |
-| **NAIVE** (`discount_pct` + category) | 0.2617 | 0.1658 | **-0.1189** | -0.1625 |
-| **CONTROLLED** (`TRACK_3B_FEATURES` + `oof_proba`) | **0.1219** | **0.8190** | **+0.0436** | 0.0000 |
-| `drop_expiry` (`days_until_expiry`, `expiry_remaining_ratio`) | — | 0.8020 | +0.0048 | **-0.0387** |
-| `drop_quality` (`quality_grade_ord`) | — | 0.8186 | +0.0528 | **+0.0093** |
-| `drop_oof_proba` | — | 0.8198 | +0.0415 | -0.0021 |
-| `drop_promoted` (`is_promoted`) | — | 0.8190 | +0.0430 | -0.0005 |
-| `drop_store_md` (`store_md_freq_hist`) | — | 0.8190 | +0.0440 | +0.0004 |
-| `drop_velocity` (`sales_velocity` & derived) | — | 0.8204 | +0.0436 | +0.0000 |
-
-Controls completely reverse the confounded NAIVE slope (`-0.1189` $\rightarrow$ `+0.0436`). Expiry features are overwhelmingly the dominant confounder (`-0.0387` shift when dropped), followed by `quality_grade_ord` (`+0.0093`).
+- **R1-Only Fixed LightGBM (`cross_entropy`):** NAIVE OOF $R^2 = 0.1645$ (`RMSE = 0.2199`) vs. CONTROLLED OOF $R^2 = \mathbf{0.7038}$ (`RMSE = 0.1309`).
+- **Cross-Fitted Partialling-Out Slope ($\Delta s / \Delta d$ within R1):**
+  - **Slope:** **`+0.2614`** (**`+2.61` sell-through percentage points per `+10%` discount**), **95% week-grouped bootstrap CI (`500` resamples): `[+0.2342, +0.2880]`**.
+  - **Control sensitivity:** Dropping `expiry` shifts slope by `+0.0411` (`+0.3025`); all other control groups (`velocity`, `oof_proba`, `promoted`, `store_md`, `quality`) shift by $< 0.008$.
+  - **Depth-band heterogeneity (diminishing returns / censoring saturation):**
+    - `10-30%` (`n=14,524`): slope **`+0.5051`** (`+5.05` pts per `+10%` discount)
+    - `30-50%` (`n=4,594`): slope **`+0.2616`** (`+2.62` pts per `+10%` discount)
+    - `50-75%` (`n=5,357`): slope **`+0.0739`** (`+0.74` pts per `+10%` discount)
 
 ---
 
-## 5. Binned Diagnostic Plots & Mechanical Verdicts
+## 4. First-Pass Diagnostics (Full Training Set, Preserved for Record)
 
-![5x5 Binned Sell-Through](../figures/m3/m3_t05_binned_s_5x5.png)
-![5x5 Binned Profit per Unit](../figures/m3/m3_t05_binned_profit_5x5.png)
-![Representative Strata Examples](../figures/m3/m3_t05_binned_examples.png)
-
-| Model | Rule U (Harmful Profit) | Rule M (Monotone $s$) | Overlap (`<5%` extreme) | Rule D (Recommend DML?) |
-| :--- | :---: | :---: | :---: | :---: |
-| **NAIVE** | **False** (`10/15 = 66.7%`) | **False** (`11/15 = 73.3%`) | **False** (`100.0%` extreme) | **False (No)** |
-| **CONTROLLED** | **True** (`15/15 = 100.0%`) | **True** (`15/15 = 100.0%`) | **False** (`100.0%` extreme) | **False (No)** |
-
-**Why Rule D = No:** Positivity is completely violated (`100.00%` extreme propensities due to the deterministic assignment rule), so DML/EconML cannot identify treatment effects without positivity.  
-**Why Rule U = True despite Rule M = True:** Even though sell-through $s$ rises sensibly (`+4.36` pts from `0%` to `30%`), baseline `0%` sell-through is already high (`0.768`), so a `10%–75%` price cut erodes margin faster than incremental unit recovery on average across all 15 evaluable strata.
+- **Counterfactual-consistency check:** 0 treatment-derived features in `TRACK_3B_FEATURES` + `oof_proba` (`max |corr| = 0.7891`).
+- **Propensity classifier:** AUC `1.0000`, Brier `0.00000`, `100.00%` extreme propensities (`<0.02` or `>0.98`). **Rule D = False (Recommend AGAINST DML/EconML)** due to total positivity violation across R0/R1.
+- **Pass-1 Full-Train Models:** NAIVE $R^2 = 0.1658$ (`s(0.30)-s(0) = -0.1189`) vs. CONTROLLED $R^2 = 0.8190$ (`s(0.30)-s(0) = +0.0436`, extrapolated across R0/R1).
+- **Censoring:** `s == 1` rises from `9.14%` (`10-15%`) to `61.4%–65.4%` (`55%–75%`), compressing measured elasticity at deep discounts.
 
 ---
 
-## 6. Censoring Check (`s == 0` and `s == 1` by Discount Bin)
+## 5. Implications for T06, T07, T08 & Track 3C
 
-- **`s == 0`:** `9.46%` at `0%` discount, dropping to `0.00%–0.12%` for discounts $\ge 30\%$.
-- **`s == 1`:** `43.14%` at `0%` discount, `9.14%` at `10-15%`, rising monotonically to **`61.42%–65.39%`** at `55%–75%` discounts.
-- **Bias note:** Heavy right-censoring at `s = 1` (>60% of deep-discount batches sell out completely) caps observed demand at `initial_quantity`, compressing the measured elasticity at deep markdowns.
+- **What CAN be claimed:** Within **R1** and supported depth bins, deeper discounts causally/quasi-experimentally raise sell-through (`+2.61` pts per `+10%` discount overall, `+5.05` pts in `10–30%`, diminishing to `+0.74` pts in `50–75%`).
+- **What CANNOT be claimed:** Any `0%` vs `> 0%` treatment effect in R0 (never discounted) or R1 (never undiscounted) is an unverified model extrapolation.
+- **T06 (Final Track 3B Regressor):** Train on `R1` (or full data with explicit `discount_support()` gating), knowing depth elasticity is identified **only inside R1**.
+- **T07 (Shape Check):** Verify profit-vs-discount and sell-through monotonicity **inside R1 supported depths only** (`10%–75%`).
+- **T08 (Elasticity View):** Report per-category elasticity curves **within R1** only.
+- **Track 3C (Optimizer & Backtest):** For **R0** batches, recommend `0%` (no evidence-based discount); optimize depth only for **R1** batches over supported `R1` depths. **Lane 1** matched historical evaluation applies only to rule-discounted **R1** batches.
 
 ---
 
-## 7. Limitations & Deviations from Plan
+## 6. Limitations & Deviations from Plan
 
 ### Limitations
-1. **Non-Random Assignment:** Discounts are not randomly assigned; treatment `discount > 0` is 100% deterministically triggered by `expiry_remaining_ratio <= 0.40` or `quality_grade == 'C'`.
-2. **Observational Estimate Only:** All response curves are observational estimates under conditional-ignorability and functional-form assumptions, not proven causal effects; unobserved confounders cannot be ruled out.
-3. **Promotional & Store-Frequency Controls Carry No Signal:** `is_promoted` and `store_md_freq_hist` have near-zero correlation with discounting (`-0.0035`, `+0.0023`) in this synthetic dataset, so separating promotional markdowns from spoilage-driven markdowns could not be achieved.
-4. **Synthetic Data:** All dynamics reflect synthetic data generation rules rather than live retail elasticity.
+1. **Rule-Based Assignment:** `discount > 0` is 100% deterministic (`expiry_remaining_ratio <= 0.40` or `grade == 'C'`). No `0%` vs `>0%` overlap exists anywhere.
+2. **Observational / Quasi-Experimental Estimate:** Even inside R1, depth identification relies on conditional ignorability given controls; unobserved confounders cannot be ruled out.
+3. **Promotional & Store-Frequency Controls Carry No Signal:** `is_promoted` and `store_md_freq_hist` have near-zero correlation with discounting (`-0.0035`, `+0.0023`).
+4. **Censoring at `s = 1` & Synthetic Data:** Heavy saturation (`>60%` at `s=1` for deep discounts) and synthetic generation limit external validity.
 
 ### Deviations from Plan
-- **Support cell check in `discount_support()`:** `10` of `25` `(oof_q, exp_q)` strata have `< 2` supported discount bins (`15` evaluable strata), so `discount_support()` flags both per-grid-point support (`>= 30` rows) and `no_undiscounted_history` per stratum for Track 3C.
+- **Region-Based Support Replaces Coarse 5×5 Rule S:** `discount_support()` in `src/m3_t05_confounding.py` enforces `R0`/`R1` separation and `(grade_C × R1_expiry_tercile × depth_bin)` $\ge 30$ support; old `discount_support_coarse()` is retained only for reference.
