@@ -12,7 +12,9 @@ Provides:
   - Pre-registered Rule U, Rule M, and Rule D evaluators.
 """
 
+import json
 from functools import lru_cache
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 import numpy as np
 import pandas as pd
@@ -20,7 +22,7 @@ import lightgbm as lgb
 from sklearn.metrics import brier_score_loss, mean_absolute_error, mean_squared_error, r2_score, roc_auc_score
 from sklearn.tree import DecisionTreeClassifier, export_text
 
-from src.config import MODEL_READY_3B_DATASET_PATH, RANDOM_STATE
+from src.config import CLEANED_DATASET_PATH, MODEL_READY_3B_DATASET_PATH, MODELS_DIR, RANDOM_STATE
 from src.m2_feature_pipeline import TRACK_3B_FEATURES
 from src.m3_oof import generate_oof_predictions
 from src.m3_t04_scenario import DISCOUNT_BIN_LABELS, assign_discount_bin
@@ -89,21 +91,15 @@ def _build_support_reference() -> Dict[str, Any]:
     }
 
 
-def discount_support(
+def discount_support_coarse(
     df: pd.DataFrame,
     grid: Sequence[float] = DEFAULT_DISCOUNT_GRID,
     min_rows: int = SUPPORT_MIN_ROWS,
 ) -> Tuple[pd.DataFrame, pd.Series]:
     """
-    Applies pre-registered Rule S using training-only quintile edges (oof_proba x
-    expiry_remaining_ratio = 25 strata) and 5-point discount bins.
-
-    Returns
-    -------
-    supported_df : pd.DataFrame (len(df) x len(grid))
-        Boolean per row and per candidate discount d in `grid`.
-    no_undiscounted_history : pd.Series (bool, len(df))
-        True when the row's stratum has fewer than `min_rows` undiscounted (0%) rows.
+    SUPERSEDED by region-based `discount_support()`.
+    Kept for historical reference: coarse 5x5 quintile strata crossed the
+    deterministic R0/R1 assignment boundary (expiry_remaining_ratio <= 0.40 or grade == 'C').
     """
     for req in ("oof_proba", "expiry_remaining_ratio"):
         if req not in df.columns:
@@ -293,7 +289,7 @@ def evaluate_pre_registered_rules(
     ref = _build_support_reference()
     oof_q = _assign_quintile_from_edges(tr["oof_proba"].to_numpy(dtype=float), ref["oof_edges"])
     exp_q = _assign_quintile_from_edges(tr["expiry_remaining_ratio"].to_numpy(dtype=float), ref["exp_edges"])
-    supported_df, _ = discount_support(tr, grid=grid, min_rows=SUPPORT_MIN_ROWS)
+    supported_df, _ = discount_support_coarse(tr, grid=grid, min_rows=SUPPORT_MIN_ROWS)
     supp_mat = supported_df.to_numpy(dtype=bool)
 
     base_p = tr["raw_base_price"].to_numpy(dtype=float)
@@ -372,3 +368,322 @@ def evaluate_pre_registered_rules(
         "rule_d_recommend_dml": rule_d_recommend_dml,
         "strata_details": strata_rows,
     }
+
+
+REGION_SUPPORT_REF_PATH: Path = MODELS_DIR / "track_3b_region_support_ref.json"
+
+
+@lru_cache(maxsize=1)
+def _build_region_support_reference() -> Dict[str, Any]:
+    """
+    Computes and caches region-based support reference from training rows only:
+      - R0: raw expiry_remaining_ratio > 0.40 AND quality_grade != 'C' (never discounted)
+      - R1: raw expiry_remaining_ratio <= 0.40 OR quality_grade == 'C' (always discounted)
+      - R1 strata: quality_grade == 'C' (bool) x expiry_remaining_ratio tercile within R1
+    Saves edges and counts to models/track_3b_region_support_ref.json.
+    """
+    tr = load_3b_train_only()
+    cl = pd.read_csv(
+        CLEANED_DATASET_PATH,
+        usecols=["record_id", "expiry_remaining_ratio", "quality_grade"],
+    ).rename(columns={"expiry_remaining_ratio": "raw_expiry_remaining_ratio"})
+    tr = tr.merge(cl, on="record_id", how="inner")
+
+    # Fit exact linear mapping between raw_expiry_remaining_ratio and scaled expiry_remaining_ratio
+    exp_slope, exp_intercept = np.polyfit(
+        tr["raw_expiry_remaining_ratio"].to_numpy(dtype=float),
+        tr["expiry_remaining_ratio"].to_numpy(dtype=float),
+        1,
+    )
+    grade_c_ord_cutoff = float(tr.loc[tr["quality_grade"] == "C", "quality_grade_ord"].max()) + 1e-6
+
+    r1_mask = (tr["raw_expiry_remaining_ratio"] <= 0.40) | (tr["quality_grade"] == "C")
+    tr_r1 = tr.loc[r1_mask].copy()
+    r1_exp_edges = np.quantile(
+        tr_r1["raw_expiry_remaining_ratio"].to_numpy(dtype=float), [0.0, 1.0 / 3.0, 2.0 / 3.0, 1.0]
+    )
+    tr_r1["r1_exp_tercile"] = np.digitize(
+        tr_r1["raw_expiry_remaining_ratio"].to_numpy(dtype=float), r1_exp_edges[1:-1], right=True
+    ) + 1
+    tr_r1["is_grade_c"] = (tr_r1["quality_grade"] == "C").astype(int)
+    tr_r1["depth_bin"] = assign_discount_bin(tr_r1["raw_discount_pct"]).astype(str)
+
+    raw_counts = (
+        tr_r1.groupby(["is_grade_c", "r1_exp_tercile", "depth_bin"], observed=True)
+        .size()
+        .to_dict()
+    )
+    counts_str = {f"{k[0]}|{k[1]}|{k[2]}": int(v) for k, v in raw_counts.items()}
+
+    ref = {
+        "exp_scale_slope": float(exp_slope),
+        "exp_scale_intercept": float(exp_intercept),
+        "grade_c_ord_cutoff": float(grade_c_ord_cutoff),
+        "r1_exp_tercile_edges": [float(x) for x in r1_exp_edges],
+        "counts": counts_str,
+    }
+    REGION_SUPPORT_REF_PATH.parent.mkdir(parents=True, exist_ok=True)
+    REGION_SUPPORT_REF_PATH.write_text(json.dumps(ref, indent=2))
+    return ref
+
+
+def discount_support(
+    df: pd.DataFrame,
+    grid: Sequence[float] = DEFAULT_DISCOUNT_GRID,
+    min_rows: int = SUPPORT_MIN_ROWS,
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Region-based discount support (M3-T05 addendum):
+      - R0 (raw expiry_remaining_ratio > 0.40 and grade != 'C'):
+          0% -> supported=True, reason='ok'
+          d > 0 -> supported=False, reason='no_discount_region'
+      - R1 (raw expiry_remaining_ratio <= 0.40 or grade == 'C'):
+          0% -> supported=False, reason='no_zero_history'
+          d > 0 -> supported=True ('ok') iff training R1 has >= min_rows in that
+                   5-pt depth bin within (is_grade_c, r1_exp_tercile), else 'thin_depth_bin'.
+
+    Accepts either raw ('raw_expiry_remaining_ratio', 'quality_grade') or scaled
+    ('expiry_remaining_ratio', 'quality_grade_ord') columns.
+    """
+    ref = _build_region_support_reference()
+    if "raw_expiry_remaining_ratio" in df.columns:
+        raw_exp = df["raw_expiry_remaining_ratio"].to_numpy(dtype=float)
+    elif "expiry_remaining_ratio" in df.columns:
+        raw_exp = (df["expiry_remaining_ratio"].to_numpy(dtype=float) - ref["exp_scale_intercept"]) / ref["exp_scale_slope"]
+    else:
+        raise KeyError("Need 'raw_expiry_remaining_ratio' or 'expiry_remaining_ratio'.")
+
+    if "quality_grade" in df.columns:
+        is_c = (df["quality_grade"].astype(str) == "C").to_numpy(dtype=int)
+    elif "quality_grade_ord" in df.columns:
+        is_c = (df["quality_grade_ord"].to_numpy(dtype=float) <= ref["grade_c_ord_cutoff"]).astype(int)
+    else:
+        raise KeyError("Need 'quality_grade' or 'quality_grade_ord'.")
+
+    is_r1 = (raw_exp <= 0.40 + 1e-9) | (is_c == 1)
+    r1_edges = np.asarray(ref["r1_exp_tercile_edges"], dtype=float)
+    r1_terc = np.digitize(raw_exp, r1_edges[1:-1], right=True) + 1
+    counts = ref["counts"]
+
+    grid_bins = [str(assign_discount_bin(pd.Series([d]))[0]) for d in grid]
+    supp_mat = np.zeros((len(df), len(grid)), dtype=bool)
+    reason_mat = np.empty((len(df), len(grid)), dtype=object)
+
+    for i in range(len(df)):
+        if not is_r1[i]:
+            for j, d in enumerate(grid):
+                if d == 0.0:
+                    supp_mat[i, j] = True
+                    reason_mat[i, j] = "ok"
+                else:
+                    supp_mat[i, j] = False
+                    reason_mat[i, j] = "no_discount_region"
+        else:
+            c_flag = int(is_c[i])
+            t_idx = int(r1_terc[i])
+            for j, (d, b) in enumerate(zip(grid, grid_bins)):
+                if d == 0.0:
+                    supp_mat[i, j] = False
+                    reason_mat[i, j] = "no_zero_history"
+                else:
+                    cnt = counts.get(f"{c_flag}|{t_idx}|{b}", 0)
+                    if cnt >= min_rows:
+                        supp_mat[i, j] = True
+                        reason_mat[i, j] = "ok"
+                    else:
+                        supp_mat[i, j] = False
+                        reason_mat[i, j] = "thin_depth_bin"
+
+    cols = [f"d_{d:.2f}" for d in grid]
+    return (
+        pd.DataFrame(supp_mat, index=df.index, columns=cols),
+        pd.DataFrame(reason_mat, index=df.index, columns=cols),
+    )
+
+
+def _lgbm_fixed_reg() -> lgb.LGBMRegressor:
+    return lgb.LGBMRegressor(
+        num_leaves=31,
+        learning_rate=0.05,
+        n_estimators=400,
+        min_child_samples=50,
+        subsample=0.8,
+        subsample_freq=1,
+        colsample_bytree=0.8,
+        random_state=RANDOM_STATE,
+        n_jobs=-1,
+        verbose=-1,
+    )
+
+
+def _lgbm_fixed_ce() -> lgb.LGBMRegressor:
+    return lgb.LGBMRegressor(
+        objective="cross_entropy",
+        num_leaves=31,
+        learning_rate=0.05,
+        n_estimators=400,
+        min_child_samples=50,
+        subsample=0.8,
+        subsample_freq=1,
+        colsample_bytree=0.8,
+        random_state=RANDOM_STATE,
+        n_jobs=-1,
+        verbose=-1,
+    )
+
+
+def run_r1_depth_diagnostics(tr_r1: pd.DataFrame, n_blocks: int = 5) -> Dict[str, Any]:
+    """
+    Fits depth ~ controls within R1 (5-fold time-blocked CV) and tests whether
+    OOF residual depth is predictable from store/supplier/product/calendar/handling/risk.
+    Evaluates Pre-Registered Rule E (SD >= 3.0 pts AND residual OOF R^2 < 0.05).
+    """
+    controls = [f for f in TRACK_3B_FEATURES if f != "discount_pct"] + ["oof_proba"]
+    dates = pd.to_datetime(tr_r1["transaction_date"]).values
+    unique_dates = np.sort(np.unique(dates))
+    date_blocks = np.array_split(unique_dates, n_blocks)
+    y_depth = tr_r1["raw_discount_pct"].to_numpy(dtype=float)
+
+    oof_depth_pred = np.zeros(len(tr_r1), dtype=float)
+    X_ctrl = tr_r1[controls]
+    for b in range(n_blocks):
+        val_m = np.isin(dates, date_blocks[b])
+        reg = _lgbm_fixed_reg()
+        reg.fit(X_ctrl.loc[~val_m], y_depth[~val_m])
+        oof_depth_pred[val_m] = reg.predict(X_ctrl.loc[val_m])
+
+    resid = y_depth - oof_depth_pred
+    depth_oof_r2 = float(r2_score(y_depth, oof_depth_pred))
+    resid_sd_pts = float(np.std(resid) * 100.0)
+
+    # Test predictability of residual depth from store, supplier, product, month, dow, handling, packaging, temp_abuse, daily_demand, oof_proba
+    resid_feats_cat = ["store_id", "supplier_id", "product_name"]
+    resid_feats_num = ["month", "dow", "handling_score", "packaging_score", "temp_abuse_events", "daily_demand", "oof_proba"]
+    X_res = tr_r1[resid_feats_cat + resid_feats_num].copy()
+    for c in resid_feats_cat:
+        X_res[c] = X_res[c].astype("category")
+
+    oof_resid_pred = np.zeros(len(tr_r1), dtype=float)
+    for b in range(n_blocks):
+        val_m = np.isin(dates, date_blocks[b])
+        reg_r = _lgbm_fixed_reg()
+        reg_r.fit(X_res.loc[~val_m], resid[~val_m])
+        oof_resid_pred[val_m] = reg_r.predict(X_res.loc[val_m])
+
+    resid_oof_r2 = float(r2_score(resid, oof_resid_pred))
+    corrs = {c: float(tr_r1[c].corr(pd.Series(resid, index=tr_r1.index))) for c in resid_feats_num}
+
+    rule_e_sd_ok = bool(resid_sd_pts >= 3.0)
+    rule_e_r2_ok = bool(resid_oof_r2 < 0.05)
+    rule_e_passed = bool(rule_e_sd_ok and rule_e_r2_ok)
+
+    return {
+        "n_r1": int(len(tr_r1)),
+        "depth_oof_r2": depth_oof_r2,
+        "residual_sd_pts": resid_sd_pts,
+        "residual_oof_r2": resid_oof_r2,
+        "residual_numeric_corrs": corrs,
+        "rule_e_sd_ge_3pts": rule_e_sd_ok,
+        "rule_e_resid_r2_lt_005": rule_e_r2_ok,
+        "rule_e_passed": rule_e_passed,
+        "resid_depth": resid,
+        "date_blocks": date_blocks,
+    }
+
+
+def run_r1_local_models_and_partialling_out(
+    tr_r1: pd.DataFrame,
+    resid_depth: np.ndarray,
+    n_blocks: int = 5,
+    n_boot: int = 500,
+) -> Dict[str, Any]:
+    """
+    Runs NAIVE and CONTROLLED within R1 only, plus cross-fitted partialling-out
+    slope (residual s ~ residual depth) with week-grouped bootstrap 95% CI,
+    control-group ablation sensitivity, and depth-band slopes.
+    """
+    dates = pd.to_datetime(tr_r1["transaction_date"]).values
+    unique_dates = np.sort(np.unique(dates))
+    date_blocks = np.array_split(unique_dates, n_blocks)
+
+    cat_cols = [c for c in TRACK_3B_FEATURES if c.startswith("category_")]
+    naive_cols = ["discount_pct"] + cat_cols
+    ctrl_cols = list(TRACK_3B_FEATURES) + ["oof_proba"]
+    controls_only = [f for f in TRACK_3B_FEATURES if f != "discount_pct"] + ["oof_proba"]
+
+    r1_grid = [d for d in DEFAULT_DISCOUNT_GRID if d > 0.0]
+    naive_res = fit_cross_entropy_oof_and_grid(tr_r1, naive_cols, grid=r1_grid, compute_grid=True)
+    ctrl_res = fit_cross_entropy_oof_and_grid(tr_r1, ctrl_cols, grid=r1_grid, compute_grid=True)
+
+    # Cross-fitted partialling-out for s ~ controls (excluding discount_pct)
+    y_s = tr_r1["s"].to_numpy(dtype=float)
+    X_ctrl = tr_r1[controls_only]
+    oof_s_ctrl = np.zeros(len(tr_r1), dtype=float)
+    for b in range(n_blocks):
+        val_m = np.isin(dates, date_blocks[b])
+        m = _lgbm_fixed_ce()
+        m.fit(X_ctrl.loc[~val_m], y_s[~val_m])
+        oof_s_ctrl[val_m] = np.clip(m.predict(X_ctrl.loc[val_m]), 0.0, 1.0)
+
+    r_s = y_s - oof_s_ctrl
+    r_d = resid_depth
+    slope = float(np.dot(r_d, r_s) / np.dot(r_d, r_d))
+
+    # Week-grouped bootstrap 95% CI (500 resamples)
+    weeks = pd.to_datetime(tr_r1["transaction_date"]).dt.to_period("W").astype(str).to_numpy()
+    unique_weeks = np.unique(weeks)
+    week_indices = [np.where(weeks == w)[0] for w in unique_weeks]
+    rng = np.random.default_rng(RANDOM_STATE)
+    boot_slopes = np.zeros(n_boot, dtype=float)
+    for k in range(n_boot):
+        chosen = rng.integers(0, len(week_indices), size=len(week_indices))
+        idx = np.concatenate([week_indices[w] for w in chosen])
+        rd_b = r_d[idx]
+        rs_b = r_s[idx]
+        boot_slopes[k] = np.dot(rd_b, rs_b) / np.dot(rd_b, rd_b)
+
+    ci_low, ci_high = float(np.percentile(boot_slopes, 2.5)), float(np.percentile(boot_slopes, 97.5))
+
+    # Ablation sensitivity of partialling-out slope
+    abl_slopes = []
+    y_depth = tr_r1["raw_discount_pct"].to_numpy(dtype=float)
+    for abl_name, drop_cols in ABLATION_GROUPS.items():
+        sub_ctrl = [c for c in controls_only if c not in drop_cols]
+        X_sub = tr_r1[sub_ctrl]
+        s_hat = np.zeros(len(tr_r1), dtype=float)
+        d_hat = np.zeros(len(tr_r1), dtype=float)
+        for b in range(n_blocks):
+            val_m = np.isin(dates, date_blocks[b])
+            ms = _lgbm_fixed_ce()
+            ms.fit(X_sub.loc[~val_m], y_s[~val_m])
+            s_hat[val_m] = np.clip(ms.predict(X_sub.loc[val_m]), 0.0, 1.0)
+            md = _lgbm_fixed_reg()
+            md.fit(X_sub.loc[~val_m], y_depth[~val_m])
+            d_hat[val_m] = md.predict(X_sub.loc[val_m])
+        rs_a = y_s - s_hat
+        rd_a = y_depth - d_hat
+        sl_a = float(np.dot(rd_a, rs_a) / np.dot(rd_a, rd_a))
+        abl_slopes.append({"ablation": abl_name, "slope": sl_a, "shift_vs_full": sl_a - slope})
+
+    # Slope by depth band
+    band_slopes = []
+    for label, lo, hi in [("10-30%", 0.10, 0.30), ("30-50%", 0.30, 0.50), ("50-75%", 0.50, 0.751)]:
+        m_band = (y_depth >= lo) & (y_depth < hi)
+        if m_band.sum() >= 100:
+            sl_b = float(np.dot(r_d[m_band], r_s[m_band]) / np.dot(r_d[m_band], r_d[m_band]))
+            band_slopes.append({"band": label, "n": int(m_band.sum()), "slope": sl_b})
+
+    return {
+        "r1_naive_metrics": naive_res["metrics"],
+        "r1_controlled_metrics": ctrl_res["metrics"],
+        "r1_naive_grid_s": naive_res["grid_s"],
+        "r1_controlled_grid_s": ctrl_res["grid_s"],
+        "r1_grid": r1_grid,
+        "partialling_out_slope": slope,
+        "slope_per_10pct_pts": slope * 0.10,
+        "boot_ci95_low": ci_low,
+        "boot_ci95_high": ci_high,
+        "ablation_slopes": abl_slopes,
+        "band_slopes": band_slopes,
+    }
+
