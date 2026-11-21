@@ -25,6 +25,8 @@ TRACK_3A_OOF_TRAIN_PATH = DATA_PROCESSED / "track_3a_oof_train.csv"
 TRACK_3A_OOF_TRAIN_V2_PATH = DATA_PROCESSED / "track_3a_oof_train_v2.csv"
 TRACK_3A_PROBA_TEST_PATH = DATA_PROCESSED / "track_3a_proba_test.csv"
 MODEL_READY_3B_DATASET_PATH = DATA_PROCESSED / "model_ready_3b_dataset.csv"
+OPTIMIZER_RECS_TRAIN_PATH = DATA_PROCESSED / "optimizer_recs_train.csv"
+OPTIMIZER_RECS_TEST_PATH = DATA_PROCESSED / "optimizer_recs_test.csv"
 
 # Models and checkpoints
 MODELS_DIR = PROJECT_ROOT / "models"
