@@ -29,6 +29,7 @@ OPTIMIZER_RECS_TRAIN_PATH = DATA_PROCESSED / "optimizer_recs_train.csv"
 OPTIMIZER_RECS_TEST_PATH = DATA_PROCESSED / "optimizer_recs_test.csv"
 OPTIMIZER_RECS_CONF_TRAIN_PATH = DATA_PROCESSED / "optimizer_recs_with_confidence_train.csv"
 OPTIMIZER_RECS_CONF_TEST_PATH = DATA_PROCESSED / "optimizer_recs_with_confidence_test.csv"
+INVENTORY_SNAPSHOT_PATH = DATA_PROCESSED / "inventory_snapshot.csv"
 
 # Models and checkpoints
 MODELS_DIR = PROJECT_ROOT / "models"
@@ -37,6 +38,7 @@ PREPROCESSOR_M2_PATH = MODELS_DIR / "preprocessor_m2.joblib"
 TRACK_3A_MODEL_PATH = MODELS_DIR / "track_3a_classifier.joblib"
 TRACK_3B_MODEL_PATH = MODELS_DIR / "track_3b_regressor.joblib"
 TIER_EDGES_PATH = MODELS_DIR / "track_3c_tier_edges.json"
+INFERENCE_DEFAULTS_PATH = MODELS_DIR / "track_3_inference_defaults.json"
 
 # Notebooks and scripts
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
