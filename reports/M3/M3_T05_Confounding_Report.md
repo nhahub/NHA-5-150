@@ -1,5 +1,7 @@
 # M3-T05: Track 3B Confounding & Selection-Bias Diagnosis Report
 
+> **Correction note (2026-11-21):** Line 23 below lists `s=0: 2.21%, s=1: 41.58%` for training `R1` (`N = 24,475`). Recomputing from `data/processed/model_ready_3b_dataset.csv` and verifying against `reports/M3/m3_t05_addendum_summary.json` confirms the exact training `R1` values are **`s=0: 3.43%` (`3.4321%`)** and **`s=1: 43.41%` (`43.4076%`)**. The original line is preserved below; `m3_t05_addendum_summary.json` is the authoritative source.
+
 **Task:** M3-T05 — Control-Variable Baseline, Binned Diagnostic, DML Decision & R1 Addendum  
 **Branch:** `M3-T05-confounding-check`  
 **MLflow Experiment:** `smart-shelf-3b-revenue-response` (Pass 1 Run: `4f3e319110254c3f801e63cbe4203916`; Addendum Run: `7b9dd2dcd299464d90f90dafcf80b9a4`)  
