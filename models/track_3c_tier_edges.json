@@ -1,0 +1,33 @@
+{
+  "rule": "T-edges: Edge1 = min d with F(d)>=0.50; Edge2 = min d with F(d)>=0.80; Edge3 = min d with F(d)>=0.95 on training R1",
+  "training_row_count": 24475,
+  "edges": {
+    "edge1": 0.15,
+    "edge2": 0.25,
+    "edge3": 0.35
+  },
+  "cdf": {
+    "0.10": 0.06239019407558733,
+    "0.15": 0.5563636363636364,
+    "0.20": 0.603023493360572,
+    "0.25": 0.945699693564862,
+    "0.30": 0.9488049029622063,
+    "0.35": 0.999591419816139,
+    "0.40": 0.9996731358529112,
+    "0.50": 1.0
+  },
+  "achieved_counts": {
+    "Low": 13617,
+    "Medium": 9529,
+    "High": 1319,
+    "Critical": 10
+  },
+  "achieved_shares": {
+    "Low": 0.5563636363636364,
+    "Medium": 0.3893360572012257,
+    "High": 0.05389172625127681,
+    "Critical": 0.00040858018386108274
+  },
+  "source_file": "optimizer_recs_train.csv",
+  "source_sha256": "13156946339ac9c5d7ffb3b3f3e569083a5c25185b3f0341b9fb54a3d7a5afd2"
+}
