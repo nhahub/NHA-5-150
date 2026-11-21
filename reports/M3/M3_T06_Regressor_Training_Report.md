@@ -1,5 +1,7 @@
 # M3-T06: Track 3B Sell-Through Regressor Training Report (R1 Domain)
 
+> **Correction note (2026-11-21):** Line 26 below lists `profit_per_unit` quantiles for training `R1` (`N = 24,475`) as `min = -$359.73, p05 = -$19.93, p25 = -$2.89, p75 = +$0.88, p95 = +$17.46`. Recomputing from `data/processed/model_ready_3b_dataset.csv` and verifying against `reports/M3/m3_t06_results_summary.json` confirms the exact training `R1` quantiles are **`min = -$316.80, p01 = -$67.92, p05 = -$7.07, p25 = -$1.98, p50 = -$0.23, p75 = +$1.31, p95 = +$6.07, p99 = +$66.86, max = +$200.56`**. The original line is preserved below; `m3_t06_results_summary.json` is the authoritative source.
+
 **Task:** M3-T06 — Extreme-Outcome Handling, Candidate Tuning & Frozen Regressor  
 **Branch:** `M3-T06-regressor-training`  
 **MLflow Experiment:** `smart-shelf-3b-revenue-response` (Final Run ID: `ce191bffab874806ad34bfe1485cd6c5`)  

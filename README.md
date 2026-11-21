@@ -2,7 +2,7 @@
 
 [![Milestone 1 Status](https://img.shields.io/badge/Milestone%201-Completed%20(36%2F36%20Checks%20Passed)-brightgreen)](#2-milestone-deliverables--task-map)
 [![Milestone 2 Status](https://img.shields.io/badge/Milestone%202-Completed%20(T01--T13%20Verified%20%26%20Merged)-brightgreen)](#2-milestone-deliverables--task-map)
-[![Milestone 3 Status](https://img.shields.io/badge/Milestone%203-Planned%20(Track%203A%2F3B%2F3C%20Modeling)-blue)](#2-milestone-deliverables--task-map)
+[![Milestone 3 Status](https://img.shields.io/badge/Milestone%203-Completed%20(T01--T14%20Verified)-brightgreen)](#2-milestone-deliverables--task-map)
 [![Python Version](https://img.shields.io/badge/Python-3.11-blue)](requirements.txt)
 [![Code Architecture](https://img.shields.io/badge/Architecture-End--to--End%20Pipeline%20%26%20Decision%20Engine-orange)](#4-repository-structure)
 
@@ -110,17 +110,26 @@ Smart Shelf links two predictive machine learning models into a dynamic discount
 | **M2-T12**<br>**M2-T12b** | [`src/m3_oof.py`](src/m3_oof.py)<br>[`src/support.py`](src/support.py)<br>[`scripts/M2_T12_decision_checks.py`](scripts/M2_T12_decision_checks.py)<br>[`reports/M2/M2_T12_Decision_Checks.md`](reports/M2/M2_T12_Decision_Checks.md) | **Done** | **OOF Generator, Support Flag & Decision Checks:** Built reusable time-blocked OOF generator for Track 3A (`data/processed/track_3a_oof_train.csv`) settling Decision 1. Formally settled Decision 4 (sell-through modeling and exact profit identity) and Decision 5 (low-confidence support flag on `product_name x store_id`, threshold 20 rows, flagging 14.36% of test set). |
 | **M2-T13** | [`src/mlflow_utils.py`](src/mlflow_utils.py)<br>[`src/config.py`](src/config.py)<br>[`scripts/M2_T13_test_helpers.py`](scripts/M2_T13_test_helpers.py)<br>[`reports/M2/M2-T09_MLflow_Setup.md`](reports/M2/M2-T09_MLflow_Setup.md) | **Done** | **Milestone 3 MLflow Helpers:** Implemented reusable helpers: model serialization with JSON metadata (`save_model_with_metadata`, `load_model_with_metadata`), calibration curves, confusion matrix, SHAP summary plots, OOF prediction logging, and CSV summary export/merge. |
 
-### Milestone 3: Machine Learning Model Development, Revenue Optimization, and Explainability (Planned)
+### Milestone 3: Machine Learning Model Development, Revenue Optimization, and Explainability
 
-*Track definitions and scopes per project proposal (`Smart_Shelf_v5.md`):*
+| Task ID | Component / Deliverable | Status | Description & Key Outcomes |
+| :--- | :--- | :---: | :--- |
+| **M3-T01** | [`src/m3_t01_track3a.py`](src/m3_t01_track3a.py)<br>[`reports/M3/M3_T01_Track3A_Report.md`](reports/M3/M3_T01_Track3A_Report.md) | **Done** | **Track 3A Spoilage Classifier:** Trained and selected uncalibrated L2 Logistic Regression (`C=0.005`) on `TRACK_3A_FEATURES_COMPACT` (90 features); test Brier `0.15641`, log loss `0.48988`, ROC-AUC `0.5899` (ceiling `~0.59–0.60`). |
+| **M3-T02** | [`src/m3_t01_track3a.py`](src/m3_t01_track3a.py)<br>[`reports/M3/m3_t02_closeout_summary.json`](reports/M3/m3_t02_closeout_summary.json) | **Done** | **Track 3A Closeout:** Generated `track_3a_oof_train_v2.csv`, `track_3a_proba_test.csv`, frozen `score_batches()`, and cost-asymmetric sweep. |
+| **M3-T03** | [`src/m3_t03_explain.py`](src/m3_t03_explain.py)<br>[`reports/M3/M3_T03_Explainability_Report.md`](reports/M3/M3_T03_Explainability_Report.md) | **Done** | **Explainability & Limited-History Flag:** Exact linear log-odds/probability-point drivers (`explain_batch()`) and `product_name × store_id < 20` flag (`14.36%` test flagged). |
+| **M3-T04** | [`src/m3_t04_scenario.py`](src/m3_t04_scenario.py)<br>[`reports/M3/M3_T04_Scenario_Construction_Report.md`](reports/M3/M3_T04_Scenario_Construction_Report.md) | **Done** | **Track 3B Scenario Dataset:** Built `model_ready_3b_dataset.csv` (`100,000 × 59`) with `oof_proba` `v2` and exact sell-through target `s`. |
+| **M3-T05** | [`src/m3_t05_confounding.py`](src/m3_t05_confounding.py)<br>[`reports/M3/M3_T05_Confounding_Report.md`](reports/M3/M3_T05_Confounding_Report.md) | **Done** | **Confounding Diagnosis & Region Support:** Proved deterministic `R0`/`R1` rule (`0` violations), ruled out DML (`100%` extreme propensity), passed Rule E (`6.10` pts SD), and froze `discount_support()`. |
+| **M3-T06** | [`src/m3_t06_regressor.py`](src/m3_t06_regressor.py)<br>[`reports/M3/M3_T06_Regressor_Training_Report.md`](reports/M3/M3_T06_Regressor_Training_Report.md) | **Done** | **Track 3B Regressor Training:** Selected monotone `lgbm_ce_monotone` on `R1` train (`24,475` rows; CV `s` RMSE `0.12967`, profit/unit MAE `$1.8337`). |
+| **M3-T07** | [`src/m3_t07_eval.py`](src/m3_t07_eval.py)<br>[`reports/M3/M3_T07_Regressor_Evaluation_Report.md`](reports/M3/M3_T07_Regressor_Evaluation_Report.md) | **Done** | **Track 3B Test Evaluation & Shape Check:** Single test `R1` eval (`s` RMSE `0.12781`, $R^2$ `0.7419`, Rule T1 passed; `15/15` unconstrained cells positive, Rule T2 passed). |
+| **M3-T08** | [`src/m3_t08_elasticity.py`](src/m3_t08_elasticity.py)<br>[`reports/M3/M3_T08_Elasticity_View_Report.md`](reports/M3/M3_T08_Elasticity_View_Report.md) | **Done** | **Category Elasticity View:** Extracted `reports/tables/M3_T08_category_elasticity.csv` (`10` categories × `14` depths) with `limited_depth_range` flag. |
+| **M3-T09** | [`src/m3_t09_optimizer.py`](src/m3_t09_optimizer.py)<br>[`reports/M3/M3_T09_Optimizer_Report.md`](reports/M3/M3_T09_Optimizer_Report.md) | **Done** | **Track 3C Discrete Optimizer:** Implemented `score_whatif()` & `optimize_batches()` on supported `R1` depths (`97.0%` `flat_curve` on test `R1`). |
+| **M3-T10** | [`src/m3_t10_tiers.py`](src/m3_t10_tiers.py)<br>[`reports/M3/M3_T10_Tier_Mapping_Report.md`](reports/M3/M3_T10_Tier_Mapping_Report.md) | **Done** | **Tier Mapping:** Derived edges `0.15 / 0.25 / 0.35` (`Low`, `Medium`, `High`, `Critical`) on training `R1` and froze `models/track_3c_tier_edges.json`. |
+| **M3-T11** | [`src/m3_t11_validation.py`](src/m3_t11_validation.py)<br>[`reports/M3/M3_T11_Optimizer_Validation_Report.md`](reports/M3/M3_T11_Optimizer_Validation_Report.md) | **Done** | **Two-Lane Optimizer Validation:** Lane 1 observed `-$1.4421/u` (`inconclusive`); Lane 2 simulated `+$1.7838/u` (`70.1%` below CV MAE); `69.06%` test in `R0`. |
+| **M3-T12** | [`src/m3_t12_confidence.py`](src/m3_t12_confidence.py)<br>[`reports/M3/M3_T12_Confidence_Propagation_Report.md`](reports/M3/M3_T12_Confidence_Propagation_Report.md) | **Done** | **Confidence Propagation:** Weakest-link `Low` (`84.12%`) / `Moderate` (`15.88%`) / `No recommendation` (`R0`), no `High` level, plus `GLOBAL_CAVEAT`. |
+| **M3-T13** | [`reports/M3/M3_T13_Model_Evaluation_Report.md`](reports/M3/M3_T13_Model_Evaluation_Report.md)<br>[`reports/M3/M3_T13_Optimizer_Validation_Report.md`](reports/M3/M3_T13_Optimizer_Validation_Report.md) | **In Review** | **Milestone 3 Deliverables & Metric Audit:** Compiled evaluation & optimizer validation reports, model/code manifest, handoff checklist, and automated metric audit. |
+| **M3-T14** | [`src/m3_t14_pipeline.py`](src/m3_t14_pipeline.py)<br>[`reports/M3/M3_T14_Inference_Pipeline_Report.md`](reports/M3/M3_T14_Inference_Pipeline_Report.md) | **Done** | **Inference Pipeline & Snapshot:** End-to-end `run_pipeline()`, `simulate()`, `manager_view_table()`, training defaults JSON, and `inventory_snapshot.csv` (`2024-12-31`). |
 
-| Track / Component | Status | Description & Planned Methodology |
-| :--- | :---: | :--- |
-| **Track 3A — Spoilage Risk Classifier** | Planned | Select from Random Forest, XGBoost, or LightGBM to predict binary `was_spoiled`. Train on `TRACK_3A_FEATURES_FULL` (180 features) and `COMPACT` (90 features) using time-blocked cross-validation inside the training period. Calibration (Brier score, log loss, reliability curve) is the headline metric. Benchmark against `spoilage_risk` column, compute confusion matrices, SHAP explanations, and attach low-confidence prediction flags. |
-| **Track 3B — Revenue-Response Regressor** | Planned | Predict revenue outcome / bounded sell-through ($s \in [0, 1]$) as a function of markdown depth (`discount_pct`) learned from historical discount variation. Uses Track 3A out-of-fold predicted spoilage probabilities (`oof_proba` from `track_3a_oof_train.csv`) and confounding controls. Derive batch profit curves deterministically via the physical accounting identity. |
-| **Track 3C — Discount Optimizer** | Planned | Evaluate what-if scoring across candidate discount grid $\{0\} \cup [0.10, 0.75]$. Recommend profit-maximizing discount tier for each batch, mapped to explainable display tiers (Low / Medium / High / Critical). Backtested via two-lane validation framework (**Lane 1: Matched Historical Evaluation**, **Lane 2: Counterfactual Scoring**), with confidence propagation from Tracks 3A and 3B. |
-
-*Milestone 3 Key Deliverables:* Model Evaluation Report, Optimizer Validation Report, Model Code, Final Models.
+*Milestone 3 Key Deliverables:* [Model Evaluation Report](reports/M3/M3_T13_Model_Evaluation_Report.md), [Optimizer Validation Report](reports/M3/M3_T13_Optimizer_Validation_Report.md), [Model & Code Manifest](reports/M3/M3_T13_Model_and_Code_Manifest.md), [Handoff Checklist](reports/M3/M3_T13_Handoff_Checklist.md).
 
 ### Milestone 4: MLOps, Deployment, and Monitoring (Planned)
 
@@ -203,10 +212,19 @@ All findings below have been audited, cross-reconciled, and programmatically ver
 │       ├── feature_dictionary.csv      # M1 feature metadata & leakage flags
 │       ├── model_ready_m2_dataset.csv  # Consolidated Milestone 2 dataset (210 columns)
 │       ├── feature_dictionary_m2.csv   # M2 feature metadata (210 rows)
-│       └── track_3a_oof_train.csv      # Track 3A time-blocked out-of-fold predictions
+│       ├── model_ready_3b_dataset.csv  # Track 3B scenario dataset (100,000 x 59)
+│       ├── track_3a_oof_train.csv      # Track 3A time-blocked OOF predictions (v1)
+│       ├── track_3a_oof_train_v2.csv   # Track 3A frozen LogReg OOF predictions (v2)
+│       ├── track_3a_proba_test.csv     # Track 3A frozen test probabilities
+│       └── inventory_snapshot.csv      # Manager View snapshot (2024-12-31, 145 rows)
 ├── models/                             # Serialized model pipelines & MLflow tracking [untracked]
 │   ├── preprocessor.joblib             # Milestone 1 fitted ColumnTransformer
 │   ├── preprocessor_m2.joblib          # Milestone 2 quality/handling scalers
+│   ├── track_3a_classifier.joblib/.json # Frozen Track 3A LogReg model & metadata
+│   ├── track_3b_regressor.joblib/.json  # Frozen Track 3B monotone LightGBM & metadata
+│   ├── track_3b_region_support_ref.json # Region R0/R1 & depth support reference (tracked)
+│   ├── track_3c_tier_edges.json        # Frozen tier edges 0.15/0.25/0.35 (tracked)
+│   ├── track_3_inference_defaults.json # Training-only inference defaults (tracked)
 │   ├── mlruns/                         # Local MLflow file-based experiment tracking store
 │   │   └── M2_T09_mlflow_runs_master.csv # Default destination for merged MLflow summaries [untracked]
 │   └── mlartifacts/                    # Local MLflow artifact repository
@@ -234,19 +252,28 @@ All findings below have been audited, cross-reconciled, and programmatically ver
 │   │   ├── M2_T11_Consolidation_Report.md
 │   │   ├── M2_T11_M3_Design_Decisions.md
 │   │   └── M2_T12_Decision_Checks.md
+│   ├── M3/                             # Milestone 3 task reports, JSONs, and compiled deliverables
+│   │   ├── M3_T13_Model_Evaluation_Report.md
+│   │   ├── M3_T13_Optimizer_Validation_Report.md
+│   │   ├── M3_T13_Model_and_Code_Manifest.md
+│   │   ├── M3_T13_Handoff_Checklist.md
+│   │   └── M3_T13_metric_audit.md
 │   ├── figures/                        # Generated figures and charts
 │   │   ├── m1/                         # Static figures from Milestone 1
 │   │   ├── m2/                         # Static figures from Milestone 2
+│   │   ├── M3/                         # Static figures from Milestone 3
 │   │   └── interactive/                # Standalone Plotly HTML interactive charts
 │   └── tables/                         # Exported CSV tables and MLflow run summaries
-│       └── M2_T09_mlflow_runs_*.csv    # Per-author MLflow run summaries (tracked)
+│       ├── M2_T09_mlflow_runs_*.csv    # Per-author MLflow run summaries (tracked)
+│       └── M3_T08_category_elasticity.csv # Category elasticity table (tracked)
 ├── scripts/                            # Standalone execution and verification scripts
 │   ├── verify_m1.py                    # Milestone 1 assertion verification suite (36 checks)
 │   ├── check_presale_inputs.py         # Presale feature independence & leakage test
 │   ├── M2_T09_test_mlflow_run.py       # MLflow logging verification script
 │   ├── M2_T11_build_m2_dataset.py      # Milestone 2 dataset consolidation builder
 │   ├── M2_T12_decision_checks.py       # Decision checks & baseline OOF generator
-│   └── M2_T13_test_helpers.py          # MLflow helpers verification suite
+│   ├── M2_T13_test_helpers.py          # MLflow helpers verification suite
+│   └── M3_T01_*.py .. M3_T14_*.py      # Milestone 3 training, validation, audit & pipeline scripts
 ├── src/                                # Reusable production library modules
 │   ├── __init__.py
 │   ├── config.py                       # Central path management and tracking constants
@@ -255,6 +282,18 @@ All findings below have been audited, cross-reconciled, and programmatically ver
 │   ├── m2_t01_analysis.py              # Statistical testing execution module
 │   ├── m2_velocity.py                  # Trailing sales velocity & sell-through calculation
 │   ├── m3_oof.py                       # Reusable Track 3A out-of-fold generator
+│   ├── m3_t01_track3a.py               # Track 3A modeling & score_batches()
+│   ├── m3_t03_explain.py               # Track 3A exact linear explain_batch() & support flag
+│   ├── m3_t04_scenario.py              # Track 3B scenario dataset builder
+│   ├── m3_t05_confounding.py           # R0/R1 diagnostics & discount_support()
+│   ├── m3_t06_regressor.py             # Track 3B regressor & predict_profit_curve()
+│   ├── m3_t07_eval.py                  # Track 3B test evaluation & Rule T1/T2 checks
+│   ├── m3_t08_elasticity.py            # Category elasticity view & table builder
+│   ├── m3_t09_optimizer.py             # Track 3C score_whatif() & optimize_batches()
+│   ├── m3_t10_tiers.py                 # Track 3C assign_tier() & tier wording
+│   ├── m3_t11_validation.py            # Lane 1 & Lane 2 two-lane validation helpers
+│   ├── m3_t12_confidence.py            # Weakest-link attach_confidence() & GLOBAL_CAVEAT
+│   ├── m3_t14_pipeline.py              # End-to-end run_pipeline(), simulate() & manager_view_table()
 │   ├── mlflow_utils.py                 # MLflow tracking, leakage enforcement & logging helpers
 │   ├── pipeline.py                     # Milestone 1 preprocessing pipeline
 │   └── support.py                      # Low-confidence cell support computation & flagging
@@ -317,6 +356,11 @@ python scripts/M2_T12_decision_checks.py
 # Produces:
 #   - data/processed/track_3a_oof_train.csv
 #   - reports/M2/M2_T12_Decision_Checks.md
+
+# Step 4 (Milestone 3): Train/evaluate Tracks 3A, 3B, 3C and build inference defaults & snapshot
+# Run in exact order (full manifest in reports/M3/M3_T13_Model_and_Code_Manifest.md):
+#   M3_T01 -> M3_T02 -> M3_T03 -> M3_T04 -> M3_T05 addendum -> M3_T06 -> M3_T07
+#   -> M3_T08 -> M3_T09 -> M3_T10 -> M3_T11 -> M3_T12 -> M3_T14_build_and_verify.py
 ```
 
 ### 4. Integrity Verification Suites (Read-Only)
@@ -415,7 +459,7 @@ To ensure code quality, strict leakage prevention, and seamless team collaborati
 
 ## 8. Known Issues & Technical Debt
 
-The following known issues are documented for resolution during Milestone 3:
+The following known issues remain open heading into Milestone 4 (all Milestone 3 code/scripts import canonical paths from `src.config`):
 
 1. **Hardcoded Paths in Earlier Notebooks:** Notebooks `M2-T02.ipynb`, `M2-T03__Sell_Through_Risk.ipynb`, `M2_T04_discount_flags.ipynb`, `M2-T07.ipynb`, and `M2_T08_store_markdown_frequency.ipynb` load data from relative file paths rather than importing canonical path constants from `src.config`.
 2. **Gitignore Scope for Report Tables:** `.gitignore` excludes `*.csv`, with only `!reports/tables/M2_T09_mlflow_runs_*.csv` whitelisted. Consequently, all other CSV tables generated under `reports/tables/` are untracked by Git.
@@ -435,4 +479,4 @@ The following known issues are documented for resolution during Milestone 3:
 ## 10. Project Documentation
 
 - [Project documentation](Smart_Shelf_Project_Documentation.md): planning, stakeholder analysis, data design and UI/UX design.
-- [Project proposal (v5)](Smart_Shelf_v5.md).
+- [Project proposal (v5)](Smart_Shelf_Proposal.md).
