@@ -1,0 +1,814 @@
+{
+  "integrity": {
+    "test_total": 19958,
+    "test_r1": 6176,
+    "test_r0_excluded": 13782,
+    "test_r0_share_pct": 69.0550155326185,
+    "rule_violations": 0
+  },
+  "lane1": {
+    "primary_tol_025": {
+      "tolerance": 0.025,
+      "n_test_r1_total": 6176,
+      "n_included_strata": 8,
+      "n_total_strata": 15,
+      "n_batches_included": 4841,
+      "coverage_share_pct": 78.38406735751295,
+      "n_followed_included": 849,
+      "n_not_followed_included": 3992,
+      "verdict": "inconclusive",
+      "estimates": {
+        "profit_per_unit": -1.442074277390929,
+        "s": -0.11692374617383891,
+        "waste_share": 0.11692374617383891,
+        "profit": -163.33042969834975
+      },
+      "ci95": {
+        "profit_per_unit": [
+          -3.2436548232748983,
+          0.36664218023761513
+        ],
+        "s": [
+          -0.13529135380627988,
+          -0.09757492109186856
+        ],
+        "waste_share": [
+          0.09757492109186859,
+          0.13529135380627988
+        ],
+        "profit": [
+          -802.8157290717851,
+          436.4154091691796
+        ]
+      },
+      "strata_table": [
+        {
+          "stratum_id": "E1_GAB_R1",
+          "n_total": 1013,
+          "n_followed": 22,
+          "n_not_followed": 991,
+          "included": true
+        },
+        {
+          "stratum_id": "E1_GAB_R2",
+          "n_total": 603,
+          "n_followed": 11,
+          "n_not_followed": 592,
+          "included": false
+        },
+        {
+          "stratum_id": "E1_GAB_R3",
+          "n_total": 273,
+          "n_followed": 3,
+          "n_not_followed": 270,
+          "included": false
+        },
+        {
+          "stratum_id": "E1_GC_R1",
+          "n_total": 1,
+          "n_followed": 0,
+          "n_not_followed": 1,
+          "included": false
+        },
+        {
+          "stratum_id": "E1_GC_R2",
+          "n_total": 57,
+          "n_followed": 2,
+          "n_not_followed": 55,
+          "included": false
+        },
+        {
+          "stratum_id": "E1_GC_R3",
+          "n_total": 264,
+          "n_followed": 3,
+          "n_not_followed": 261,
+          "included": false
+        },
+        {
+          "stratum_id": "E2_GAB_R1",
+          "n_total": 923,
+          "n_followed": 146,
+          "n_not_followed": 777,
+          "included": true
+        },
+        {
+          "stratum_id": "E2_GAB_R2",
+          "n_total": 421,
+          "n_followed": 72,
+          "n_not_followed": 349,
+          "included": true
+        },
+        {
+          "stratum_id": "E2_GAB_R3",
+          "n_total": 133,
+          "n_followed": 18,
+          "n_not_followed": 115,
+          "included": false
+        },
+        {
+          "stratum_id": "E2_GC_R1",
+          "n_total": 4,
+          "n_followed": 1,
+          "n_not_followed": 3,
+          "included": false
+        },
+        {
+          "stratum_id": "E2_GC_R2",
+          "n_total": 142,
+          "n_followed": 22,
+          "n_not_followed": 120,
+          "included": true
+        },
+        {
+          "stratum_id": "E2_GC_R3",
+          "n_total": 342,
+          "n_followed": 64,
+          "n_not_followed": 278,
+          "included": true
+        },
+        {
+          "stratum_id": "E3_GC_R1",
+          "n_total": 180,
+          "n_followed": 51,
+          "n_not_followed": 129,
+          "included": true
+        },
+        {
+          "stratum_id": "E3_GC_R2",
+          "n_total": 869,
+          "n_followed": 222,
+          "n_not_followed": 647,
+          "included": true
+        },
+        {
+          "stratum_id": "E3_GC_R3",
+          "n_total": 951,
+          "n_followed": 250,
+          "n_not_followed": 701,
+          "included": true
+        }
+      ],
+      "negative_control": {
+        "n_permutations": 200,
+        "null_mean": 0.008878124550617419,
+        "null_sd": 0.4380575343686676,
+        "null_p025": -0.8409006572141345,
+        "null_p975": 0.8471705546488576,
+        "real_estimate": -1.442074277390929,
+        "empirical_two_sided_p": 0.0
+      },
+      "observed_depth_band_by_stratum": [
+        {
+          "stratum_id": "E1_GAB_R1",
+          "actual_bin": "25-30%",
+          "n": 41,
+          "mean_obs_profit_per_unit": -2.4133216937272413,
+          "mean_obs_s": 0.4577015018991837
+        },
+        {
+          "stratum_id": "E1_GAB_R1",
+          "actual_bin": "30-35%",
+          "n": 45,
+          "mean_obs_profit_per_unit": -3.5504061517759764,
+          "mean_obs_s": 0.4956463966083644
+        },
+        {
+          "stratum_id": "E1_GAB_R1",
+          "actual_bin": "35-40%",
+          "n": 39,
+          "mean_obs_profit_per_unit": -3.1530116762612326,
+          "mean_obs_s": 0.5066645087575602
+        },
+        {
+          "stratum_id": "E1_GAB_R1",
+          "actual_bin": "40-45%",
+          "n": 167,
+          "mean_obs_profit_per_unit": -1.4147153257299279,
+          "mean_obs_s": 0.7901674375033253
+        },
+        {
+          "stratum_id": "E1_GAB_R1",
+          "actual_bin": "45-50%",
+          "n": 135,
+          "mean_obs_profit_per_unit": -1.1549397887937125,
+          "mean_obs_s": 0.8958389381531756
+        },
+        {
+          "stratum_id": "E1_GAB_R1",
+          "actual_bin": "50-55%",
+          "n": 156,
+          "mean_obs_profit_per_unit": -1.5292677971285848,
+          "mean_obs_s": 0.8947609759688823
+        },
+        {
+          "stratum_id": "E1_GAB_R1",
+          "actual_bin": "55-60%",
+          "n": 148,
+          "mean_obs_profit_per_unit": -2.0030371647740184,
+          "mean_obs_s": 0.9075144392252944
+        },
+        {
+          "stratum_id": "E1_GAB_R1",
+          "actual_bin": "60-65%",
+          "n": 113,
+          "mean_obs_profit_per_unit": -2.893097404020748,
+          "mean_obs_s": 0.8974252070112412
+        },
+        {
+          "stratum_id": "E1_GAB_R1",
+          "actual_bin": "65-70%",
+          "n": 153,
+          "mean_obs_profit_per_unit": -3.3860830826971706,
+          "mean_obs_s": 0.9342971633369558
+        },
+        {
+          "stratum_id": "E1_GAB_R2",
+          "actual_bin": "35-40%",
+          "n": 30,
+          "mean_obs_profit_per_unit": -4.395113497883934,
+          "mean_obs_s": 0.5237845145642119
+        },
+        {
+          "stratum_id": "E1_GAB_R2",
+          "actual_bin": "40-45%",
+          "n": 106,
+          "mean_obs_profit_per_unit": -1.5589514198837882,
+          "mean_obs_s": 0.8068013888147799
+        },
+        {
+          "stratum_id": "E1_GAB_R2",
+          "actual_bin": "45-50%",
+          "n": 74,
+          "mean_obs_profit_per_unit": -1.3456246482472587,
+          "mean_obs_s": 0.879556104145038
+        },
+        {
+          "stratum_id": "E1_GAB_R2",
+          "actual_bin": "50-55%",
+          "n": 72,
+          "mean_obs_profit_per_unit": -1.5712934047283804,
+          "mean_obs_s": 0.8730680814335279
+        },
+        {
+          "stratum_id": "E1_GAB_R2",
+          "actual_bin": "55-60%",
+          "n": 90,
+          "mean_obs_profit_per_unit": -2.3715592306698716,
+          "mean_obs_s": 0.8892569745406599
+        },
+        {
+          "stratum_id": "E1_GAB_R2",
+          "actual_bin": "60-65%",
+          "n": 81,
+          "mean_obs_profit_per_unit": -3.0659646263406715,
+          "mean_obs_s": 0.8843597563911196
+        },
+        {
+          "stratum_id": "E1_GAB_R2",
+          "actual_bin": "65-70%",
+          "n": 104,
+          "mean_obs_profit_per_unit": -3.797396517181996,
+          "mean_obs_s": 0.9013690188619088
+        },
+        {
+          "stratum_id": "E1_GAB_R3",
+          "actual_bin": "40-45%",
+          "n": 40,
+          "mean_obs_profit_per_unit": -0.9941486115243006,
+          "mean_obs_s": 0.7935337344507938
+        },
+        {
+          "stratum_id": "E1_GAB_R3",
+          "actual_bin": "45-50%",
+          "n": 45,
+          "mean_obs_profit_per_unit": -1.5121338111273281,
+          "mean_obs_s": 0.8600254590644705
+        },
+        {
+          "stratum_id": "E1_GAB_R3",
+          "actual_bin": "50-55%",
+          "n": 45,
+          "mean_obs_profit_per_unit": -2.0277028677615814,
+          "mean_obs_s": 0.8480897279290963
+        },
+        {
+          "stratum_id": "E1_GAB_R3",
+          "actual_bin": "55-60%",
+          "n": 44,
+          "mean_obs_profit_per_unit": -2.353699286559458,
+          "mean_obs_s": 0.8915769475182338
+        },
+        {
+          "stratum_id": "E1_GAB_R3",
+          "actual_bin": "60-65%",
+          "n": 36,
+          "mean_obs_profit_per_unit": -3.2193217500407134,
+          "mean_obs_s": 0.8839299605720474
+        },
+        {
+          "stratum_id": "E1_GAB_R3",
+          "actual_bin": "65-70%",
+          "n": 40,
+          "mean_obs_profit_per_unit": -3.172389813906853,
+          "mean_obs_s": 0.9156207839225672
+        },
+        {
+          "stratum_id": "E1_GC_R3",
+          "actual_bin": "50-55%",
+          "n": 44,
+          "mean_obs_profit_per_unit": -2.053654895764115,
+          "mean_obs_s": 0.8010703301884535
+        },
+        {
+          "stratum_id": "E1_GC_R3",
+          "actual_bin": "55-60%",
+          "n": 37,
+          "mean_obs_profit_per_unit": -2.5303344354543142,
+          "mean_obs_s": 0.8331434477521125
+        },
+        {
+          "stratum_id": "E1_GC_R3",
+          "actual_bin": "60-65%",
+          "n": 45,
+          "mean_obs_profit_per_unit": -2.634170816021058,
+          "mean_obs_s": 0.8783819330053347
+        },
+        {
+          "stratum_id": "E1_GC_R3",
+          "actual_bin": "65-70%",
+          "n": 36,
+          "mean_obs_profit_per_unit": -4.068184377697864,
+          "mean_obs_s": 0.8495617791462381
+        },
+        {
+          "stratum_id": "E1_GC_R3",
+          "actual_bin": "70-75%",
+          "n": 74,
+          "mean_obs_profit_per_unit": -3.908958420784791,
+          "mean_obs_s": 0.8973468836673754
+        },
+        {
+          "stratum_id": "E2_GAB_R1",
+          "actual_bin": "10-15%",
+          "n": 155,
+          "mean_obs_profit_per_unit": -0.2234002853090658,
+          "mean_obs_s": 0.6199481592591616
+        },
+        {
+          "stratum_id": "E2_GAB_R1",
+          "actual_bin": "15-20%",
+          "n": 171,
+          "mean_obs_profit_per_unit": 0.048160790387946156,
+          "mean_obs_s": 0.67388769442473
+        },
+        {
+          "stratum_id": "E2_GAB_R1",
+          "actual_bin": "20-25%",
+          "n": 179,
+          "mean_obs_profit_per_unit": 0.06789816338798163,
+          "mean_obs_s": 0.748208563610367
+        },
+        {
+          "stratum_id": "E2_GAB_R1",
+          "actual_bin": "25-30%",
+          "n": 211,
+          "mean_obs_profit_per_unit": -0.4294119581755885,
+          "mean_obs_s": 0.7086308971104026
+        },
+        {
+          "stratum_id": "E2_GAB_R1",
+          "actual_bin": "30-35%",
+          "n": 88,
+          "mean_obs_profit_per_unit": -1.200180065964443,
+          "mean_obs_s": 0.6866179681725391
+        },
+        {
+          "stratum_id": "E2_GAB_R1",
+          "actual_bin": "35-40%",
+          "n": 54,
+          "mean_obs_profit_per_unit": -1.6475224334929832,
+          "mean_obs_s": 0.6639452452184632
+        },
+        {
+          "stratum_id": "E2_GAB_R1",
+          "actual_bin": "40-45%",
+          "n": 62,
+          "mean_obs_profit_per_unit": -2.2651452001504913,
+          "mean_obs_s": 0.6586183051533396
+        },
+        {
+          "stratum_id": "E2_GAB_R2",
+          "actual_bin": "10-15%",
+          "n": 72,
+          "mean_obs_profit_per_unit": 0.36454949005604437,
+          "mean_obs_s": 0.6465278231783742
+        },
+        {
+          "stratum_id": "E2_GAB_R2",
+          "actual_bin": "15-20%",
+          "n": 94,
+          "mean_obs_profit_per_unit": 0.15837705819061823,
+          "mean_obs_s": 0.6808514809609156
+        },
+        {
+          "stratum_id": "E2_GAB_R2",
+          "actual_bin": "20-25%",
+          "n": 67,
+          "mean_obs_profit_per_unit": 0.5968896849502738,
+          "mean_obs_s": 0.7213311637077896
+        },
+        {
+          "stratum_id": "E2_GAB_R2",
+          "actual_bin": "25-30%",
+          "n": 95,
+          "mean_obs_profit_per_unit": -0.3092494741887742,
+          "mean_obs_s": 0.7368072635265775
+        },
+        {
+          "stratum_id": "E2_GAB_R2",
+          "actual_bin": "30-35%",
+          "n": 41,
+          "mean_obs_profit_per_unit": -1.0545473975581727,
+          "mean_obs_s": 0.6526234185464272
+        },
+        {
+          "stratum_id": "E2_GAB_R3",
+          "actual_bin": "15-20%",
+          "n": 34,
+          "mean_obs_profit_per_unit": 0.1856884074716978,
+          "mean_obs_s": 0.6679804750865922
+        },
+        {
+          "stratum_id": "E2_GAB_R3",
+          "actual_bin": "25-30%",
+          "n": 32,
+          "mean_obs_profit_per_unit": -0.036346752337439225,
+          "mean_obs_s": 0.7497445334802075
+        },
+        {
+          "stratum_id": "E2_GC_R2",
+          "actual_bin": "15-20%",
+          "n": 37,
+          "mean_obs_profit_per_unit": 1.2997961522289025,
+          "mean_obs_s": 0.8309477253308569
+        },
+        {
+          "stratum_id": "E2_GC_R2",
+          "actual_bin": "20-25%",
+          "n": 49,
+          "mean_obs_profit_per_unit": 0.8858822232808286,
+          "mean_obs_s": 0.8175554262476401
+        },
+        {
+          "stratum_id": "E2_GC_R3",
+          "actual_bin": "15-20%",
+          "n": 85,
+          "mean_obs_profit_per_unit": 1.140156037068943,
+          "mean_obs_s": 0.7856440810816898
+        },
+        {
+          "stratum_id": "E2_GC_R3",
+          "actual_bin": "20-25%",
+          "n": 106,
+          "mean_obs_profit_per_unit": 1.2548268821090287,
+          "mean_obs_s": 0.8062909367726806
+        },
+        {
+          "stratum_id": "E2_GC_R3",
+          "actual_bin": "25-30%",
+          "n": 35,
+          "mean_obs_profit_per_unit": 1.166501934662098,
+          "mean_obs_s": 0.7877180789328454
+        },
+        {
+          "stratum_id": "E2_GC_R3",
+          "actual_bin": "30-35%",
+          "n": 38,
+          "mean_obs_profit_per_unit": -0.6028092330078707,
+          "mean_obs_s": 0.7667109850613202
+        },
+        {
+          "stratum_id": "E2_GC_R3",
+          "actual_bin": "35-40%",
+          "n": 42,
+          "mean_obs_profit_per_unit": -1.0315688225462043,
+          "mean_obs_s": 0.7489887241526247
+        },
+        {
+          "stratum_id": "E3_GC_R1",
+          "actual_bin": "15-20%",
+          "n": 75,
+          "mean_obs_profit_per_unit": -0.9833585923043086,
+          "mean_obs_s": 0.7181213123568286
+        },
+        {
+          "stratum_id": "E3_GC_R1",
+          "actual_bin": "20-25%",
+          "n": 98,
+          "mean_obs_profit_per_unit": 2.1064390087530556,
+          "mean_obs_s": 0.6983695151775295
+        },
+        {
+          "stratum_id": "E3_GC_R2",
+          "actual_bin": "15-20%",
+          "n": 394,
+          "mean_obs_profit_per_unit": 1.0509547880165684,
+          "mean_obs_s": 0.7695404630793363
+        },
+        {
+          "stratum_id": "E3_GC_R2",
+          "actual_bin": "20-25%",
+          "n": 438,
+          "mean_obs_profit_per_unit": -1.321326297146948,
+          "mean_obs_s": 0.8234791116176845
+        },
+        {
+          "stratum_id": "E3_GC_R2",
+          "actual_bin": "25-30%",
+          "n": 37,
+          "mean_obs_profit_per_unit": -1.589411482542358,
+          "mean_obs_s": 0.8672797804707238
+        },
+        {
+          "stratum_id": "E3_GC_R3",
+          "actual_bin": "15-20%",
+          "n": 430,
+          "mean_obs_profit_per_unit": -1.7445805237973466,
+          "mean_obs_s": 0.7821471666154696
+        },
+        {
+          "stratum_id": "E3_GC_R3",
+          "actual_bin": "20-25%",
+          "n": 489,
+          "mean_obs_profit_per_unit": -4.614360129883886,
+          "mean_obs_s": 0.8029590347263805
+        },
+        {
+          "stratum_id": "E3_GC_R3",
+          "actual_bin": "25-30%",
+          "n": 32,
+          "mean_obs_profit_per_unit": -13.07675446416022,
+          "mean_obs_s": 0.7520952530993659
+        }
+      ]
+    },
+    "sensitivity_tol_050": {
+      "tolerance": 0.05,
+      "n_test_r1_total": 6176,
+      "n_included_strata": 9,
+      "n_total_strata": 15,
+      "n_batches_included": 4974,
+      "coverage_share_pct": 80.53756476683938,
+      "n_followed_included": 1865,
+      "n_not_followed_included": 3109,
+      "verdict": "inconclusive",
+      "estimates": {
+        "profit_per_unit": -1.284607663936807,
+        "s": -0.11994430102926884,
+        "waste_share": 0.11994430102926891,
+        "profit": -173.68147612159387
+      },
+      "ci95": {
+        "profit_per_unit": [
+          -2.4502559248432996,
+          0.260249654074959
+        ],
+        "s": [
+          -0.13485800760616617,
+          -0.10354542377761242
+        ],
+        "waste_share": [
+          0.10354542377761246,
+          0.13485800760616617
+        ],
+        "profit": [
+          -599.3001391835893,
+          308.13592113014903
+        ]
+      },
+      "strata_table": [
+        {
+          "stratum_id": "E1_GAB_R1",
+          "n_total": 1013,
+          "n_followed": 57,
+          "n_not_followed": 956,
+          "included": true
+        },
+        {
+          "stratum_id": "E1_GAB_R2",
+          "n_total": 603,
+          "n_followed": 19,
+          "n_not_followed": 584,
+          "included": false
+        },
+        {
+          "stratum_id": "E1_GAB_R3",
+          "n_total": 273,
+          "n_followed": 6,
+          "n_not_followed": 267,
+          "included": false
+        },
+        {
+          "stratum_id": "E1_GC_R1",
+          "n_total": 1,
+          "n_followed": 0,
+          "n_not_followed": 1,
+          "included": false
+        },
+        {
+          "stratum_id": "E1_GC_R2",
+          "n_total": 57,
+          "n_followed": 5,
+          "n_not_followed": 52,
+          "included": false
+        },
+        {
+          "stratum_id": "E1_GC_R3",
+          "n_total": 264,
+          "n_followed": 8,
+          "n_not_followed": 256,
+          "included": false
+        },
+        {
+          "stratum_id": "E2_GAB_R1",
+          "n_total": 923,
+          "n_followed": 311,
+          "n_not_followed": 612,
+          "included": true
+        },
+        {
+          "stratum_id": "E2_GAB_R2",
+          "n_total": 421,
+          "n_followed": 152,
+          "n_not_followed": 269,
+          "included": true
+        },
+        {
+          "stratum_id": "E2_GAB_R3",
+          "n_total": 133,
+          "n_followed": 44,
+          "n_not_followed": 89,
+          "included": true
+        },
+        {
+          "stratum_id": "E2_GC_R1",
+          "n_total": 4,
+          "n_followed": 2,
+          "n_not_followed": 2,
+          "included": false
+        },
+        {
+          "stratum_id": "E2_GC_R2",
+          "n_total": 142,
+          "n_followed": 59,
+          "n_not_followed": 83,
+          "included": true
+        },
+        {
+          "stratum_id": "E2_GC_R3",
+          "n_total": 342,
+          "n_followed": 113,
+          "n_not_followed": 229,
+          "included": true
+        },
+        {
+          "stratum_id": "E3_GC_R1",
+          "n_total": 180,
+          "n_followed": 108,
+          "n_not_followed": 72,
+          "included": true
+        },
+        {
+          "stratum_id": "E3_GC_R2",
+          "n_total": 869,
+          "n_followed": 485,
+          "n_not_followed": 384,
+          "included": true
+        },
+        {
+          "stratum_id": "E3_GC_R3",
+          "n_total": 951,
+          "n_followed": 536,
+          "n_not_followed": 415,
+          "included": true
+        }
+      ],
+      "negative_control": null
+    }
+  },
+  "lane2": {
+    "label": "simulated / model-estimated, not observed",
+    "n_batches": 5289,
+    "mean_gain_unit": 1.783838006441359,
+    "median_gain_unit": 0.7026240843929825,
+    "ci95_mean_gain_unit": [
+      1.6849642342700013,
+      1.8705284399932938
+    ],
+    "mean_gain_batch": 458.8738189887751,
+    "median_gain_batch": 158.41883039177117,
+    "ci95_mean_gain_batch": [
+      431.19112790648063,
+      481.669509986181
+    ],
+    "share_positive_gain_pct": 100.0,
+    "share_below_cv_mae_pct": 70.08886367933447,
+    "cv_profit_unit_mae": 1.833657585245831,
+    "model_error_at_actual_depth": {
+      "mae_profit_per_unit": 1.5975929970368852,
+      "rmse_profit_per_unit": 5.969565724515171,
+      "mean_error_pred_minus_obs": 0.07049095161924117,
+      "mean_snap_dist": 0.011905842314237094,
+      "max_snap_dist": 0.040000000000000036
+    },
+    "by_tier": [
+      {
+        "tier": "Critical",
+        "n": 5,
+        "mean_gain_unit": 0.12857994393734842,
+        "median_gain_unit": 0.11084066504448753,
+        "mean_gain_batch": 3.1876051866287582
+      },
+      {
+        "tier": "High",
+        "n": 340,
+        "mean_gain_unit": 2.752832985754936,
+        "median_gain_unit": 2.265627159847481,
+        "mean_gain_batch": 712.6001531587436
+      },
+      {
+        "tier": "Low",
+        "n": 2648,
+        "mean_gain_unit": 1.1267691548403422,
+        "median_gain_unit": 0.43341806887692735,
+        "mean_gain_batch": 295.03826870046544
+      },
+      {
+        "tier": "Medium",
+        "n": 2296,
+        "mean_gain_unit": 2.401754520546497,
+        "median_gain_unit": 1.8555423271541729,
+        "mean_gain_batch": 611.2466476536989
+      }
+    ],
+    "by_exp_terc_and_grade": [
+      {
+        "exp_terc": 1,
+        "grade_grp": "AB",
+        "n": 1853,
+        "mean_gain_unit": 2.927442940231474,
+        "median_gain_unit": 2.336550053453773,
+        "mean_gain_batch": 743.3161019970039
+      },
+      {
+        "exp_terc": 1,
+        "grade_grp": "C",
+        "n": 317,
+        "mean_gain_unit": 2.944748975750161,
+        "median_gain_unit": 2.451445691444132,
+        "mean_gain_batch": 762.9015026928428
+      },
+      {
+        "exp_terc": 2,
+        "grade_grp": "AB",
+        "n": 1241,
+        "mean_gain_unit": 0.4457500975822647,
+        "median_gain_unit": 0.25289332905632467,
+        "mean_gain_batch": 115.45847676377241
+      },
+      {
+        "exp_terc": 2,
+        "grade_grp": "C",
+        "n": 401,
+        "mean_gain_unit": 0.7830306774314634,
+        "median_gain_unit": 0.5137054290744416,
+        "mean_gain_batch": 203.34058211875347
+      },
+      {
+        "exp_terc": 3,
+        "grade_grp": "C",
+        "n": 1477,
+        "mean_gain_unit": 1.4959450573845754,
+        "median_gain_unit": 0.40978910977156646,
+        "mean_gain_batch": 394.6889452837441
+      }
+    ],
+    "by_flat_curve": [
+      {
+        "flat_curve": false,
+        "n": 138,
+        "mean_gain_unit": 11.617784344968657,
+        "median_gain_unit": 10.360873591583697,
+        "mean_gain_batch": 3060.8675934772473
+      },
+      {
+        "flat_curve": true,
+        "n": 5151,
+        "mean_gain_unit": 1.5203775920137201,
+        "median_gain_unit": 0.6743256192820599,
+        "mean_gain_batch": 389.16402654470414
+      }
+    ]
+  },
+  "mlflow_run_id": "b62e8893e1b9490db3176f715c576c19"
+}
