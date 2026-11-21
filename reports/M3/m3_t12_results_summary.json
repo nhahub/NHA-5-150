@@ -1,0 +1,313 @@
+{
+  "train_r1": {
+    "n_rows": 24475,
+    "level_shares_pct": {
+      "Low": 84.78038815117466,
+      "Moderate": 15.219611848825332
+    },
+    "flag_shares_pct": {
+      "low_history_3a": 11.771195097037793,
+      "limited_depth_category": 19.991828396322777,
+      "support_edge": 79.76710929519918,
+      "critical_tier": 0.04085801838610827,
+      "near_tie": 96.80081716036773
+    },
+    "active_flag_count_dist": {
+      "0": 3725,
+      "1": 14465,
+      "2": 6013,
+      "3": 272
+    },
+    "pairwise_overlap_pct": {
+      "low_history_3a_AND_limited_depth_category": 1.2420837589376916,
+      "low_history_3a_AND_support_edge": 9.270684371807967,
+      "low_history_3a_AND_critical_tier": 0.012257405515832482,
+      "limited_depth_category_AND_support_edge": 17.37282941777324,
+      "limited_depth_category_AND_critical_tier": 0.0040858018386108275,
+      "support_edge_AND_critical_tier": 0.0
+    },
+    "by_tier_pct": {
+      "Critical": {
+        "Low": 100.0,
+        "Moderate": 0.0
+      },
+      "High": {
+        "Low": 92.26686884003033,
+        "Moderate": 7.733131159969673
+      },
+      "Low": {
+        "Low": 83.12403613130645,
+        "Moderate": 16.875963868693546
+      },
+      "Medium": {
+        "Low": 86.0950781823906,
+        "Moderate": 13.904921817609402
+      }
+    },
+    "by_category_pct": {
+      "Bakery": {
+        "Low": 81.86827604303333,
+        "Moderate": 18.131723956966674
+      },
+      "Beverages": {
+        "Low": 100.0,
+        "Moderate": 0.0
+      },
+      "Dairy": {
+        "Low": 100.0,
+        "Moderate": 0.0
+      },
+      "Deli": {
+        "Low": 78.38577291381668,
+        "Moderate": 21.61422708618331
+      },
+      "Frozen_Meals": {
+        "Low": 100.0,
+        "Moderate": 0.0
+      },
+      "Meat": {
+        "Low": 74.13855640188612,
+        "Moderate": 25.861443598113894
+      },
+      "Pharmaceuticals": {
+        "Low": 100.0,
+        "Moderate": 0.0
+      },
+      "Produce": {
+        "Low": 84.07310704960835,
+        "Moderate": 15.926892950391643
+      },
+      "Ready_to_Eat": {
+        "Low": 84.63665086887836,
+        "Moderate": 15.363349131121643
+      },
+      "Seafood": {
+        "Low": 80.11452368558042,
+        "Moderate": 19.885476314419574
+      }
+    },
+    "moderate_by_exp_terc_and_grade": [
+      {
+        "exp_terc": 1,
+        "grade_grp": "Grade_AB",
+        "n": 7253,
+        "moderate_pct": 0.5652833310354336
+      },
+      {
+        "exp_terc": 1,
+        "grade_grp": "Grade_C",
+        "n": 1185,
+        "moderate_pct": 0.0
+      },
+      {
+        "exp_terc": 2,
+        "grade_grp": "Grade_AB",
+        "n": 5734,
+        "moderate_pct": 60.620858039762815
+      },
+      {
+        "exp_terc": 2,
+        "grade_grp": "Grade_C",
+        "n": 2184,
+        "moderate_pct": 9.249084249084248
+      },
+      {
+        "exp_terc": 3,
+        "grade_grp": "Grade_C",
+        "n": 8119,
+        "moderate_pct": 0.07390072669047912
+      }
+    ]
+  },
+  "test_r1": {
+    "n_rows": 6176,
+    "level_shares_pct": {
+      "Low": 84.11593264248705,
+      "Moderate": 15.884067357512954
+    },
+    "flag_shares_pct": {
+      "low_history_3a": 16.35362694300518,
+      "limited_depth_category": 19.284326424870464,
+      "support_edge": 77.75259067357513,
+      "critical_tier": 0.09715025906735751,
+      "near_tie": 96.97215025906736
+    },
+    "active_flag_count_dist": {
+      "0": 981,
+      "1": 3480,
+      "2": 1616,
+      "3": 99
+    },
+    "pairwise_overlap_pct": {
+      "low_history_3a_AND_limited_depth_category": 1.7972797927461142,
+      "low_history_3a_AND_support_edge": 12.580958549222798,
+      "low_history_3a_AND_critical_tier": 0.032383419689119175,
+      "limited_depth_category_AND_support_edge": 16.547927461139896,
+      "limited_depth_category_AND_critical_tier": 0.016191709844559588,
+      "support_edge_AND_critical_tier": 0.0
+    },
+    "by_tier_pct": {
+      "Critical": {
+        "Low": 100.0,
+        "Moderate": 0.0
+      },
+      "High": {
+        "Low": 94.50867052023122,
+        "Moderate": 5.491329479768786
+      },
+      "Low": {
+        "Low": 81.0615199034982,
+        "Moderate": 18.93848009650181
+      },
+      "Medium": {
+        "Low": 86.68261562998406,
+        "Moderate": 13.31738437001595
+      }
+    },
+    "by_category_pct": {
+      "Bakery": {
+        "Low": 84.25832492431887,
+        "Moderate": 15.74167507568113
+      },
+      "Beverages": {
+        "Low": 100.0,
+        "Moderate": 0.0
+      },
+      "Dairy": {
+        "Low": 100.0,
+        "Moderate": 0.0
+      },
+      "Deli": {
+        "Low": 73.77622377622379,
+        "Moderate": 26.223776223776223
+      },
+      "Frozen_Meals": {
+        "Low": 100.0,
+        "Moderate": 0.0
+      },
+      "Meat": {
+        "Low": 73.45767575322813,
+        "Moderate": 26.54232424677188
+      },
+      "Pharmaceuticals": {
+        "Low": 100.0,
+        "Moderate": 0.0
+      },
+      "Produce": {
+        "Low": 80.95238095238095,
+        "Moderate": 19.047619047619047
+      },
+      "Ready_to_Eat": {
+        "Low": 82.69817073170732,
+        "Moderate": 17.301829268292682
+      },
+      "Seafood": {
+        "Low": 81.61290322580645,
+        "Moderate": 18.387096774193548
+      }
+    },
+    "moderate_by_exp_terc_and_grade": [
+      {
+        "exp_terc": 1,
+        "grade_grp": "Grade_AB",
+        "n": 1889,
+        "moderate_pct": 0.4764425622022234
+      },
+      {
+        "exp_terc": 1,
+        "grade_grp": "Grade_C",
+        "n": 322,
+        "moderate_pct": 0.0
+      },
+      {
+        "exp_terc": 2,
+        "grade_grp": "Grade_AB",
+        "n": 1477,
+        "moderate_pct": 62.423832092078534
+      },
+      {
+        "exp_terc": 2,
+        "grade_grp": "Grade_C",
+        "n": 488,
+        "moderate_pct": 10.245901639344263
+      },
+      {
+        "exp_terc": 3,
+        "grade_grp": "Grade_C",
+        "n": 2000,
+        "moderate_pct": 0.0
+      }
+    ]
+  },
+  "error_by_level_test_r1": {
+    "Low": {
+      "n_rows": 5195,
+      "mae_profit_unit": 1.86422311316349,
+      "mae_profit_unit_ci95": [
+        1.6878613804833738,
+        2.0269739268139193
+      ],
+      "rmse_profit_unit": 6.919265170260628,
+      "rmse_profit_unit_ci95": [
+        6.114110722196722,
+        7.582993726522361
+      ],
+      "mae_s": 0.10866321793778876,
+      "mae_s_ci95": [
+        0.10679141504956279,
+        0.11056076010264322
+      ],
+      "rmse_s": 0.12807733726771145,
+      "rmse_s_ci95": [
+        0.1261288634107979,
+        0.1300648927766457
+      ],
+      "obs_profit_unit_mean": -1.6329913804486873,
+      "obs_profit_unit_median": -0.3630769230769231
+    },
+    "Moderate": {
+      "n_rows": 981,
+      "mae_profit_unit": 1.0444287816134545,
+      "mae_profit_unit_ci95": [
+        0.9641600698406495,
+        1.131123867070977
+      ],
+      "rmse_profit_unit": 1.4788667182078952,
+      "rmse_profit_unit_ci95": [
+        1.3490237856607672,
+        1.5977426893067643
+      ],
+      "mae_s": 0.10509684490768927,
+      "mae_s_ci95": [
+        0.10102162414654596,
+        0.10936830911838996
+      ],
+      "rmse_s": 0.12639860041777598,
+      "rmse_s_ci95": [
+        0.12269590813916831,
+        0.13056272234847033
+      ],
+      "obs_profit_unit_mean": -0.7635702902518757,
+      "obs_profit_unit_median": -0.5191907514450866
+    }
+  },
+  "wording": {
+    "levels": {
+      "No recommendation": "No markdown recommended: this batch is outside the range where the data supports a discount decision.",
+      "Low": "Low confidence: one or more data-support limits apply to this recommendation; treat as a tentative estimate.",
+      "Moderate": "Moderate confidence: this batch lies inside supported data ranges, but remains an advisory model estimate rather than a guarantee."
+    },
+    "reasons": {
+      "no_discount_region": "Batch is in region R0 where historical practice is no markdown.",
+      "low_history_3a": "Limited history for this product at this store (fewer than 20 training rows).",
+      "limited_depth_category": "Category has limited historical discount-depth coverage (fewer than 8 of 13 depth bands supported).",
+      "support_edge": "Recommended depth sits on the shallowest or deepest supported depth boundary for this batch.",
+      "critical_tier": "Critical tier has very thin historical support (fewer than 20 test batches).",
+      "near_tie": "Predicted profit is nearly the same across depths."
+    },
+    "global_caveat": {
+      "text": "Advisory estimate. The observed-data backtest was inconclusive; see the validation report."
+    }
+  },
+  "mlflow_run_id": "2143aa1328194920b3293b121d7ca2d8"
+}
