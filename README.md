@@ -359,8 +359,11 @@ python scripts/M2_T12_decision_checks.py
 
 # Step 4 (Milestone 3): Train/evaluate Tracks 3A, 3B, 3C and build inference defaults & snapshot
 # Run in exact order (full manifest in reports/M3/M3_T13_Model_and_Code_Manifest.md):
-#   M3_T01 -> M3_T02 -> M3_T03 -> M3_T04 -> M3_T05 addendum -> M3_T06 -> M3_T07
-#   -> M3_T08 -> M3_T09 -> M3_T10 -> M3_T11 -> M3_T12 -> M3_T14_build_and_verify.py
+#   M3_T01_train_track3a.py -> M3_T02_closeout_track3a.py -> M3_T03_explain_demo.py
+#   -> M3_T04_build_and_diagnose.py -> M3_T05_diagnose_confounding.py -> M3_T05_addendum_r1.py
+#   -> M3_T06_train_track3b.py -> M3_T07_evaluate_track3b.py -> M3_T08_elasticity_view.py
+#   -> M3_T09_run_optimizer.py -> M3_T10_tier_mapping.py -> M3_T11_validate_optimizer.py
+#   -> M3_T12_confidence_propagation.py -> M3_T14_build_and_verify.py
 ```
 
 ### 4. Integrity Verification Suites (Read-Only)
