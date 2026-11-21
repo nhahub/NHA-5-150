@@ -50,6 +50,7 @@ from src.mlflow_utils import (
     save_model_with_metadata,
     setup_tracking_environment,
     start_tracked_run,
+    to_repo_relative_path,
 )
 
 REPORTS_M3_DIR = REPORTS_DIR / "M3"
@@ -388,8 +389,8 @@ def main() -> None:
         },
         "heterogeneity": het_summary,
         "final_mlflow_run_id": final_run_id,
-        "model_path": str(model_path),
-        "meta_path": str(meta_path),
+        "model_path": to_repo_relative_path(model_path),
+        "meta_path": to_repo_relative_path(meta_path),
     }
     out_json = REPORTS_M3_DIR / "m3_t06_results_summary.json"
     out_json.write_text(json.dumps(summary, indent=2))

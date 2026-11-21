@@ -43,6 +43,7 @@ from src.m3_t01_track3a import (
     tune_candidate_cv,
 )
 from src.mlflow_utils import (
+    to_repo_relative_path,
     log_calibration_curve,
     log_confusion_matrix,
     log_figure_artifact,
@@ -425,8 +426,8 @@ def main() -> None:
             },
             "shap_top10": [{"feature": f, "mean_abs_shap": v} for f, v in shap_top10],
             "mlflow_run_id": final_run_id,
-            "model_path": str(model_path),
-            "meta_path": str(meta_path),
+            "model_path": to_repo_relative_path(model_path),
+            "meta_path": to_repo_relative_path(meta_path),
         },
     }
     summary_path = REPORTS_M3_DIR / "m3_t01_results_summary.json"
