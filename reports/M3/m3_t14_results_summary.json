@@ -1,0 +1,300 @@
+{
+  "task": "M3-T14",
+  "snapshot_date": "2024-12-31",
+  "snapshot_rows": 145,
+  "defaults_training_rows": 80042,
+  "defaults_file_bytes": 583751,
+  "defaults_top_level_keys": [
+    "train_end_date",
+    "training_row_count",
+    "valid_categories",
+    "valid_products",
+    "valid_stores",
+    "valid_regions",
+    "valid_suppliers",
+    "valid_quality_grades",
+    "store_region_map",
+    "global_defaults",
+    "by_category",
+    "history_by_product_store",
+    "history_by_category_store"
+  ],
+  "inmem_m2_proba_max_abs_diff": 1.1102230246251565e-16,
+  "parity_test_1000": {
+    "label": "test_random_1000",
+    "n_rows": 1000,
+    "n_r1": 313,
+    "n_r0": 687,
+    "elapsed_sec": 2.622,
+    "spoil_proba_max_abs_diff": 3.607782183556729e-07,
+    "spoil_proba_mean_abs_diff": 7.17701324979697e-08,
+    "spoil_proba_within_1e9": false,
+    "spoil_proba_within_1e5": true,
+    "categorical_match_rates": {
+      "region": 1.0,
+      "status": 1.0,
+      "tier": 1.0,
+      "confidence_level": 1.0,
+      "confidence_reasons": 1.0
+    },
+    "r1_recommended_depth_exact_rate": 1.0,
+    "r1_profit_max_abs_diff": 1.8189894035458565e-12,
+    "r1_profit_mean_abs_diff": 1.8825895315498615e-14
+  },
+  "parity_snapshot": {
+    "label": "snapshot_2024-12-31",
+    "n_rows": 145,
+    "n_r1": 38,
+    "n_r0": 107,
+    "elapsed_sec": 0.15,
+    "spoil_proba_max_abs_diff": 2.936031710254472e-07,
+    "spoil_proba_mean_abs_diff": 6.057075917584405e-08,
+    "spoil_proba_within_1e9": false,
+    "spoil_proba_within_1e5": true,
+    "categorical_match_rates": {
+      "region": 1.0,
+      "status": 1.0,
+      "tier": 1.0,
+      "confidence_level": 1.0,
+      "confidence_reasons": 1.0
+    },
+    "r1_recommended_depth_exact_rate": 1.0,
+    "r1_profit_max_abs_diff": 2.2737367544323206e-13,
+    "r1_profit_mean_abs_diff": 1.0284171175475135e-14
+  },
+  "snapshot_stats": {
+    "date": "2024-12-31",
+    "n_rows": 145,
+    "n_r0": 107,
+    "n_r1": 38,
+    "r0_pct": 73.79,
+    "r1_tier_counts": {
+      "Low": 24,
+      "Medium": 12,
+      "High": 2
+    },
+    "r1_confidence_counts": {
+      "Low": 29,
+      "Moderate": 9
+    },
+    "snapshot_csv_columns": [
+      "record_id",
+      "product_id",
+      "product_name",
+      "category",
+      "store_id",
+      "region",
+      "supplier_id",
+      "transaction_date",
+      "expiration_date",
+      "shelf_life_days",
+      "days_remaining_at_purchase",
+      "storage_temp",
+      "temp_deviation",
+      "base_price",
+      "cost_price",
+      "initial_quantity",
+      "spoilage_sensitivity",
+      "day_of_week",
+      "is_weekend",
+      "month",
+      "daily_demand",
+      "demand_variability",
+      "temp_abuse_events",
+      "distribution_hours",
+      "handling_score",
+      "packaging_score",
+      "quality_grade",
+      "days_until_expiry",
+      "supplier_score",
+      "is_promoted",
+      "receipt_date",
+      "days_since_receipt",
+      "shelf_life_used_ratio",
+      "expiry_remaining_ratio",
+      "expiry_lag_days",
+      "quarter",
+      "week_of_year",
+      "day_of_month",
+      "days_since_data_start",
+      "month_sin",
+      "month_cos",
+      "dow_sin",
+      "dow_cos",
+      "quality_grade_ord",
+      "split"
+    ],
+    "manager_view_columns": [
+      "record_id",
+      "product_name",
+      "category",
+      "store_id",
+      "days_left",
+      "stock_units",
+      "spoil_chance_pct",
+      "risk_band",
+      "region",
+      "recommended_tier",
+      "recommended_discount_pct",
+      "simulated_profit_at_rec",
+      "confidence_level",
+      "confidence_reasons",
+      "limited_history_flag",
+      "top_factors"
+    ]
+  },
+  "hypothetical_examples": [
+    {
+      "case": "H1_R0_fresh",
+      "region": "R0",
+      "status": "no_markdown_historical_practice",
+      "spoil_chance_pct": 19.74,
+      "tier": "None",
+      "recommended_depth": null,
+      "predicted_profit_at_rec": null,
+      "confidence_level": "No recommendation",
+      "confidence_reasons": "[\"no_discount_region\"]",
+      "defaults_dominate": true,
+      "unknown_entity": true,
+      "top_drivers_text": "Predicted spoilage risk 19.7% (typical batch: 19.4%). Main drivers: packaging quality raises risk (+0.4 pts), initial batch quantity raises risk (+0.4 pts), base price lowers risk (-0.3 pts). Note: Limited history for this product at this store (0 training rows)."
+    },
+    {
+      "case": "H2_R1_short_expiry",
+      "region": "R1",
+      "status": "recommended",
+      "spoil_chance_pct": 19.15,
+      "tier": "Medium",
+      "recommended_depth": 0.25,
+      "predicted_profit_at_rec": 10.303107347085811,
+      "confidence_level": "Low",
+      "confidence_reasons": "[\"low_history_3a\", \"support_edge\"]|unknown_entity|defaults_dominate",
+      "defaults_dominate": true,
+      "unknown_entity": true,
+      "top_drivers_text": "Predicted spoilage risk 19.1% (typical batch: 19.4%). Main drivers: days until expiry raises risk (-1.2 pts), packaging quality lowers risk (+0.8 pts), initial batch quantity raises risk (-0.7 pts). Note: Limited history for this product at this store (0 training rows)."
+    },
+    {
+      "case": "H3_Grade_C_long_shelf_life",
+      "region": "R1",
+      "status": "recommended",
+      "spoil_chance_pct": 17.67,
+      "tier": "Low",
+      "recommended_depth": 0.15,
+      "predicted_profit_at_rec": 93.74713413221345,
+      "confidence_level": "Low",
+      "confidence_reasons": "[\"low_history_3a\", \"support_edge\"]|unknown_entity|defaults_dominate",
+      "defaults_dominate": true,
+      "unknown_entity": true,
+      "top_drivers_text": "Predicted spoilage risk 17.7% (typical batch: 19.4%). Main drivers: packaging quality lowers risk (-1.3 pts), initial batch quantity raises risk (+1.0 pts), days since receipt lowers risk (-1.0 pts). Note: Limited history for this product at this store (0 training rows)."
+    },
+    {
+      "case": "H4_all_optional_defaulted",
+      "region": "R1",
+      "status": "recommended",
+      "spoil_chance_pct": 17.21,
+      "tier": "Low",
+      "recommended_depth": 0.1,
+      "predicted_profit_at_rec": 24.5763929881189,
+      "confidence_level": "Low",
+      "confidence_reasons": "[\"support_edge\"]|defaults_dominate",
+      "defaults_dominate": true,
+      "unknown_entity": false,
+      "top_drivers_text": "Predicted spoilage risk 17.2% (typical batch: 19.4%). Main drivers: days until expiry raises risk (+2.0 pts), product category lowers risk (-1.5 pts), packaging quality lowers risk (-1.2 pts)."
+    },
+    {
+      "case": "H5_unseen_product_store",
+      "region": "R1",
+      "status": "recommended",
+      "spoil_chance_pct": 21.28,
+      "tier": "Medium",
+      "recommended_depth": 0.25,
+      "predicted_profit_at_rec": 13.77223939433705,
+      "confidence_level": "Low",
+      "confidence_reasons": "[\"low_history_3a\", \"limited_depth_category\", \"support_edge\"]|unknown_entity|defaults_dominate",
+      "defaults_dominate": true,
+      "unknown_entity": true,
+      "top_drivers_text": "Predicted spoilage risk 21.3% (typical batch: 19.4%). Main drivers: days until expiry raises risk (+1.3 pts), packaging quality raises risk (+0.8 pts), initial batch quantity raises risk (+0.7 pts). Note: Limited history for this product at this store (0 training rows)."
+    }
+  ],
+  "counterfactual_check": {
+    "feature": "handling_score",
+    "model_3a_coef": -0.1407757972793517,
+    "expected_direction_on_increase": "negative",
+    "spoil_proba_at_0.2": 0.27644930003556234,
+    "spoil_proba_at_0.9": 0.26671080695217436,
+    "delta": -0.009738493083387978,
+    "direction_matches_model_coef": true,
+    "chosen_depth_0.25_eval_at_0.9": {
+      "chosen_depth": 0.25,
+      "supported": true,
+      "reason": "ok",
+      "s_hat": 0.7444950822513058,
+      "expected_units_sold": 22.334852467539175,
+      "profit_per_unit": 0.20045574026175217,
+      "batch_profit": 6.013672207852565
+    },
+    "simulate_latency_sec": 0.106
+  },
+  "manager_view_summary_strip": {
+    "batches_today": 145,
+    "high_or_critical_risk_count": 0,
+    "estimated_value_at_risk_sim": 121575.51,
+    "r1_batches_count": 38,
+    "r0_batches_count": 107,
+    "global_caveat": "Advisory estimate. The observed-data backtest was inconclusive; see the validation report.",
+    "wording_note": "All profit and value-at-risk figures are simulated estimates; no markdown is guaranteed to improve observed profit."
+  },
+  "manager_view_latency_sec": 0.2,
+  "robustness_checks": [
+    {
+      "case": "empty_df",
+      "raised_value_error": true,
+      "message": "Input raw_df must be a non-empty pandas DataFrame."
+    },
+    {
+      "case": "missing_required_col",
+      "raised_value_error": true,
+      "message": "Missing required input columns: ['initial_quantity', 'base_price', 'cost_price']"
+    },
+    {
+      "case": "negative_days_until_expiry",
+      "raised_value_error": true,
+      "message": "Row 0: days_until_expiry must be >= 0."
+    },
+    {
+      "case": "unknown_category",
+      "raised_value_error": true,
+      "message": "Row 0: unknown category 'Electronics'. Valid categories: ['Bakery', 'Beverages', 'Dairy', 'Deli', 'Frozen_Meals', 'Meat', 'Pharmaceuticals', 'Produce', 'Ready_to_Eat', 'Seafood']"
+    },
+    {
+      "case": "invalid_quality_grade",
+      "raised_value_error": true,
+      "message": "Row 0: invalid quality_grade 'Z'. Expected A, B, or C."
+    },
+    {
+      "case": "single_row",
+      "passed": true,
+      "n_out": 1
+    },
+    {
+      "case": "all_nan_optional_fields",
+      "passed": true,
+      "defaults_dominate": true,
+      "confidence_level": "Low"
+    },
+    {
+      "case": "p3_key_field_default_packaging_score",
+      "passed": true,
+      "confidence_level": "Low",
+      "confidence_reasons": "[]|defaults_dominate"
+    },
+    {
+      "case": "duplicated_record_id",
+      "passed": true,
+      "n_out": 2
+    },
+    {
+      "case": "repeated_call_determinism",
+      "passed": true
+    }
+  ]
+}
