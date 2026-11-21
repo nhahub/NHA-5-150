@@ -34,6 +34,7 @@ PREPROCESSOR_PATH = MODELS_DIR / "preprocessor.joblib"
 PREPROCESSOR_M2_PATH = MODELS_DIR / "preprocessor_m2.joblib"
 TRACK_3A_MODEL_PATH = MODELS_DIR / "track_3a_classifier.joblib"
 TRACK_3B_MODEL_PATH = MODELS_DIR / "track_3b_regressor.joblib"
+TIER_EDGES_PATH = MODELS_DIR / "track_3c_tier_edges.json"
 
 # Notebooks and scripts
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
