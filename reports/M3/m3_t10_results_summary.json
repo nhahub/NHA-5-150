@@ -1,0 +1,413 @@
+{
+  "edges_payload": {
+    "rule": "T-edges: Edge1 = min d with F(d)>=0.50; Edge2 = min d with F(d)>=0.80; Edge3 = min d with F(d)>=0.95 on training R1",
+    "training_row_count": 24475,
+    "edges": {
+      "edge1": 0.15,
+      "edge2": 0.25,
+      "edge3": 0.35
+    },
+    "cdf": {
+      "0.10": 0.06239019407558733,
+      "0.15": 0.5563636363636364,
+      "0.20": 0.603023493360572,
+      "0.25": 0.945699693564862,
+      "0.30": 0.9488049029622063,
+      "0.35": 0.999591419816139,
+      "0.40": 0.9996731358529112,
+      "0.50": 1.0
+    },
+    "achieved_counts": {
+      "Low": 13617,
+      "Medium": 9529,
+      "High": 1319,
+      "Critical": 10
+    },
+    "achieved_shares": {
+      "Low": 0.5563636363636364,
+      "Medium": 0.3893360572012257,
+      "High": 0.05389172625127681,
+      "Critical": 0.00040858018386108274
+    },
+    "source_file": "optimizer_recs_train.csv",
+    "source_sha256": "13156946339ac9c5d7ffb3b3f3e569083a5c25185b3f0341b9fb54a3d7a5afd2"
+  },
+  "train_tier_docs": [
+    {
+      "tier": "Low",
+      "depth_min": 0.1,
+      "depth_max": 0.15,
+      "n_rows": 13617,
+      "share_pct": 55.63636363636364,
+      "median_pred_profit_per_unit": 1.2851393053883715,
+      "flat_curve_pct": 94.46280384813102,
+      "median_historical_actual_depth": 0.21,
+      "composition_exp_terc_x_grade": {
+        "T2_Grade_AB": 4305,
+        "T2_Grade_C": 1943,
+        "T3_Grade_C": 7369
+      }
+    },
+    {
+      "tier": "Medium",
+      "depth_min": 0.2,
+      "depth_max": 0.25,
+      "n_rows": 9529,
+      "share_pct": 38.93360572012257,
+      "median_pred_profit_per_unit": 0.4384148461906836,
+      "flat_curve_pct": 99.83209151012699,
+      "median_historical_actual_depth": 0.47,
+      "composition_exp_terc_x_grade": {
+        "T1_Grade_AB": 7196,
+        "T2_Grade_AB": 1349,
+        "T2_Grade_C": 234,
+        "T3_Grade_C": 750
+      }
+    },
+    {
+      "tier": "High",
+      "depth_min": 0.3,
+      "depth_max": 0.35,
+      "n_rows": 1319,
+      "share_pct": 5.3891726251276815,
+      "median_pred_profit_per_unit": -0.2252393172382607,
+      "flat_curve_pct": 99.01440485216074,
+      "median_historical_actual_depth": 0.6,
+      "composition_exp_terc_x_grade": {
+        "T1_Grade_AB": 48,
+        "T1_Grade_C": 1185,
+        "T2_Grade_AB": 79,
+        "T2_Grade_C": 7
+      }
+    },
+    {
+      "tier": "Critical",
+      "depth_min": 0.4,
+      "depth_max": 0.5,
+      "n_rows": 10,
+      "share_pct": 0.04085801838610827,
+      "median_pred_profit_per_unit": -6.274264052758745,
+      "flat_curve_pct": 100.0,
+      "median_historical_actual_depth": 0.305,
+      "composition_exp_terc_x_grade": {
+        "T1_Grade_AB": 9,
+        "T2_Grade_AB": 1
+      }
+    }
+  ],
+  "test_tier_docs": [
+    {
+      "tier": "Low",
+      "n_test_rows": 3316,
+      "test_share_pct": 53.69170984455959,
+      "train_share_pct": 55.63636363636364,
+      "diff_test_minus_train_pct": -1.9446537918040505,
+      "lt_20_test_batches": false
+    },
+    {
+      "tier": "Medium",
+      "n_test_rows": 2508,
+      "test_share_pct": 40.60880829015544,
+      "train_share_pct": 38.93360572012257,
+      "diff_test_minus_train_pct": 1.6752025700328659,
+      "lt_20_test_batches": false
+    },
+    {
+      "tier": "High",
+      "n_test_rows": 346,
+      "test_share_pct": 5.602331606217616,
+      "train_share_pct": 5.3891726251276815,
+      "diff_test_minus_train_pct": 0.21315898108993458,
+      "lt_20_test_batches": false
+    },
+    {
+      "tier": "Critical",
+      "n_test_rows": 6,
+      "test_share_pct": 0.09715025906735751,
+      "train_share_pct": 0.04085801838610827,
+      "diff_test_minus_train_pct": 0.05629224068124924,
+      "lt_20_test_batches": true
+    }
+  ],
+  "examples": [
+    {
+      "tier": "Low",
+      "record_id": 25554,
+      "category": "Produce",
+      "quality_grade": "C",
+      "raw_expiry_remaining_ratio": 0.6,
+      "oof_proba": 0.2402324895478876,
+      "recommended_depth": 0.15,
+      "flat_curve": true,
+      "margin_per_unit": 0.1897946446497087,
+      "supported_profit_curve": [
+        {
+          "depth": 0.15,
+          "s_hat": 0.8253508130443703,
+          "profit_per_unit": 0.5079636303099759,
+          "batch_profit": 74.16269002525648
+        },
+        {
+          "depth": 0.2,
+          "s_hat": 0.8448095935454996,
+          "profit_per_unit": 0.3181689856602672,
+          "batch_profit": 46.45267190639901
+        },
+        {
+          "depth": 0.25,
+          "s_hat": 0.8522181551466009,
+          "profit_per_unit": 0.03833294261510023,
+          "batch_profit": 5.5966096218046335
+        }
+      ]
+    },
+    {
+      "tier": "Medium",
+      "record_id": 18328,
+      "category": "Seafood",
+      "quality_grade": "A",
+      "raw_expiry_remaining_ratio": 0.0,
+      "oof_proba": 0.2055009025979264,
+      "recommended_depth": 0.25,
+      "flat_curve": true,
+      "margin_per_unit": 1.763096569499016,
+      "supported_profit_curve": [
+        {
+          "depth": 0.25,
+          "s_hat": 0.9185397834395818,
+          "profit_per_unit": 5.475407608665286,
+          "batch_profit": 2244.9171195527674
+        },
+        {
+          "depth": 0.3,
+          "s_hat": 0.9238917334870608,
+          "profit_per_unit": 3.71231103916627,
+          "batch_profit": 1522.0475260581707
+        },
+        {
+          "depth": 0.35,
+          "s_hat": 0.9294327055664151,
+          "profit_per_unit": 1.9319809372951653,
+          "batch_profit": 792.1121842910178
+        },
+        {
+          "depth": 0.4,
+          "s_hat": 0.9294327055664151,
+          "profit_per_unit": -0.010533417338642437,
+          "batch_profit": -4.318701108843399
+        },
+        {
+          "depth": 0.45,
+          "s_hat": 0.9321344657747515,
+          "profit_per_unit": -1.8909072871807133,
+          "batch_profit": -775.2719877440925
+        },
+        {
+          "depth": 0.5,
+          "s_hat": 0.9351028433256017,
+          "profit_per_unit": -3.776999546061667,
+          "batch_profit": -1548.5698138852836
+        },
+        {
+          "depth": 0.55,
+          "s_hat": 0.9351028433256017,
+          "profit_per_unit": -5.74071551704543,
+          "batch_profit": -2353.6933619886263
+        },
+        {
+          "depth": 0.6,
+          "s_hat": 0.9351028433256017,
+          "profit_per_unit": -7.695080459595939,
+          "batch_profit": -3154.982988434335
+        },
+        {
+          "depth": 0.65,
+          "s_hat": 0.9374898429966151,
+          "profit_per_unit": -9.614523596959518,
+          "batch_profit": -3941.9546747534027
+        },
+        {
+          "depth": 0.7,
+          "s_hat": 0.9374898429966151,
+          "profit_per_unit": -11.573877368822446,
+          "batch_profit": -4745.289721217203
+        },
+        {
+          "depth": 0.75,
+          "s_hat": 0.9410888463429228,
+          "profit_per_unit": -13.495621555716456,
+          "batch_profit": -5533.204837843747
+        }
+      ]
+    },
+    {
+      "tier": "High",
+      "record_id": 90055,
+      "category": "Bakery",
+      "quality_grade": "C",
+      "raw_expiry_remaining_ratio": 0.0,
+      "oof_proba": 0.2833232683496718,
+      "recommended_depth": 0.35,
+      "flat_curve": true,
+      "margin_per_unit": 0.4841402690996537,
+      "supported_profit_curve": [
+        {
+          "depth": 0.35,
+          "s_hat": 0.9134722058484039,
+          "profit_per_unit": 1.2446887762370187,
+          "batch_profit": 343.53410224141714
+        },
+        {
+          "depth": 0.4,
+          "s_hat": 0.9134722058484039,
+          "profit_per_unit": 0.760548507137365,
+          "batch_profit": 209.91138796991274
+        },
+        {
+          "depth": 0.45,
+          "s_hat": 0.9159855836054203,
+          "profit_per_unit": 0.29103609658354657,
+          "batch_profit": 80.32596265705885
+        },
+        {
+          "depth": 0.5,
+          "s_hat": 0.9184766734780784,
+          "profit_per_unit": -0.18125839730096516,
+          "batch_profit": -50.02731765506638
+        },
+        {
+          "depth": 0.55,
+          "s_hat": 0.9189147332775882,
+          "profit_per_unit": -0.6567767222659047,
+          "batch_profit": -181.27037534538968
+        },
+        {
+          "depth": 0.6,
+          "s_hat": 0.9189147332775882,
+          "profit_per_unit": -1.1438015309030258,
+          "batch_profit": -315.6892225292351
+        },
+        {
+          "depth": 0.65,
+          "s_hat": 0.9237161003771228,
+          "profit_per_unit": -1.6130132676008744,
+          "batch_profit": -445.1916618578413
+        },
+        {
+          "depth": 0.7,
+          "s_hat": 0.9281264225416227,
+          "profit_per_unit": -2.08855797631764,
+          "batch_profit": -576.4420014636686
+        },
+        {
+          "depth": 0.75,
+          "s_hat": 0.9311196182511747,
+          "profit_per_unit": -2.572533011634387,
+          "batch_profit": -710.0191112110908
+        }
+      ]
+    },
+    {
+      "tier": "Critical",
+      "record_id": 73650,
+      "category": "Bakery",
+      "quality_grade": "B",
+      "raw_expiry_remaining_ratio": 0.2,
+      "oof_proba": 0.197632070411665,
+      "recommended_depth": 0.5,
+      "flat_curve": true,
+      "margin_per_unit": 0.0120433472429998,
+      "supported_profit_curve": [
+        {
+          "depth": 0.25,
+          "s_hat": 0.12873064016284796,
+          "profit_per_unit": -0.747295992518273,
+          "batch_profit": -16.440511835402006
+        },
+        {
+          "depth": 0.3,
+          "s_hat": 0.13801929234257218,
+          "profit_per_unit": -0.7464087464050331,
+          "batch_profit": -16.42099242091073
+        },
+        {
+          "depth": 0.35,
+          "s_hat": 0.15158712760905818,
+          "profit_per_unit": -0.7426193085864127,
+          "batch_profit": -16.337624788901078
+        },
+        {
+          "depth": 0.4,
+          "s_hat": 0.16224962716352034,
+          "profit_per_unit": -0.7444730182427067,
+          "batch_profit": -16.378406401339547
+        },
+        {
+          "depth": 0.45,
+          "s_hat": 0.1702949503463889,
+          "profit_per_unit": -0.7537254130600861,
+          "batch_profit": -16.581959087321895
+        },
+        {
+          "depth": 0.5,
+          "s_hat": 0.20640003332464404,
+          "profit_per_unit": -0.7305759613434128,
+          "batch_profit": -16.072671149555084
+        },
+        {
+          "depth": 0.55,
+          "s_hat": 0.20640003332464404,
+          "profit_per_unit": -0.7553439653423701,
+          "batch_profit": -16.617567237532143
+        },
+        {
+          "depth": 0.6,
+          "s_hat": 0.20640003332464404,
+          "profit_per_unit": -0.7801119693413274,
+          "batch_profit": -17.162463325509204
+        },
+        {
+          "depth": 0.65,
+          "s_hat": 0.2091100790675186,
+          "profit_per_unit": -0.8006208359553099,
+          "batch_profit": -17.613658391016816
+        },
+        {
+          "depth": 0.7,
+          "s_hat": 0.2099001286745128,
+          "profit_per_unit": -0.8251689112145861,
+          "batch_profit": -18.153716046720895
+        },
+        {
+          "depth": 0.75,
+          "s_hat": 0.21718801336961227,
+          "profit_per_unit": -0.8440309522456249,
+          "batch_profit": -18.568680949403745
+        }
+      ]
+    }
+  ],
+  "tier_wording": {
+    "Low": {
+      "label": "Low",
+      "meaning": "Low: a shallow markdown of about 10-15% is recommended."
+    },
+    "Medium": {
+      "label": "Medium",
+      "meaning": "Medium: a moderate markdown of about 20-25% is recommended."
+    },
+    "High": {
+      "label": "High",
+      "meaning": "High: a deeper markdown of about 30-35% is recommended."
+    },
+    "Critical": {
+      "label": "Critical",
+      "meaning": "Critical: a deep markdown above 35% is recommended."
+    },
+    "R0": {
+      "label": "No markdown (historical practice)",
+      "meaning": "No markdown recommended: this batch is outside the range where the data supports a discount decision."
+    }
+  },
+  "mlflow_run_id": "4774b6f6e1c04181ac7a5441bf22c828"
+}
