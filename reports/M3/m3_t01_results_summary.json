@@ -496,7 +496,7 @@
       }
     ],
     "mlflow_run_id": "1c6393d91cbd4396b3baee6c91045aa2",
-    "model_path": "D:\\DEPI\\Project\\Github Repo\\NHA-5-150\\models\\track_3a_classifier.joblib",
-    "meta_path": "D:\\DEPI\\Project\\Github Repo\\NHA-5-150\\models\\track_3a_classifier.json"
+    "model_path": "models/track_3a_classifier.joblib",
+    "meta_path": "models/track_3a_classifier.json"
   }
 }

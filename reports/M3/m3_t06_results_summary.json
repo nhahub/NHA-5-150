@@ -493,6 +493,6 @@
     }
   ],
   "final_mlflow_run_id": "ce191bffab874806ad34bfe1485cd6c5",
-  "model_path": "D:\\DEPI\\Project\\Github Repo\\NHA-5-150\\models\\track_3b_regressor.joblib",
-  "meta_path": "D:\\DEPI\\Project\\Github Repo\\NHA-5-150\\models\\track_3b_regressor.json"
+  "model_path": "models/track_3b_regressor.joblib",
+  "meta_path": "models/track_3b_regressor.json"
 }
