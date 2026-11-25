@@ -1,0 +1,157 @@
+{
+  "task": "M4-T01",
+  "author": "Maryam",
+  "mode": "live",
+  "tracking_uri": "file:///home/hatch/workspace/projects/smart-shelf/until%20milestone3/NHA-5-150-main/models/mlruns",
+  "models": {
+    "3A": {
+      "track": "3A",
+      "registered_name": "smart-shelf-3a-spoilage-classifier",
+      "original_run_id": "1c6393d91cbd4396b3baee6c91045aa2",
+      "checks": {
+        "n_features": 90,
+        "expected_n_features": 90,
+        "joblib_present": true,
+        "all_listed_artifacts_present": true
+      },
+      "errors": [],
+      "n_features_json": 90,
+      "feature_list_matches_expected": true,
+      "canonical_match": true,
+      "leakage_check_pass": true,
+      "train_period": "2023-01-01 to 2024-08-07",
+      "train_period_ok": true,
+      "shelf_life_version": "expiry_remaining_ratio",
+      "model_class": "LogisticRegression",
+      "class_matches": true,
+      "run_id_in_json": "1c6393d91cbd4396b3baee6c91045aa2",
+      "run_id_matches": true,
+      "git_commit_in_json": "6ebbb42",
+      "joblib_exists": true,
+      "artifacts": [
+        {
+          "path": "/home/hatch/workspace/projects/smart-shelf/until milestone3/NHA-5-150-main/models/track_3a_classifier.json",
+          "exists": true
+        },
+        {
+          "path": "/home/hatch/workspace/projects/smart-shelf/until milestone3/NHA-5-150-main/reports/figures/m3/m3_t01_cv_reliability_curve.png",
+          "exists": true
+        },
+        {
+          "path": "/home/hatch/workspace/projects/smart-shelf/until milestone3/NHA-5-150-main/reports/figures/m3/m3_t01_test_shap_summary.png",
+          "exists": true
+        }
+      ],
+      "metrics": {
+        "test_brier_score": 0.15640742607682803,
+        "test_log_loss": 0.48987567457756626,
+        "test_roc_auc": 0.5899190509656349,
+        "test_ece": 0.005789645333738579,
+        "cv_brier": 0.1537399141774408,
+        "cv_log_loss": 0.483743926726195,
+        "cv_roc_auc": 0.5884597442940973,
+        "benchmark_test_roc_auc": 0.5967366592848501
+      },
+      "params": {
+        "C": 0.005,
+        "penalty": "l2",
+        "calibration": "uncalibrated"
+      },
+      "source": "reports/M3/m3_t01_results_summary.json; M3_T01_Track3A_Report.md; M3_T13_metric_audit.md (92 checks, 0 mismatches)",
+      "live": {
+        "registered_name": "smart-shelf-3a-spoilage-classifier",
+        "mode": "live",
+        "original_run_found": false,
+        "relogged_run_id": "e63c243c8540436dbd51773e6f84a856",
+        "run_id_used": "e63c243c8540436dbd51773e6f84a856",
+        "registered_model_existed": false,
+        "model_version": "pending_binary_upload",
+        "note": "joblib present on disk but not yet logged as an MLflow model artifact in the source run; upload it with mlflow.log_artifact / mlflow.<flavor>.log_model and re-run with --register to create version 1."
+      }
+    },
+    "3B": {
+      "track": "3B",
+      "registered_name": "smart-shelf-3b-revenue-response",
+      "original_run_id": "ce191bffab874806ad34bfe1485cd6c5",
+      "checks": {
+        "n_features": 44,
+        "expected_n_features": 44,
+        "joblib_present": true,
+        "all_listed_artifacts_present": true
+      },
+      "errors": [],
+      "n_features_json": 44,
+      "feature_list_matches_expected": true,
+      "canonical_match": true,
+      "leakage_check_pass": true,
+      "train_period": "2023-01-01 to 2024-08-07 (R1 only)",
+      "train_period_ok": true,
+      "shelf_life_version": "expiry_remaining_ratio",
+      "model_class": "LGBMRegressor",
+      "class_matches": true,
+      "run_id_in_json": "ce191bffab874806ad34bfe1485cd6c5",
+      "run_id_matches": true,
+      "git_commit_in_json": "b183fc9",
+      "joblib_exists": true,
+      "artifacts": [
+        {
+          "path": "/home/hatch/workspace/projects/smart-shelf/until milestone3/NHA-5-150-main/models/track_3b_regressor.json",
+          "exists": true
+        },
+        {
+          "path": "/home/hatch/workspace/projects/smart-shelf/until milestone3/NHA-5-150-main/models/track_3b_region_support_ref.json",
+          "exists": true
+        },
+        {
+          "path": "/home/hatch/workspace/projects/smart-shelf/until milestone3/NHA-5-150-main/models/track_3c_tier_edges.json",
+          "exists": true
+        },
+        {
+          "path": "/home/hatch/workspace/projects/smart-shelf/until milestone3/NHA-5-150-main/reports/figures/m3/m3_t06_cv_calibration.png",
+          "exists": true
+        },
+        {
+          "path": "/home/hatch/workspace/projects/smart-shelf/until milestone3/NHA-5-150-main/reports/figures/m3/m3_t07_test_calibration.png",
+          "exists": true
+        }
+      ],
+      "metrics": {
+        "cv_s_rmse": 0.1296725443306064,
+        "cv_s_mae": 0.10937267253467968,
+        "cv_s_r2": 0.7093742810367285,
+        "cv_profit_unit_mae": 1.833657585245831,
+        "test_s_rmse": 0.12781215858528563,
+        "test_s_mae": 0.10809673284346759,
+        "test_s_r2": 0.741930501106602,
+        "test_profit_unit_mae": 1.7340064293470097,
+        "test_profit_unit_rmse": 6.373298186827674
+      },
+      "params": {
+        "colsample_bytree": 0.9950553116457923,
+        "learning_rate": 0.08149619212376244,
+        "min_child_samples": 93,
+        "num_leaves": 15,
+        "n_estimators": 500,
+        "reg_lambda": 7.480534388702453,
+        "subsample": 0.985296571922335,
+        "region_domain": "R1_only",
+        "oof_version": "v2"
+      },
+      "source": "reports/M3/m3_t06_results_summary.json (CV, run ce191bff); reports/M3/m3_t07_results_summary.json (test R1, run d3ed3411); M3_T13_metric_audit.md",
+      "live": {
+        "registered_name": "smart-shelf-3b-revenue-response",
+        "mode": "live",
+        "original_run_found": false,
+        "relogged_run_id": "6af5f233fb284ba5bac54caa484aa495",
+        "run_id_used": "6af5f233fb284ba5bac54caa484aa495",
+        "registered_model_existed": false,
+        "model_version": "pending_binary_upload",
+        "note": "joblib present on disk but not yet logged as an MLflow model artifact in the source run; upload it with mlflow.log_artifact / mlflow.<flavor>.log_model and re-run with --register to create version 1."
+      }
+    }
+  },
+  "status": "REGISTERED",
+  "mlflow_installed": true,
+  "missing_binaries": [],
+  "todo_for_team": "Binaries present \u2014 re-run with --register to create version 1 of each model."
+}
