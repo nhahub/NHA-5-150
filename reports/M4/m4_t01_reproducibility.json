@@ -1,0 +1,125 @@
+{
+  "task": "M4-T01",
+  "overall_status": "PASS",
+  "tolerance": 0.0001,
+  "checks": [
+    {
+      "name": "binary present: models/track_3a_classifier.joblib",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "name": "binary present: models/track_3b_regressor.joblib",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "name": "MLflow store present: models/mlruns/",
+      "status": "PASS",
+      "detail": "present \u2014 re-logged runs only; original runs 1c6393d9... / ce191bff... / d3ed3411... not found in this store"
+    },
+    {
+      "name": "data present: data/processed/",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "name": "3A features = COMPACT 90, exact order",
+      "status": "PASS",
+      "detail": "JSON=90, canonical COMPACT=90"
+    },
+    {
+      "name": "3B features = 43 base + oof_proba (44 total)",
+      "status": "PASS",
+      "detail": "JSON=44, canonical TRACK_3B=43 + oof_proba"
+    },
+    {
+      "name": "3A leakage: no discount / outcome columns",
+      "status": "PASS",
+      "detail": "no forbidden columns in 3A feature list"
+    },
+    {
+      "name": "3B leakage: no outcome columns",
+      "status": "PASS",
+      "detail": "no forbidden outcome columns in 3B feature list"
+    },
+    {
+      "name": "random_state = 42 in src/config.py",
+      "status": "PASS",
+      "detail": "found RANDOM_STATE=42"
+    },
+    {
+      "name": "train period ends 2024-08-07",
+      "status": "PASS",
+      "detail": "defaults train_end_date=2024-08-07, 3A train_period=2023-01-01 to 2024-08-07, 3B train_period=2023-01-01 to 2024-08-07 (R1 only)"
+    },
+    {
+      "name": "run IDs recorded in JSONs match M3 reports",
+      "status": "PASS",
+      "detail": "3A=1c6393d91cbd4396b3baee6c91045aa2, 3B=ce191bffab874806ad34bfe1485cd6c5"
+    },
+    {
+      "name": "model classes match M3 reports",
+      "status": "PASS",
+      "detail": "3A=LogisticRegression, 3B=LGBMRegressor"
+    },
+    {
+      "name": "3A test_brier matches M3-T13 (tol 1e-4)",
+      "status": "PASS",
+      "detail": "summary=0.15640742607682803, expected=0.15640742607682803"
+    },
+    {
+      "name": "3A test_log_loss matches M3-T13 (tol 1e-4)",
+      "status": "PASS",
+      "detail": "summary=0.48987567457756626, expected=0.48987567457756626"
+    },
+    {
+      "name": "3A test_roc_auc matches M3-T13 (tol 1e-4)",
+      "status": "PASS",
+      "detail": "summary=0.5899190509656349, expected=0.5899190509656349"
+    },
+    {
+      "name": "3B CV s_rmse matches M3-T13 (tol 1e-4)",
+      "status": "PASS",
+      "detail": "summary=0.1296725443306064, expected=0.1296725443306064"
+    },
+    {
+      "name": "3B CV s_r2 matches M3-T13 (tol 1e-4)",
+      "status": "PASS",
+      "detail": "summary=0.7093742810367285, expected=0.7093742810367285"
+    },
+    {
+      "name": "3B test R1 s_rmse matches M3-T13 (run d3ed3411, tol 1e-4)",
+      "status": "PASS",
+      "detail": "summary=0.12781215858528563, expected=0.12781215858528563"
+    },
+    {
+      "name": "3B test R1 s_r2 matches M3-T13 (run d3ed3411, tol 1e-4)",
+      "status": "PASS",
+      "detail": "summary=0.741930501106602, expected=0.741930501106602"
+    },
+    {
+      "name": "library versions in 3A JSON match requirements.txt (mlflow 3.17.1)",
+      "status": "PASS",
+      "detail": "JSON mlflow=3.17.1, sklearn=1.7.2, lightgbm=4.7.0"
+    },
+    {
+      "name": "MLflow installed in this env",
+      "status": "PASS",
+      "detail": "mlflow 3.17.1"
+    }
+  ],
+  "supporting_evidence_not_rerun": {
+    "m3_t14_parity_spoil_proba_max_abs_diff_1000_rows": 3.607782183556729e-07,
+    "m3_t14_parity_in_memory_max_abs_diff": 1.1102230246251565e-16,
+    "source": "reports/M3/m3_t14_results_summary.json (parity_test_1000 / inmem_m2_proba_max_abs_diff)",
+    "m3_t13_metric_audit": "92 checks, 0 mismatches (reports/M3/M3_T13_metric_audit.md) \u2014 that audit read the live MLflow store on the author's machine; it cannot be re-run from this zip because models/mlruns/ is absent"
+  },
+  "what_is_needed_to_reach_PASS": [
+    "models/track_3a_classifier.joblib",
+    "models/track_3b_regressor.joblib",
+    "models/mlruns/ (original runs 1c6393d91cbd4396b3baee6c91045aa2, ce191bffab874806ad34bfe1485cd6c5, d3ed3411ecd3464b8baf57aefd62557d) or re-logged runs from scripts/M4_T01_register_models.py --register",
+    "data/processed/ (or at least track_3a_proba_test.csv + model_ready_3b_dataset.csv) to re-score the loaded models",
+    "Python 3.11 smart-shelf env with mlflow==3.17.1 installed"
+  ]
+}
