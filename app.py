@@ -29,6 +29,7 @@ from src.m3_t14_pipeline import (  # noqa: E402
     export_inventory_snapshot,
     manager_view_table,
 )
+from src.m4_t03_simulator import render_simulator  # noqa: E402  (M4-T03 Simulator Mode)
 
 # --------------------------------------------------------------------------- #
 # Visual encoding: three separate colour families so the three flags never
@@ -149,15 +150,13 @@ def explain_reasons(reasons: str) -> list:
 # --------------------------------------------------------------------------- #
 # Page
 # --------------------------------------------------------------------------- #
-def main() -> None:
-    st.set_page_config(page_title="Smart Shelf - Manager View", page_icon="🛒", layout="wide")
-    st.title("🛒 Smart Shelf - Manager View")
-
+def render_manager_view() -> None:
+    """Manager View tab (M4-T02): inventory, risk flags, tiers and confidence."""
     try:
         table, summary, snapshot_date = load_dashboard_data()
     except Exception as exc:  # show a readable error instead of a raw traceback
         st.error(f"Could not load data or run the pipeline: {exc}")
-        st.stop()
+        return  # (not st.stop(): the Simulator tab must still render)
 
     st.caption(f"Inventory snapshot date: **{snapshot_date}**  |  Batches: **{len(table)}**")
     st.info(summary["global_caveat"])
@@ -171,7 +170,7 @@ def main() -> None:
     st.caption(summary["wording_note"])
 
     # ---- Sidebar filters ---------------------------------------------------
-    st.sidebar.header("Filters")
+    st.sidebar.header("Manager View filters")
     sel_cat = st.sidebar.multiselect("Category", sorted(table["category"].dropna().astype(str).unique()))
     sel_store = st.sidebar.multiselect("Store", sorted(table["store_id"].dropna().astype(str).unique()))
     sel_risk = st.sidebar.multiselect(
@@ -277,6 +276,17 @@ def main() -> None:
     if bool(row["limited_history_flag"]):
         st.warning("Limited history for this product/store: treat the estimate with extra care.")
     st.caption(summary["global_caveat"])
+
+
+def main() -> None:
+    st.set_page_config(page_title="Smart Shelf Dashboard", page_icon="🛒", layout="wide")
+    st.title("🛒 Smart Shelf Dashboard")
+
+    tab_manager, tab_simulator = st.tabs(["📋 Manager View", "🧪 Simulator Mode"])
+    with tab_manager:
+        render_manager_view()
+    with tab_simulator:
+        render_simulator()
 
 
 if __name__ == "__main__":
