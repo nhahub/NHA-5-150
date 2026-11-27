@@ -1,0 +1,82 @@
+{
+  "task": "M4-T03",
+  "n_checks": 15,
+  "n_failed": 0,
+  "checks": [
+    {
+      "check": "KEY_SENSITIVE_FIELDS match pipeline",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "N_OPTIONAL_TRACKED matches pipeline",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Numeric optional fields match pipeline",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "H1_R0_fresh reproduces M3-T14",
+      "pass": true,
+      "detail": "region=R0 spoil=19.74 depth=None profit=None conf=No recommendation"
+    },
+    {
+      "check": "H2_R1_short_expiry reproduces M3-T14",
+      "pass": true,
+      "detail": "region=R1 spoil=19.15 depth=0.25 profit=10.303107347085811 conf=Low"
+    },
+    {
+      "check": "H3_Grade_C_long_shelf_life reproduces M3-T14",
+      "pass": true,
+      "detail": "region=R1 spoil=17.67 depth=0.15 profit=93.74713413221345 conf=Low"
+    },
+    {
+      "check": "H4_all_optional_defaulted reproduces M3-T14",
+      "pass": true,
+      "detail": "region=R1 spoil=17.21 depth=0.1 profit=24.5763929881189 conf=Low"
+    },
+    {
+      "check": "H5_unseen_product_store reproduces M3-T14",
+      "pass": true,
+      "detail": "region=R1 spoil=21.28 depth=0.25 profit=13.77223939433705 conf=Low"
+    },
+    {
+      "check": "What-if curve has 14 depths (10%..75%)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Recommended depth = best supported depth on the curve",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Display table marks exactly one recommended row",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "R0 batch: no recommendation, all depths unsupported",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "build_batch omits 'Default' choices",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Higher handling_score lowers spoilage risk",
+      "pass": true,
+      "detail": "0.2859 -> 0.2760"
+    },
+    {
+      "check": "Repeated run is deterministic",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}
